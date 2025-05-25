@@ -2,6 +2,8 @@
 
 A modern, responsive todo application built for neurodivergent human beings with React, TypeScript, Node.js, and MongoDB. Features hierarchical todos, user authentication, and mobile-optimized design.
 
+This application is the result of experimenting with Agent mode in VS Code.
+
 ## 🚀 Features
 
 - **User Authentication**: Secure registration and login with JWT tokens
