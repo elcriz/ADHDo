@@ -31,14 +31,14 @@ export const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+    fontFamily: '"Manrope", "Inter", "Roboto", "Helvetica", "Arial", sans-serif',
     h1: {
       fontSize: '2rem',
-      fontWeight: 600,
+      fontWeight: 700,
     },
     h2: {
       fontSize: '1.5rem',
-      fontWeight: 600,
+      fontWeight: 700,
     },
     h3: {
       fontSize: '1.25rem',
@@ -61,9 +61,10 @@ export const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          textTransform: 'none',
+          textTransform: 'uppercase',
           borderRadius: '8px',
-          fontWeight: 500,
+          fontWeight: 700,
+          letterSpacing: '0.5px',
         },
       },
     },
@@ -88,6 +89,18 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: '8px',
+        },
+      },
+    },
+    MuiFab: {
+      styleOverrides: {
+        root: {
+          fontFamily: '"Manrope", "Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+          fontWeight: 500,
+          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+          '&:hover': {
+            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+          },
         },
       },
     },

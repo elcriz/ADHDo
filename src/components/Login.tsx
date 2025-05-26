@@ -40,14 +40,6 @@ const Login: React.FC = () => {
     <Container
       maxWidth="sm"
     >
-      <Typography
-        variant="h3"
-        component="h1"
-        align="center"
-        sx={{ mt: 4 }}
-      >
-        The pragmatic todo app for neurodivergents
-      </Typography>
       <Box
         sx={{ mt: 4 }}
       >
