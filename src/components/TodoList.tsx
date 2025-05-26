@@ -8,8 +8,11 @@ import {
   Tab,
   CircularProgress,
   Container,
+  Fab,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
-import { Add as AddIcon } from '@mui/icons-material';
+import { Add as AddIcon, Close as CloseIcon } from '@mui/icons-material';
 import { useTodos } from '../contexts/TodoContext';
 import type { Todo } from '../types';
 import TodoItem from './TodoItem';
@@ -19,6 +22,9 @@ const TodoList: React.FC = () => {
   const { todos, loading } = useTodos();
   const [activeTab, setActiveTab] = useState<'open' | 'completed'>('open');
   const [showForm, setShowForm] = useState(false);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   // Ensure todos is always an array and filter by completion status
   const todoArray = Array.isArray(todos) ? todos : [];
@@ -72,7 +78,7 @@ const TodoList: React.FC = () => {
         sx={{ p: 2 }}
       >
         <Box
-          sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}
+          sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}
         >
           <Typography
             variant="h4"
@@ -81,19 +87,30 @@ const TodoList: React.FC = () => {
           >
             My Todos
           </Typography>
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={() => setShowForm(!showForm)}
-          >
-            {showForm ? 'Cancel' : 'Add Todo'}
-          </Button>
+          {!isMobile && (
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={() => setShowForm(!showForm)}
+            >
+              {showForm ? 'Cancel' : 'Add Todo'}
+            </Button>
+          )}
         </Box>
 
         {showForm && (
           <Paper
             elevation={1}
-            sx={{ p: 2, mb: 3, bgcolor: 'grey.50' }}
+            sx={{
+              p: 2,
+              mb: 3,
+              bgcolor: 'grey.50',
+              ...(isMobile && {
+                position: 'sticky',
+                top: 80,
+                zIndex: 999,
+              })
+            }}
           >
             <TodoForm
               onSuccess={() => setShowForm(false)}
@@ -102,7 +119,7 @@ const TodoList: React.FC = () => {
         )}
 
         <Box
-          sx={{ mb: 3 }}
+          sx={{ mb: 3}}
         >
           <Tabs
             value={activeTab}
@@ -128,10 +145,12 @@ const TodoList: React.FC = () => {
             <Tab
               label={`Open (${openTodos.length})`}
               value="open"
+              sx={{ minHeight: 22, py: 1.5 }}
             />
             <Tab
               label={`Completed (${completedTodos.length})`}
               value="completed"
+              sx={{ minHeight: 22, py: 1.5 }}
             />
           </Tabs>
         </Box>
@@ -161,6 +180,23 @@ const TodoList: React.FC = () => {
           )}
         </Box>
       </Paper>
+
+      {/* Floating Action Button for mobile devices */}
+      {isMobile && (
+        <Fab
+          color={showForm ? 'error' : 'primary'}
+          aria-label={showForm ? 'Cancel adding todo' : 'Add new todo'}
+          sx={{
+            position: 'fixed',
+            bottom: 16,
+            right: 16,
+            zIndex: 1000,
+          }}
+          onClick={() => setShowForm(!showForm)}
+        >
+          {showForm ? <CloseIcon /> : <AddIcon />}
+        </Fab>
+      )}
     </Container>
   );
 };

@@ -74,6 +74,7 @@ const TodoForm: React.FC<TodoFormProps> = ({ todo, parent, onSuccess, onCancel }
         required
         size="small"
         fullWidth
+        autoFocus
       />
 
       <TextField
@@ -98,7 +99,7 @@ const TodoForm: React.FC<TodoFormProps> = ({ todo, parent, onSuccess, onCancel }
           startIcon={loading ? <CircularProgress size={16} /> : null}
           size="small"
         >
-          {loading ? 'Saving...' : (todo ? 'Update' : 'Create')}
+          {loading ? 'Saving...' : (todo ? 'Update todo' : 'Create todo ')}
         </Button>
 
         {onCancel && (
