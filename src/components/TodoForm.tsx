@@ -1,4 +1,11 @@
 import React, { useState } from 'react';
+import {
+  TextField,
+  Button,
+  Box,
+  Alert,
+  CircularProgress,
+} from '@mui/material';
 import type { Todo } from '../types';
 import { useTodos } from '../contexts/TodoContext';
 
@@ -45,64 +52,68 @@ const TodoForm: React.FC<TodoFormProps> = ({ todo, parent, onSuccess, onCancel }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+    >
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded text-sm">
+        <Alert
+          severity="error"
+        >
           {error}
-        </div>
+        </Alert>
       )}
 
-      <div>
-        <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
-          Title *
-        </label>
-        <input
-          type="text"
-          id="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Enter todo title"
-          disabled={loading}
-        />
-      </div>
+      <TextField
+        label="Title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Enter todo title"
+        disabled={loading}
+        required
+        size="small"
+        fullWidth
+      />
 
-      <div>
-        <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-          Description
-        </label>
-        <textarea
-          id="description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          rows={3}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Enter todo description (optional)"
-          disabled={loading}
-        />
-      </div>
+      <TextField
+        label="Description"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        placeholder="Enter todo description (optional)"
+        disabled={loading}
+        multiline
+        rows={3}
+        size="small"
+        fullWidth
+      />
 
-      <div className="flex space-x-3">
-        <button
+      <Box
+        sx={{ display: 'flex', gap: 1 }}
+      >
+        <Button
           type="submit"
+          variant="contained"
           disabled={loading}
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          startIcon={loading ? <CircularProgress size={16} /> : null}
+          size="small"
         >
           {loading ? 'Saving...' : (todo ? 'Update' : 'Create')}
-        </button>
-        
+        </Button>
+
         {onCancel && (
-          <button
+          <Button
             type="button"
+            variant="outlined"
             onClick={onCancel}
             disabled={loading}
-            className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            size="small"
           >
             Cancel
-          </button>
+          </Button>
         )}
-      </div>
-    </form>
+      </Box>
+    </Box>
   );
 };
 

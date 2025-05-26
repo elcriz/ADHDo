@@ -1,5 +1,6 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+import { Box, CircularProgress } from '@mui/material';
 import { useAuth } from '../contexts/AuthContext';
 
 interface ProtectedRouteProps {
@@ -11,13 +12,25 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '16rem'
+        }}
+      >
+        <CircularProgress />
+      </Box>
     );
   }
 
-  return user ? <>{children}</> : <Navigate to="/login" replace />;
+  return user ? <>{children}</> : (
+    <Navigate
+      to="/login"
+      replace
+    />
+  );
 };
 
 export default ProtectedRoute;

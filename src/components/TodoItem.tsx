@@ -1,4 +1,20 @@
 import React, { useState } from 'react';
+import {
+  Card,
+  CardContent,
+  Checkbox,
+  Typography,
+  IconButton,
+  Box,
+  Chip,
+  Paper,
+  Tooltip,
+} from '@mui/material';
+import {
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Add as AddIcon,
+} from '@mui/icons-material';
 import type { Todo } from '../types';
 import { useTodos } from '../contexts/TodoContext';
 import TodoForm from './TodoForm';
@@ -28,82 +44,157 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
   };
 
   return (
-    <div className={`border rounded-lg p-4 ${level > 0 ? 'border-l-4 border-l-blue-300' : 'border-gray-200'} ${todo.completed ? 'bg-gray-50' : 'bg-white'}`}>
-      <div className="flex items-start space-x-3">
-        <input
-          type="checkbox"
-          checked={todo.completed}
-          onChange={handleToggle}
-          className="mt-1 h-4 w-4 text-blue-600 rounded focus:ring-blue-500"
-        />
-        
-        <div className="flex-1">
-          <div className={`font-medium ${todo.completed ? 'line-through text-gray-500' : 'text-gray-800'}`}>
-            {todo.title}
-          </div>
-          
-          {todo.description && (
-            <div className={`mt-1 text-sm ${todo.completed ? 'text-gray-400' : 'text-gray-600'}`}>
-              {todo.description}
-            </div>
-          )}
-          
-          <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-gray-500">
-            <span>Created: {formatDate(todo.createdAt)}</span>
-            {todo.completedAt && (
-              <span>• Completed: {formatDate(todo.completedAt)}</span>
-            )}
-            {todo.children.length > 0 && (
-              <span>• {todo.children.length} subtask{todo.children.length > 1 ? 's' : ''}</span>
-            )}
-          </div>
-        </div>
-        
-        <div className="flex space-x-2">
-          <button
-            onClick={() => setShowChildForm(!showChildForm)}
-            className="text-green-600 hover:text-green-800 text-sm"
-            title="Add subtask"
-          >
-            + Sub
-          </button>
-          <button
-            onClick={() => setIsEditing(!isEditing)}
-            className="text-blue-600 hover:text-blue-800 text-sm"
-            title="Edit"
-          >
-            Edit
-          </button>
-          <button
-            onClick={handleDelete}
-            className="text-red-600 hover:text-red-800 text-sm"
-            title="Delete"
-          >
-            Delete
-          </button>
-        </div>
-      </div>
-
-      {isEditing && (
-        <div className="mt-4 p-3 bg-gray-50 rounded">
-          <TodoForm
-            todo={todo}
-            onSuccess={() => setIsEditing(false)}
-            onCancel={() => setIsEditing(false)}
+    <Card
+      elevation={level > 0 ? 1 : 2}
+      sx={{
+        mb: 1,
+        ml: level * 2,
+        borderLeft: level > 0 ? 3 : 0,
+        borderLeftColor: level > 0 ? 'primary.light' : 'transparent',
+        bgcolor: todo.completed ? 'grey.50' : 'background.paper',
+      }}
+    >
+      <CardContent
+        sx={{ p: 2, '&:last-child': { pb: 2 } }}
+      >
+        <Box
+          sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}
+        >
+          <Checkbox
+            checked={todo.completed}
+            onChange={handleToggle}
+            size="small"
+            sx={{ mt: -0.5 }}
           />
-        </div>
-      )}
 
-      {showChildForm && (
-        <div className="mt-4 p-3 bg-blue-50 rounded">
-          <TodoForm
-            parent={todo._id}
-            onSuccess={() => setShowChildForm(false)}
-            onCancel={() => setShowChildForm(false)}
-          />
-        </div>
-      )}
-    </div>
+          <Box
+            sx={{ flexGrow: 1, minWidth: 0 }}
+          >
+            <Typography
+              variant="body1"
+              sx={{
+                textDecoration: todo.completed ? 'line-through' : 'none',
+                color: todo.completed ? 'text.disabled' : 'text.primary',
+                fontWeight: 500,
+              }}
+            >
+              {todo.title}
+            </Typography>
+
+            {todo.description && (
+              <Typography
+                variant="body2"
+                sx={{
+                  mt: 0.5,
+                  color: todo.completed ? 'text.disabled' : 'text.secondary',
+                }}
+              >
+                {todo.description}
+              </Typography>
+            )}
+
+            <Box
+              sx={{ mt: 1, display: 'flex', flexWrap: 'wrap', gap: 0.5 }}
+            >
+              <Chip
+                label={`Created: ${formatDate(todo.createdAt)}`}
+                size="small"
+                variant="outlined"
+                sx={{ fontSize: '0.7rem', height: 20 }}
+              />
+              {todo.completedAt && (
+                <Chip
+                  label={`Completed: ${formatDate(todo.completedAt)}`}
+                  size="small"
+                  variant="outlined"
+                  color="success"
+                  sx={{ fontSize: '0.7rem', height: 20 }}
+                />
+              )}
+              {todo.children.length > 0 && (
+                <Chip
+                  label={`${todo.children.length} subtask${todo.children.length > 1 ? 's' : ''}`}
+                  size="small"
+                  variant="outlined"
+                  color="info"
+                  sx={{ fontSize: '0.7rem', height: 20 }}
+                />
+              )}
+            </Box>
+          </Box>
+
+          <Box
+            sx={{ display: 'flex', gap: 0.5 }}
+          >
+            <Tooltip
+              title="Add subtask"
+            >
+              <IconButton
+                size="small"
+                onClick={() => setShowChildForm(!showChildForm)}
+                color="success"
+              >
+                <AddIcon
+                  fontSize="small"
+                />
+              </IconButton>
+            </Tooltip>
+            <Tooltip
+              title="Edit"
+            >
+              <IconButton
+                size="small"
+                onClick={() => setIsEditing(!isEditing)}
+                color="primary"
+              >
+                <EditIcon
+                  fontSize="small"
+                />
+              </IconButton>
+            </Tooltip>
+            <Tooltip
+              title="Delete"
+            >
+              <IconButton
+                size="small"
+                onClick={handleDelete}
+                color="error"
+              >
+                <DeleteIcon
+                  fontSize="small"
+                />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Box>
+
+        {isEditing && (
+          <Paper
+            elevation={1}
+            sx={{ mt: 2, p: 2, bgcolor: 'grey.50' }}
+          >
+            <TodoForm
+              todo={todo}
+              onSuccess={() => setIsEditing(false)}
+              onCancel={() => setIsEditing(false)}
+            />
+          </Paper>
+        )}
+
+        {showChildForm && (
+          <Paper
+            elevation={1}
+            sx={{ mt: 2, p: 2, bgcolor: 'primary.50' }}
+          >
+            <TodoForm
+              parent={todo._id}
+              onSuccess={() => setShowChildForm(false)}
+              onCancel={() => setShowChildForm(false)}
+            />
+          </Paper>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 

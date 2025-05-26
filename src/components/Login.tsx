@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import {
+  Paper,
+  TextField,
+  Button,
+  Typography,
+  Box,
+  Alert,
+  Container,
+  CircularProgress,
+} from '@mui/material';
 import { useAuth } from '../contexts/AuthContext';
 
 const Login: React.FC = () => {
@@ -7,7 +17,7 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  
+
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -27,62 +37,106 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-8 bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
-      
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          {error}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter your email"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter your password"
-          />
-        </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+    <Container
+      maxWidth="sm"
+    >
+      <Typography
+        variant="h3"
+        component="h1"
+        align="center"
+        sx={{ mt: 4 }}
+      >
+        The pragmatic todo app for neurodivergents
+      </Typography>
+      <Box
+        sx={{ mt: 4 }}
+      >
+        <Paper
+          elevation={3}
+          sx={{ p: 4 }}
         >
-          {loading ? 'Logging in...' : 'Login'}
-        </button>
-      </form>
+          <Typography
+            variant="h4"
+            component="h2"
+            align="center"
+            gutterBottom
+          >
+            Login
+          </Typography>
 
-      <p className="mt-6 text-center text-gray-600">
-        Don't have an account?{' '}
-        <Link to="/register" className="text-blue-600 hover:text-blue-800">
-          Register here
-        </Link>
-      </p>
-    </div>
+          {error && (
+            <Alert
+              severity="error"
+              sx={{ mb: 2 }}
+            >
+              {error}
+            </Alert>
+          )}
+
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{ mt: 2 }}
+          >
+            <TextField
+              type="email"
+              label="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              fullWidth
+              margin="normal"
+              placeholder="Enter your email"
+              autoComplete="email"
+            />
+
+            <TextField
+              type="password"
+              label="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              fullWidth
+              margin="normal"
+              placeholder="Enter your password"
+              autoComplete="current-password"
+            />
+
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              size="large"
+              disabled={loading}
+              sx={{ mt: 3, mb: 2 }}
+              startIcon={loading ? <CircularProgress size={20} /> : null}
+            >
+              {loading ? 'Logging in...' : 'Login'}
+            </Button>
+          </Box>
+
+          <Typography
+            variant="body2"
+            align="center"
+            sx={{ mt: 2 }}
+          >
+            Don't have an account?{' '}
+            <Link
+              to="/register"
+              style={{ color: 'inherit' }}
+            >
+              <Typography
+                component="span"
+                color="primary"
+                sx={{ textDecoration: 'underline' }}
+              >
+                Register here
+              </Typography>
+            </Link>
+          </Typography>
+        </Paper>
+      </Box>
+    </Container>
   );
 };
 
