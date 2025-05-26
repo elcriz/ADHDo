@@ -52,9 +52,15 @@ const TodoForm: React.FC<TodoFormProps> = ({ todo, parent, onSuccess, onCancel }
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+    >
       {error && (
-        <Alert severity="error">
+        <Alert
+          severity="error"
+        >
           {error}
         </Alert>
       )}
@@ -82,7 +88,9 @@ const TodoForm: React.FC<TodoFormProps> = ({ todo, parent, onSuccess, onCancel }
         fullWidth
       />
 
-      <Box sx={{ display: 'flex', gap: 1 }}>
+      <Box
+        sx={{ display: 'flex', gap: 1 }}
+      >
         <Button
           type="submit"
           variant="contained"
@@ -92,7 +100,7 @@ const TodoForm: React.FC<TodoFormProps> = ({ todo, parent, onSuccess, onCancel }
         >
           {loading ? 'Saving...' : (todo ? 'Update' : 'Create')}
         </Button>
-        
+
         {onCancel && (
           <Button
             type="button"

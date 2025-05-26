@@ -37,23 +37,47 @@ const Login: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="sm">
-      <Typography variant="h3" component="h1" align="center" sx={{ mt: 4 }}>
+    <Container
+      maxWidth="sm"
+    >
+      <Typography
+        variant="h3"
+        component="h1"
+        align="center"
+        sx={{ mt: 4 }}
+      >
         The pragmatic todo app for neurodivergents
       </Typography>
-      <Box sx={{ mt: 4 }}>
-        <Paper elevation={3} sx={{ p: 4 }}>
-          <Typography variant="h4" component="h2" align="center" gutterBottom>
+      <Box
+        sx={{ mt: 4 }}
+      >
+        <Paper
+          elevation={3}
+          sx={{ p: 4 }}
+        >
+          <Typography
+            variant="h4"
+            component="h2"
+            align="center"
+            gutterBottom
+          >
             Login
           </Typography>
 
           {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
+            <Alert
+              severity="error"
+              sx={{ mb: 2 }}
+            >
               {error}
             </Alert>
           )}
 
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{ mt: 2 }}
+          >
             <TextField
               type="email"
               label="Email"
@@ -91,10 +115,21 @@ const Login: React.FC = () => {
             </Button>
           </Box>
 
-          <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+          <Typography
+            variant="body2"
+            align="center"
+            sx={{ mt: 2 }}
+          >
             Don't have an account?{' '}
-            <Link to="/register" style={{ color: 'inherit' }}>
-              <Typography component="span" color="primary" sx={{ textDecoration: 'underline' }}>
+            <Link
+              to="/register"
+              style={{ color: 'inherit' }}
+            >
+              <Typography
+                component="span"
+                color="primary"
+                sx={{ textDecoration: 'underline' }}
+              >
                 Register here
               </Typography>
             </Link>

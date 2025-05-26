@@ -19,7 +19,11 @@ const Header: React.FC = () => {
   };
 
   return (
-    <AppBar position="static" elevation={1} sx={{ bgcolor: 'background.paper', color: 'text.primary' }}>
+    <AppBar
+      position="static"
+      elevation={1}
+      sx={{ bgcolor: 'background.paper', color: 'text.primary' }}
+    >
       <Toolbar>
         <Typography
           variant="h5"
@@ -34,10 +38,15 @@ const Header: React.FC = () => {
         >
           ADHDo
         </Typography>
-        
+
         {user ? (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Typography variant="body2" color="text.secondary">
+          <Box
+            sx={{ display: 'flex', alignItems: 'center', gap: 2 }}
+          >
+            <Typography
+              variant="body2"
+              color="text.secondary"
+            >
               Welcome, {user.name}
             </Typography>
             <Button
@@ -50,7 +59,9 @@ const Header: React.FC = () => {
             </Button>
           </Box>
         ) : (
-          <Box sx={{ display: 'flex', gap: 1 }}>
+          <Box
+            sx={{ display: 'flex', gap: 1 }}
+          >
             <Button
               component={Link}
               to="/login"

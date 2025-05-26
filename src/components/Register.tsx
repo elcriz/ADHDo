@@ -19,7 +19,7 @@ const Register: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  
+
   const { register } = useAuth();
   const navigate = useNavigate();
 
@@ -50,20 +50,39 @@ const Register: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="sm">
-      <Box sx={{ mt: 4 }}>
-        <Paper elevation={3} sx={{ p: 4 }}>
-          <Typography variant="h4" component="h2" align="center" gutterBottom>
+    <Container
+      maxWidth="sm"
+    >
+      <Box
+        sx={{ mt: 4 }}
+      >
+        <Paper
+          elevation={3}
+          sx={{ p: 4 }}
+        >
+          <Typography
+            variant="h4"
+            component="h2"
+            align="center"
+            gutterBottom
+          >
             Register
           </Typography>
-          
+
           {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
+            <Alert
+              severity="error"
+              sx={{ mb: 2 }}
+            >
               {error}
             </Alert>
           )}
 
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{ mt: 2 }}
+          >
             <TextField
               type="text"
               label="Name"
@@ -125,10 +144,21 @@ const Register: React.FC = () => {
             </Button>
           </Box>
 
-          <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+          <Typography
+            variant="body2"
+            align="center"
+            sx={{ mt: 2 }}
+          >
             Already have an account?{' '}
-            <Link to="/login" style={{ color: 'inherit' }}>
-              <Typography component="span" color="primary" sx={{ textDecoration: 'underline' }}>
+            <Link
+              to="/login"
+              style={{ color: 'inherit' }}
+            >
+              <Typography
+                component="span"
+                color="primary"
+                sx={{ textDecoration: 'underline' }}
+              >
                 Login here
               </Typography>
             </Link>

@@ -12,16 +12,29 @@ import { theme } from './theme';
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider
+      theme={theme}
+    >
       <CssBaseline />
       <AuthProvider>
         <Router>
-          <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+          <Box
+            sx={{ minHeight: '100vh', bgcolor: 'background.default' }}
+          >
             <Header />
-            <Box component="main" sx={{ maxWidth: '1200px', mx: 'auto', px: 0, py: 2 }}>
+            <Box
+              component="main"
+              sx={{ maxWidth: '1200px', mx: 'auto', px: 0, py: 2 }}
+            >
               <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
+                <Route
+                  path="/login"
+                  element={<Login />}
+                />
+                <Route
+                  path="/register"
+                  element={<Register />}
+                />
                 <Route
                   path="/todos"
                   element={
@@ -32,7 +45,15 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
-                <Route path="/" element={<Navigate to="/todos" replace />} />
+                <Route
+                  path="/"
+                  element={
+                    <Navigate
+                      to="/todos"
+                      replace
+                    />
+                  }
+                />
               </Routes>
             </Box>
           </Box>

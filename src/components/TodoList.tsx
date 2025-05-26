@@ -28,10 +28,17 @@ const TodoList: React.FC = () => {
   const currentTodos = activeTab === 'open' ? openTodos : completedTodos;
 
   const renderTodoWithChildren = (todo: Todo, level: number = 0) => (
-    <Box key={todo._id}>
-      <TodoItem todo={todo} level={level} />
+    <Box
+      key={todo._id}
+    >
+      <TodoItem
+        todo={todo}
+        level={level}
+      />
       {todo.children && todo.children.length > 0 && (
-        <Box sx={{ ml: 2 }}>
+        <Box
+          sx={{ ml: 2 }}
+        >
           {todo.children.map(child => renderTodoWithChildren(child, level + 1))}
         </Box>
       )}
@@ -40,12 +47,12 @@ const TodoList: React.FC = () => {
 
   if (loading) {
     return (
-      <Box 
-        sx={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          minHeight: '16rem' 
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '16rem'
         }}
       >
         <CircularProgress />
@@ -54,10 +61,21 @@ const TodoList: React.FC = () => {
   }
 
   return (
-    <Container maxWidth="lg">
-      <Paper elevation={2} sx={{ p: 3 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-          <Typography variant="h4" component="h1" fontWeight="bold">
+    <Container
+      maxWidth="lg"
+    >
+      <Paper
+        elevation={2}
+        sx={{ p: 3 }}
+      >
+        <Box
+          sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}
+        >
+          <Typography
+            variant="h4"
+            component="h1"
+            fontWeight="bold"
+          >
             My Todos
           </Typography>
           <Button
@@ -70,12 +88,19 @@ const TodoList: React.FC = () => {
         </Box>
 
         {showForm && (
-          <Paper elevation={1} sx={{ p: 2, mb: 3, bgcolor: 'grey.50' }}>
-            <TodoForm onSuccess={() => setShowForm(false)} />
+          <Paper
+            elevation={1}
+            sx={{ p: 2, mb: 3, bgcolor: 'grey.50' }}
+          >
+            <TodoForm
+              onSuccess={() => setShowForm(false)}
+            />
           </Paper>
         )}
 
-        <Box sx={{ mb: 3 }}>
+        <Box
+          sx={{ mb: 3 }}
+        >
           <Tabs
             value={activeTab}
             onChange={(_, newValue) => setActiveTab(newValue)}
@@ -97,28 +122,37 @@ const TodoList: React.FC = () => {
               },
             }}
           >
-            <Tab 
-              label={`Open (${openTodos.length})`} 
-              value="open" 
+            <Tab
+              label={`Open (${openTodos.length})`}
+              value="open"
             />
-            <Tab 
-              label={`Completed (${completedTodos.length})`} 
-              value="completed" 
+            <Tab
+              label={`Completed (${completedTodos.length})`}
+              value="completed"
             />
           </Tabs>
         </Box>
 
-        <Box sx={{ mt: 2 }}>
+        <Box
+          sx={{ mt: 2 }}
+        >
           {currentTodos.length === 0 ? (
-            <Box sx={{ textAlign: 'center', py: 4 }}>
-              <Typography variant="body1" color="text.secondary">
-                {activeTab === 'open' 
-                  ? "No open todos. Create one to get started!" 
+            <Box
+              sx={{ textAlign: 'center', py: 4 }}
+            >
+              <Typography
+                variant="body1"
+                color="text.secondary"
+              >
+                {activeTab === 'open'
+                  ? "No open todos. Create one to get started!"
                   : "No completed todos yet."}
               </Typography>
             </Box>
           ) : (
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Box
+              sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
+            >
               {currentTodos.map(todo => renderTodoWithChildren(todo))}
             </Box>
           )}

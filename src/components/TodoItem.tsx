@@ -44,9 +44,9 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
   };
 
   return (
-    <Card 
+    <Card
       elevation={level > 0 ? 1 : 2}
-      sx={{ 
+      sx={{
         mb: 1,
         ml: level * 2,
         borderLeft: level > 0 ? 3 : 0,
@@ -54,16 +54,22 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
         bgcolor: todo.completed ? 'grey.50' : 'background.paper',
       }}
     >
-      <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
-        <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
+      <CardContent
+        sx={{ p: 2, '&:last-child': { pb: 2 } }}
+      >
+        <Box
+          sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}
+        >
           <Checkbox
             checked={todo.completed}
             onChange={handleToggle}
             size="small"
             sx={{ mt: -0.5 }}
           />
-          
-          <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+
+          <Box
+            sx={{ flexGrow: 1, minWidth: 0 }}
+          >
             <Typography
               variant="body1"
               sx={{
@@ -74,7 +80,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
             >
               {todo.title}
             </Typography>
-            
+
             {todo.description && (
               <Typography
                 variant="body2"
@@ -86,8 +92,10 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
                 {todo.description}
               </Typography>
             )}
-            
-            <Box sx={{ mt: 1, display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+
+            <Box
+              sx={{ mt: 1, display: 'flex', flexWrap: 'wrap', gap: 0.5 }}
+            >
               <Chip
                 label={`Created: ${formatDate(todo.createdAt)}`}
                 size="small"
@@ -114,40 +122,57 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
               )}
             </Box>
           </Box>
-          
-          <Box sx={{ display: 'flex', gap: 0.5 }}>
-            <Tooltip title="Add subtask">
+
+          <Box
+            sx={{ display: 'flex', gap: 0.5 }}
+          >
+            <Tooltip
+              title="Add subtask"
+            >
               <IconButton
                 size="small"
                 onClick={() => setShowChildForm(!showChildForm)}
                 color="success"
               >
-                <AddIcon fontSize="small" />
+                <AddIcon
+                  fontSize="small"
+                />
               </IconButton>
             </Tooltip>
-            <Tooltip title="Edit">
+            <Tooltip
+              title="Edit"
+            >
               <IconButton
                 size="small"
                 onClick={() => setIsEditing(!isEditing)}
                 color="primary"
               >
-                <EditIcon fontSize="small" />
+                <EditIcon
+                  fontSize="small"
+                />
               </IconButton>
             </Tooltip>
-            <Tooltip title="Delete">
+            <Tooltip
+              title="Delete"
+            >
               <IconButton
                 size="small"
                 onClick={handleDelete}
                 color="error"
               >
-                <DeleteIcon fontSize="small" />
+                <DeleteIcon
+                  fontSize="small"
+                />
               </IconButton>
             </Tooltip>
           </Box>
         </Box>
 
         {isEditing && (
-          <Paper elevation={1} sx={{ mt: 2, p: 2, bgcolor: 'grey.50' }}>
+          <Paper
+            elevation={1}
+            sx={{ mt: 2, p: 2, bgcolor: 'grey.50' }}
+          >
             <TodoForm
               todo={todo}
               onSuccess={() => setIsEditing(false)}
@@ -157,7 +182,10 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
         )}
 
         {showChildForm && (
-          <Paper elevation={1} sx={{ mt: 2, p: 2, bgcolor: 'primary.50' }}>
+          <Paper
+            elevation={1}
+            sx={{ mt: 2, p: 2, bgcolor: 'primary.50' }}
+          >
             <TodoForm
               parent={todo._id}
               onSuccess={() => setShowChildForm(false)}
