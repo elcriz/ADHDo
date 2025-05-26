@@ -20,9 +20,16 @@ const Header: React.FC = () => {
 
   return (
     <AppBar
-      position="static"
+      position="sticky"
       elevation={1}
-      sx={{ bgcolor: 'background.paper', color: 'text.primary', borderRadius: 0, boxShadow: 'none' }}
+      sx={{
+        bgcolor: 'background.paper',
+        color: 'text.primary',
+        borderRadius: 0,
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+        zIndex: (theme) => theme.zIndex.appBar,
+        top: 0
+      }}
     >
       <Toolbar>
         <Typography
