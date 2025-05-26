@@ -58,7 +58,7 @@ const Register: React.FC = () => {
       >
         <Paper
           elevation={3}
-          sx={{ p: 4 }}
+          sx={{ py: 2, px: 4 }}
         >
           <Typography
             variant="h4"
@@ -81,7 +81,7 @@ const Register: React.FC = () => {
           <Box
             component="form"
             onSubmit={handleSubmit}
-            sx={{ mt: 2 }}
+            sx={{ mt: 1 }}
           >
             <TextField
               type="text"
@@ -89,6 +89,7 @@ const Register: React.FC = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
+              size="small"
               fullWidth
               margin="normal"
               placeholder="Enter your full name"
@@ -101,6 +102,7 @@ const Register: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              size="small"
               fullWidth
               margin="normal"
               placeholder="Enter your email"
@@ -113,6 +115,7 @@ const Register: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              size="small"
               fullWidth
               margin="normal"
               placeholder="Enter your password (min 6 characters)"
@@ -125,6 +128,7 @@ const Register: React.FC = () => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
+              size="small"
               fullWidth
               margin="normal"
               placeholder="Confirm your password"

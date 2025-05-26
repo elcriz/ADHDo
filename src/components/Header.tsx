@@ -33,7 +33,7 @@ const Header: React.FC = () => {
     >
       <Toolbar>
         <Typography
-          variant="h5"
+          variant="h4"
           component={Link}
           to="/"
           sx={{

@@ -30,7 +30,7 @@ function AppContent() {
               align="center"
               sx={{ mt: 4, fontWeight: 200 }}
             >
-              The pragmatic todo app for neurodivergents
+              The <strong>pragmatic</strong> todo app for neurodivergent <strong>human</strong> beings
             </Typography>
           )}
           <Routes>
