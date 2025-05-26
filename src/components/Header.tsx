@@ -40,7 +40,7 @@ const Header: React.FC = () => {
             flexGrow: 1,
             textDecoration: 'none',
             color: 'inherit',
-            fontWeight: 600,
+            fontWeight: 700,
           }}
         >
           ADHDo
