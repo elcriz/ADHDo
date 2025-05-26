@@ -45,7 +45,7 @@ const Login: React.FC = () => {
       >
         <Paper
           elevation={3}
-          sx={{ py: 2, px: 4 }}
+          sx={{ py: 2, px: 4, mx: 1 }}
         >
           <Typography
             variant="h4"
@@ -127,7 +127,7 @@ const Login: React.FC = () => {
               >
                 Register here
               </Typography>
-            </Link>
+            </Link>.<br />It's free and always will be!
           </Typography>
         </Paper>
       </Box>

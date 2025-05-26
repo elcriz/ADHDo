@@ -58,7 +58,7 @@ const Register: React.FC = () => {
       >
         <Paper
           elevation={3}
-          sx={{ py: 2, px: 4 }}
+          sx={{ py: 2, px: 4, mx: 1 }}
         >
           <Typography
             variant="h4"
