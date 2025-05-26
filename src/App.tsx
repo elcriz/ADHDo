@@ -8,6 +8,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import TodoList from './components/TodoList';
 import Header from './components/Header';
+import PWAInstallPrompt from './components/PWAInstallPrompt';
 import { theme } from './theme';
 
 function AppContent() {
@@ -63,6 +64,7 @@ function AppContent() {
             />
           </Routes>
         </Box>
+        <PWAInstallPrompt />
       </Box>
     </Router>
   );
