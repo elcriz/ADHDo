@@ -8,13 +8,19 @@ import {
   Box,
   Chip,
   Paper,
-  Tooltip,
+  Popover,
+  MenuList,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
 } from '@mui/material';
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   Add as AddIcon,
+  MoreVert as MoreVertIcon,
 } from '@mui/icons-material';
+import { format } from 'date-fns';
 import type { Todo } from '../types';
 import { useTodos } from '../contexts/TodoContext';
 import TodoForm from './TodoForm';
@@ -28,6 +34,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
   const { toggleTodo, deleteTodo } = useTodos();
   const [isEditing, setIsEditing] = useState(false);
   const [showChildForm, setShowChildForm] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const handleToggle = () => {
     toggleTodo(todo._id);
@@ -39,8 +46,31 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
     }
   };
 
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleAddSubtask = () => {
+    setShowChildForm(!showChildForm);
+    handleMenuClose();
+  };
+
+  const handleEdit = () => {
+    setIsEditing(!isEditing);
+    handleMenuClose();
+  };
+
+  const handleDeleteClick = () => {
+    handleDelete();
+    handleMenuClose();
+  };
+
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString();
+    return format(new Date(dateString), 'dd-MM-yyyy');
   };
 
   return (
@@ -48,17 +78,20 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
       elevation={level > 0 ? 1 : 2}
       sx={{
         mb: 1,
-        ml: level * 2,
+        ml: level,
         borderLeft: level > 0 ? 3 : 0,
         borderLeftColor: level > 0 ? 'primary.light' : 'transparent',
         bgcolor: todo.completed ? 'grey.50' : 'background.paper',
+        borderTopLeftRadius: level > 0 ? 0 : 8,
+        borderTopRightRadius: level > 0 ? 0 : 8,
+        borderBottomRightRadius: todo.children.length > 0 ? 0 : 8,
       }}
     >
       <CardContent
-        sx={{ p: 2, '&:last-child': { pb: 2 } }}
+        sx={{ p: 1, px: 0.25, '&:last-child': { pb: 1.5 } }}
       >
         <Box
-          sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}
+          sx={{ display: 'flex', alignItems: 'flex-start', gap: 0.5 }}
         >
           <Checkbox
             checked={todo.completed}
@@ -68,7 +101,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
           />
 
           <Box
-            sx={{ flexGrow: 1, minWidth: 0 }}
+            sx={{ flexGrow: 1, minWidth: 0, mt: 0.75 }}
           >
             <Typography
               variant="body1"
@@ -76,6 +109,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
                 textDecoration: todo.completed ? 'line-through' : 'none',
                 color: todo.completed ? 'text.disabled' : 'text.primary',
                 fontWeight: 500,
+                lineHeight: 1.25,
               }}
             >
               {todo.title}
@@ -100,7 +134,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
                 label={`Created: ${formatDate(todo.createdAt)}`}
                 size="small"
                 variant="outlined"
-                sx={{ fontSize: '0.7rem', height: 20 }}
+                sx={{ fontSize: '0.7rem', height: 20, pt: 0.35 }}
               />
               {todo.completedAt && (
                 <Chip
@@ -108,7 +142,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
                   size="small"
                   variant="outlined"
                   color="success"
-                  sx={{ fontSize: '0.7rem', height: 20 }}
+                  sx={{ fontSize: '0.7rem', height: 20, pt: 0.35 }}
                 />
               )}
               {todo.children.length > 0 && (
@@ -117,55 +151,80 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
                   size="small"
                   variant="outlined"
                   color="info"
-                  sx={{ fontSize: '0.7rem', height: 20 }}
+                  sx={{ fontSize: '0.7rem', height: 20, pt: 0.35 }}
                 />
               )}
             </Box>
           </Box>
 
-          <Box
-            sx={{ display: 'flex', gap: 0.5 }}
+          <IconButton
+            size="small"
+            onClick={handleMenuOpen}
+            sx={{ p: 0.5 }}
           >
-            <Tooltip
-              title="Add subtask"
+            <MoreVertIcon
+              fontSize="small"
+            />
+          </IconButton>
+
+          <Popover
+            open={Boolean(anchorEl)}
+            anchorEl={anchorEl}
+            onClose={handleMenuClose}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+          >
+            <MenuList
+              dense
+              sx={{ py: 0 }}
             >
-              <IconButton
-                size="small"
-                onClick={() => setShowChildForm(!showChildForm)}
-                color="success"
+              <MenuItem
+                onClick={handleAddSubtask}
               >
-                <AddIcon
-                  fontSize="small"
+                <ListItemIcon>
+                  <AddIcon
+                    fontSize="small"
+                    color="success"
+                  />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Add subtask"
                 />
-              </IconButton>
-            </Tooltip>
-            <Tooltip
-              title="Edit"
-            >
-              <IconButton
-                size="small"
-                onClick={() => setIsEditing(!isEditing)}
-                color="primary"
+              </MenuItem>
+              <MenuItem
+                onClick={handleEdit}
               >
-                <EditIcon
-                  fontSize="small"
+                <ListItemIcon>
+                  <EditIcon
+                    fontSize="small"
+                    color="primary"
+                  />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Edit"
                 />
-              </IconButton>
-            </Tooltip>
-            <Tooltip
-              title="Delete"
-            >
-              <IconButton
-                size="small"
-                onClick={handleDelete}
-                color="error"
+              </MenuItem>
+              <MenuItem
+                onClick={handleDeleteClick}
               >
-                <DeleteIcon
-                  fontSize="small"
+                <ListItemIcon>
+                  <DeleteIcon
+                    fontSize="small"
+                    color="error"
+                  />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Delete"
                 />
-              </IconButton>
-            </Tooltip>
-          </Box>
+              </MenuItem>
+            </MenuList>
+          </Popover>
         </Box>
 
         {isEditing && (
