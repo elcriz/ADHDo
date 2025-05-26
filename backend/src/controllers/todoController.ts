@@ -9,15 +9,48 @@ export const getTodos = async (req: AuthRequest, res: Response): Promise<void> =
       return;
     }
 
-    const todos = await Todo.find({ user: req.user._id })
-      .populate('children')
-      .sort({ createdAt: -1 });
+    // First get all todos for the user
+    const allTodos = await Todo.find({ user: req.user._id }).sort({ createdAt: -1 });
+
+    // Create a map for quick lookup
+    const todoMap = new Map<string, any>();
+    allTodos.forEach(todo => todoMap.set((todo._id as any).toString(), todo.toObject()));
+
+    // Build the hierarchy
+    const rootTodos: any[] = [];
+
+    for (const todo of allTodos) {
+      const todoObj = todo.toObject();
+
+      // Recursively populate children
+      const populateChildren = (item: any): any => {
+        const childIds = item.children || [];
+        item.children = childIds
+          .map((childId: any) => {
+            const childTodo = todoMap.get(childId.toString());
+            if (childTodo) {
+              return populateChildren({ ...childTodo });
+            }
+            return null;
+          })
+          .filter((child: any) => child !== null);
+        return item;
+      };
+
+      const populatedTodo = populateChildren(todoObj);
+
+      // Only include root todos (no parent)
+      if (!todo.parent) {
+        rootTodos.push(populatedTodo);
+      }
+    }
 
     res.json({
       success: true,
-      todos
+      todos: rootTodos
     });
   } catch (error) {
+    console.error('Error in getTodos:', error);
     res.status(500).json({
       success: false,
       message: 'Internal server error'
@@ -49,8 +82,6 @@ export const createTodo = async (req: AuthRequest, res: Response): Promise<void>
         $push: { children: todo._id }
       });
     }
-
-    await todo.populate('children');
 
     res.status(201).json({
       success: true,
@@ -96,7 +127,6 @@ export const updateTodo = async (req: AuthRequest, res: Response): Promise<void>
     todo.description = description ?? todo.description;
 
     await todo.save();
-    await todo.populate('children');
 
     res.json({
       success: true,
@@ -130,8 +160,12 @@ export const toggleTodo = async (req: AuthRequest, res: Response): Promise<void>
     }
 
     todo.completed = !todo.completed;
+    if (todo.completed) {
+      todo.completedAt = new Date();
+    } else {
+      todo.completedAt = undefined;
+    }
     await todo.save();
-    await todo.populate('children');
 
     res.json({
       success: true,

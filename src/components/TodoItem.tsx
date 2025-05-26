@@ -36,6 +36,9 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
   const [showChildForm, setShowChildForm] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
+  // Filter out any children that are strings (IDs) instead of Todo objects
+  const validChildren = todo.children?.filter(child => typeof child === 'object' && child._id) || [];
+
   const handleToggle = () => {
     toggleTodo(todo._id);
   };
@@ -84,7 +87,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
         bgcolor: todo.completed ? 'grey.50' : 'background.paper',
         borderTopLeftRadius: level > 0 ? 0 : 8,
         borderTopRightRadius: level > 0 ? 0 : 8,
-        borderBottomRightRadius: todo.children.length > 0 ? 0 : 8,
+        borderBottomRightRadius: validChildren.length > 0 ? 0 : 8,
       }}
     >
       <CardContent
@@ -145,9 +148,9 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
                   sx={{ fontSize: '0.7rem', height: 20, pt: 0.35 }}
                 />
               )}
-              {todo.children.length > 0 && (
+              {validChildren.length > 0 && (
                 <Chip
-                  label={`${todo.children.length} subtask${todo.children.length > 1 ? 's' : ''}`}
+                  label={`${validChildren.length} subtask${validChildren.length > 1 ? 's' : ''}`}
                   size="small"
                   variant="outlined"
                   color="info"

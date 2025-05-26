@@ -25,25 +25,28 @@ const TodoList: React.FC = () => {
   const openTodos = todoArray.filter(todo => !todo.completed && !todo.parent);
   const completedTodos = todoArray.filter(todo => todo.completed && !todo.parent);
 
-  const currentTodos = activeTab === 'open' ? openTodos : completedTodos;
+  const currentTodos = activeTab === 'open' ? openTodos : completedTodos;  const renderTodoWithChildren = (todo: Todo, level: number = 0) => {
+    // Filter out any children that are strings (IDs) instead of Todo objects
+    const validChildren = todo.children?.filter(child => typeof child === 'object' && child._id) || [];
 
-  const renderTodoWithChildren = (todo: Todo, level: number = 0) => (
-    <Box
-      key={todo._id}
-    >
-      <TodoItem
-        todo={todo}
-        level={level}
-      />
-      {todo.children && todo.children.length > 0 && (
-        <Box
-          sx={{ ml: 2 }}
-        >
-          {todo.children.map(child => renderTodoWithChildren(child, level + 1))}
-        </Box>
-      )}
-    </Box>
-  );
+    return (
+      <Box
+        key={todo._id}
+      >
+        <TodoItem
+          todo={todo}
+          level={level}
+        />
+        {validChildren.length > 0 && (
+          <Box
+            sx={{ ml: 2 }}
+          >
+            {validChildren.map(child => renderTodoWithChildren(child, level + 1))}
+          </Box>
+        )}
+      </Box>
+    );
+  };
 
   if (loading) {
     return (
