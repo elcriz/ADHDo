@@ -66,7 +66,7 @@ const TodoList: React.FC = () => {
     >
       <Paper
         elevation={2}
-        sx={{ p: 3 }}
+        sx={{ p: 2 }}
       >
         <Box
           sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}

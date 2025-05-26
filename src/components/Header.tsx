@@ -22,7 +22,7 @@ const Header: React.FC = () => {
     <AppBar
       position="static"
       elevation={1}
-      sx={{ bgcolor: 'background.paper', color: 'text.primary' }}
+      sx={{ bgcolor: 'background.paper', color: 'text.primary', borderRadius: 0, boxShadow: 'none' }}
     >
       <Toolbar>
         <Typography

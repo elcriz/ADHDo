@@ -127,6 +127,7 @@ const Login: React.FC = () => {
             >
               <Typography
                 component="span"
+                variant="body2"
                 color="primary"
                 sx={{ textDecoration: 'underline' }}
               >
