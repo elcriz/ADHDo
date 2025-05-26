@@ -1,4 +1,15 @@
 import React, { useState } from 'react';
+import {
+  Box,
+  Paper,
+  Typography,
+  Button,
+  Tabs,
+  Tab,
+  CircularProgress,
+  Container,
+} from '@mui/material';
+import { Add as AddIcon } from '@mui/icons-material';
 import { useTodos } from '../contexts/TodoContext';
 import type { Todo } from '../types';
 import TodoItem from './TodoItem';
@@ -17,81 +28,103 @@ const TodoList: React.FC = () => {
   const currentTodos = activeTab === 'open' ? openTodos : completedTodos;
 
   const renderTodoWithChildren = (todo: Todo, level: number = 0) => (
-    <div key={todo._id}>
+    <Box key={todo._id}>
       <TodoItem todo={todo} level={level} />
       {todo.children && todo.children.length > 0 && (
-        <div className="ml-4">
+        <Box sx={{ ml: 2 }}>
           {todo.children.map(child => renderTodoWithChildren(child, level + 1))}
-        </div>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
+      <Box 
+        sx={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          minHeight: '16rem' 
+        }}
+      >
+        <CircularProgress />
+      </Box>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">My Todos</h1>
-          <button
+    <Container maxWidth="lg">
+      <Paper elevation={2} sx={{ p: 3 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+          <Typography variant="h4" component="h1" fontWeight="bold">
+            My Todos
+          </Typography>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
             onClick={() => setShowForm(!showForm)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
           >
             {showForm ? 'Cancel' : 'Add Todo'}
-          </button>
-        </div>
+          </Button>
+        </Box>
 
         {showForm && (
-          <div className="mb-6 p-4 bg-gray-50 rounded-md">
+          <Paper elevation={1} sx={{ p: 2, mb: 3, bgcolor: 'grey.50' }}>
             <TodoForm onSuccess={() => setShowForm(false)} />
-          </div>
+          </Paper>
         )}
 
-        {/* Tab navigation */}
-        <div className="flex space-x-1 mb-6 bg-gray-100 rounded-lg p-1">
-          <button
-            onClick={() => setActiveTab('open')}
-            className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-              activeTab === 'open'
-                ? 'bg-white text-blue-600 shadow-sm'
-                : 'text-gray-600 hover:text-gray-800'
-            }`}
+        <Box sx={{ mb: 3 }}>
+          <Tabs
+            value={activeTab}
+            onChange={(_, newValue) => setActiveTab(newValue)}
+            variant="fullWidth"
+            sx={{
+              '& .MuiTabs-flexContainer': {
+                bgcolor: 'grey.100',
+                borderRadius: 2,
+                p: 0.5,
+              },
+              '& .MuiTab-root': {
+                borderRadius: 1.5,
+                textTransform: 'none',
+                fontWeight: 500,
+              },
+              '& .Mui-selected': {
+                bgcolor: 'background.paper',
+                boxShadow: 1,
+              },
+            }}
           >
-            Open ({openTodos.length})
-          </button>
-          <button
-            onClick={() => setActiveTab('completed')}
-            className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-              activeTab === 'completed'
-                ? 'bg-white text-blue-600 shadow-sm'
-                : 'text-gray-600 hover:text-gray-800'
-            }`}
-          >
-            Completed ({completedTodos.length})
-          </button>
-        </div>
+            <Tab 
+              label={`Open (${openTodos.length})`} 
+              value="open" 
+            />
+            <Tab 
+              label={`Completed (${completedTodos.length})`} 
+              value="completed" 
+            />
+          </Tabs>
+        </Box>
 
-        {/* Todo list */}
-        <div className="space-y-2">
+        <Box sx={{ mt: 2 }}>
           {currentTodos.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
-              {activeTab === 'open' 
-                ? "No open todos. Create one to get started!" 
-                : "No completed todos yet."}
-            </div>
+            <Box sx={{ textAlign: 'center', py: 4 }}>
+              <Typography variant="body1" color="text.secondary">
+                {activeTab === 'open' 
+                  ? "No open todos. Create one to get started!" 
+                  : "No completed todos yet."}
+              </Typography>
+            </Box>
           ) : (
-            currentTodos.map(todo => renderTodoWithChildren(todo))
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              {currentTodos.map(todo => renderTodoWithChildren(todo))}
+            </Box>
           )}
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Paper>
+    </Container>
   );
 };
 

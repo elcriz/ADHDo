@@ -1,5 +1,12 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Box,
+} from '@mui/material';
 import { useAuth } from '../contexts/AuthContext';
 
 const Header: React.FC = () => {
@@ -12,42 +19,59 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="bg-white shadow-sm border-b">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex justify-between items-center">
-          <Link to="/" className="text-xl font-bold text-gray-800">
-            ADHDo
-          </Link>
-          
-          {user ? (
-            <div className="flex items-center space-x-4">
-              <span className="text-gray-600">Welcome, {user.name}</span>
-              <button
-                onClick={handleLogout}
-                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
-              >
-                Logout
-              </button>
-            </div>
-          ) : (
-            <div className="space-x-4">
-              <Link
-                to="/login"
-                className="text-blue-600 hover:text-blue-800 transition-colors"
-              >
-                Login
-              </Link>
-              <Link
-                to="/register"
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
-              >
-                Register
-              </Link>
-            </div>
-          )}
-        </div>
-      </div>
-    </header>
+    <AppBar position="static" elevation={1} sx={{ bgcolor: 'background.paper', color: 'text.primary' }}>
+      <Toolbar>
+        <Typography
+          variant="h5"
+          component={Link}
+          to="/"
+          sx={{
+            flexGrow: 1,
+            textDecoration: 'none',
+            color: 'inherit',
+            fontWeight: 600,
+          }}
+        >
+          ADHDo
+        </Typography>
+        
+        {user ? (
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Typography variant="body2" color="text.secondary">
+              Welcome, {user.name}
+            </Typography>
+            <Button
+              onClick={handleLogout}
+              variant="contained"
+              color="error"
+              size="small"
+            >
+              Logout
+            </Button>
+          </Box>
+        ) : (
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Button
+              component={Link}
+              to="/login"
+              color="primary"
+              size="small"
+            >
+              Login
+            </Button>
+            <Button
+              component={Link}
+              to="/register"
+              variant="contained"
+              color="primary"
+              size="small"
+            >
+              Register
+            </Button>
+          </Box>
+        )}
+      </Toolbar>
+    </AppBar>
   );
 };
 
