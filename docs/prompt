@@ -1,0 +1,47 @@
+Prompt:
+
+#new Create a todo web app using TypeScript, React and Vite for frontend, and TypeScript and Node.js for backend. Storage of users and todos will happen using MongoDB and Mongoose. Authentication of users should use Passport (JWT). It should be able to run on Heroku.
+
+Once a user has logged in, the UI should consist of 2 tabs or screens: one screen or tab for open todos (not yet done) and to add, edit and delete new ones, and one screen or tab for todos that are done. A todo can have another todo as 'parent' todo. This should clearly be visible in the UI (e.g. in the list with todo's and in the form for adding or modifying existing ones). Todo's that are done can be undone, or deleted permanently. Todo's that are done should be listed under the date on which they were marked as 'done'.
+
+The UI should be responsive and mobile friendly, as this app will be mostly used on mobile phones.
+
+--------------
+
+# Copilot Instructions
+
+<!-- Use this file to provide workspace-specific custom instructions to Copilot. For more details, visit https://code.visualstudio.com/docs/copilot/copilot-customization#_use-a-githubcopilotinstructionsmd-file -->
+
+This is a full-stack todo application project with the following structure:
+
+## Frontend
+- React + TypeScript + Vite
+- Responsive, mobile-friendly UI
+- Authentication with JWT
+- Hierarchical todos support
+- Separate tabs for open/completed todos
+
+## Backend
+- Node.js + TypeScript + Express
+- MongoDB with Mongoose ODM
+- Passport.js authentication with JWT strategy
+- RESTful API endpoints
+
+## Key Features
+- User authentication and registration
+- Hierarchical todo structure (parent-child relationships)
+- Todo status management (open/completed)
+- Date-based completion tracking
+- CRUD operations for todos
+- Responsive design optimized for mobile
+
+## Development Guidelines
+- Use TypeScript for all new code
+- Follow RESTful API conventions
+- Implement proper error handling
+- Use proper TypeScript types and interfaces
+- Follow React best practices with hooks
+- Ensure mobile-responsive design
+- Implement proper authentication middleware
+- Use environment variables for configuration
+
