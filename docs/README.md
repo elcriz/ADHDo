@@ -14,6 +14,7 @@ Welcome to the ADHDO (Attention Deficit Hyperactivity Disorder Organizer) docume
 - [**MOBILE-IMPROVEMENTS.md**](./MOBILE-IMPROVEMENTS.md) - Mobile-first design improvements and floating action button
 - [**SPACE-GROTESK-FONT.md**](./SPACE-GROTESK-FONT.md) - Typography implementation with Manrope font
 - [**CONDITIONAL-TAGLINE-RENDERING.md**](./CONDITIONAL-TAGLINE-RENDERING.md) - Conditional rendering for unauthenticated users
+- [**DARK-MODE-IMPLEMENTATION.md**](./DARK-MODE-IMPLEMENTATION.md) - 🌙 **Automatic dark mode with system preference detection**
 - [**PWA-IMPLEMENTATION.md**](./PWA-IMPLEMENTATION.md) - Progressive Web App implementation with offline functionality
 - [**PWA-TESTING-GUIDE.md**](./PWA-TESTING-GUIDE.md) - Comprehensive PWA testing procedures and validation
 - [**PWA-COMPLETE.md**](./PWA-COMPLETE.md) - 🎉 **PWA Implementation Complete - Summary & Status**
@@ -39,6 +40,7 @@ Welcome to the ADHDO (Attention Deficit Hyperactivity Disorder Organizer) docume
 - ✅ Date-based completion tracking
 - ✅ Responsive design optimized for mobile
 - ✅ Material UI components with custom theming
+- ✅ **Automatic dark mode with system preference detection** 🌙
 - ✅ Floating action button for mobile UX
 - ✅ Modern typography with Manrope font
 - ✅ **Progressive Web App (PWA) with offline functionality** 🎉

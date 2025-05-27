@@ -1,2 +1,4 @@
 /* Material UI handles all styling now */
+/* Dark mode is automatically handled by the useAppTheme hook in theme.ts */
+/* The theme responds to the user's system preference (prefers-color-scheme) */
 /* This file is kept for any future custom styles if needed */
