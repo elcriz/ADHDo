@@ -6,7 +6,7 @@
 
 ## 🆕 Latest Updates (May 2025)
 
-- **🔍 Search Functionality**: Real-time search with mutual exclusivity system
+- **🔍 Search Functionality**: Real-time search with autofocus and mutual exclusivity system
 - **🗑️ Bulk Delete**: Delete all completed todos with confirmation dialog
 - **🍔 Hamburger Menu**: Modern menu system replacing logout button for scalable user actions
 - **🎨 Material UI Design**: Complete UI overhaul with modern components
@@ -20,7 +20,7 @@
 - **Authentication System**: Login/Register with JWT tokens
 - **Todo Management**: Create, edit, delete, and toggle todos
 - **Hierarchical Todos**: Parent-child relationships with subtasks
-- **Real-time Search**: Live filtering of todos by title and description
+- **Real-time Search**: Live filtering of todos by title and description with automatic field focus
 - **Smart UI Management**: Mutual exclusivity between search and editing modes
 - **Progressive Web App**: Installable app with offline functionality
 - **Dark Mode**: Automatic theme switching based on system preferences
@@ -73,7 +73,7 @@
 1. **User Registration/Login**: Secure account management
 2. **Todo Creation**: Add todos with title and description
 3. **Hierarchical Structure**: Create subtasks under any todo
-4. **Real-time Search**: Search todos by title/description with live filtering
+4. **Real-time Search**: Search todos by title/description with live filtering and automatic field focus
 5. **Smart Mode Management**: Mutual exclusivity between search and editing
 6. **Bulk Operations**: Delete all completed todos with confirmation dialog
 7. **Hamburger Menu**: Access user actions through modern menu interface

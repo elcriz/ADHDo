@@ -58,11 +58,13 @@ const TodoList: React.FC = () => {
 
   // Focus search input when search becomes visible
   useEffect(() => {
-    if (showSearch && !isAnyEditing && searchInputRef.current) {
+    if (showSearch && !isAnyEditing) {
       // Small delay to ensure the Collapse animation doesn't interfere
       const timer = setTimeout(() => {
-        searchInputRef.current?.focus();
-      }, 100);
+        if (searchInputRef.current) {
+          searchInputRef.current.focus();
+        }
+      }, 150);
       return () => clearTimeout(timer);
     }
   }, [showSearch, isAnyEditing]);
@@ -207,7 +209,7 @@ const TodoList: React.FC = () => {
         <Collapse in={showSearch && !isAnyEditing}>
           <Box sx={{ mb: 2 }}>
             <TextField
-              ref={searchInputRef}
+              inputRef={searchInputRef}
               size="small"
               fullWidth
               placeholder="Search todos... (minimum 2 characters)"

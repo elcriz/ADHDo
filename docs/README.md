@@ -42,7 +42,7 @@ Welcome to the ADHDO (Attention Deficit Hyperactivity Disorder Organizer) docume
 - ✅ Hierarchical todo structure (parent-child relationships)
 - ✅ Todo status management (open/completed)
 - ✅ Date-based completion tracking
-- ✅ **Real-time search functionality with mutual exclusivity** 🔍
+- ✅ **Real-time search functionality with autofocus and mutual exclusivity** 🔍
 - ✅ **Bulk delete completed todos with confirmation** 🗑️
 - ✅ **Modern hamburger menu for scalable user actions** 🍔
 - ✅ **Decorative color bar with vibrant repeating pattern** 🎨

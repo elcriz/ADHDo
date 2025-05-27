@@ -58,6 +58,31 @@ Enhanced the main TodoList component with mutual exclusivity logic:
 - Automatically collapses when editing begins
 - Clears search query when closed due to editing
 - Conditional rendering: `in={showSearch && !isAnyEditing}`
+- **Autofocus Enhancement:** Uses `inputRef` for reliable Material UI TextField focusing
+- **Smart Focus Timing:** 150ms delay ensures Collapse animation completes before focusing
+- **Programmatic Focus:** Proper focus management with cleanup on unmount
+
+```typescript
+// Reliable autofocus implementation
+const searchInputRef = useRef<HTMLInputElement>(null);
+
+useEffect(() => {
+  if (showSearch && !isAnyEditing) {
+    const timer = setTimeout(() => {
+      if (searchInputRef.current) {
+        searchInputRef.current.focus();
+      }
+    }, 150);
+    return () => clearTimeout(timer);
+  }
+}, [showSearch, isAnyEditing]);
+
+// TextField with inputRef for direct input element access
+<TextField
+  inputRef={searchInputRef}
+  // ... other props
+/>
+```
 
 **Mobile FAB (Floating Action Button):**
 - Disabled when search is active

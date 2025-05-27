@@ -9,7 +9,7 @@ This application is the result of experimenting with Agent mode in VS Code.
 - **User Authentication**: Secure registration and login with JWT tokens
 - **Hierarchical Todos**: Create parent-child relationships between todos
 - **Status Management**: Toggle between open and completed todos
-- **Real-time Search**: Search todos by title and description with live filtering
+- **Real-time Search**: Search todos by title and description with autofocus and live filtering
 - **Smart UI Management**: Mutual exclusivity between search and editing modes
 - **Bulk Operations**: Delete all completed todos with confirmation dialog
 - **Hamburger Menu**: Modern menu system for scalable user actions
@@ -116,7 +116,7 @@ PORT=5000
 1. **Register** a new account or **login** with existing credentials
 2. **Create todos** using the form at the top
 3. **Add subtasks** by clicking the "+ Sub" button on any todo
-4. **Search todos** by clicking the search icon and typing (minimum 2 characters)
+4. **Search todos** by clicking the search icon and typing (minimum 2 characters) - field automatically focuses for quick input
 5. **Toggle completion** by checking/unchecking the checkbox
 6. **Edit todos** by clicking the "Edit" button
 7. **Delete todos** by clicking the "Delete" button (includes all children)
@@ -125,7 +125,7 @@ PORT=5000
 10. **Switch tabs** between "Open" and "Completed" todos
 
 ### Search & Editing Modes
-- **Search mode**: Filters todos in real-time as you type
+- **Search mode**: Filters todos in real-time as you type with automatic field focus
 - **Editing mode**: Edit individual todos with inline forms
 - **Mutual exclusivity**: Search and editing modes cannot be active simultaneously for focused user experience
 
