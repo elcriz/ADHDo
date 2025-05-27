@@ -7,6 +7,7 @@
 ## 🆕 Latest Updates (May 2025)
 
 - **🔍 Search Functionality**: Real-time search with mutual exclusivity system
+- **🗑️ Bulk Delete**: Delete all completed todos with confirmation dialog
 - **🎨 Material UI Design**: Complete UI overhaul with modern components
 - **🌙 Dark Mode**: Automatic theme switching based on system preferences
 - **📱 PWA Features**: Installable app with offline functionality and service worker
@@ -72,17 +73,19 @@
 3. **Hierarchical Structure**: Create subtasks under any todo
 4. **Real-time Search**: Search todos by title/description with live filtering
 5. **Smart Mode Management**: Mutual exclusivity between search and editing
-6. **Status Management**: Toggle between open/completed
-7. **Date Tracking**: Automatic timestamps for creation/completion
-8. **Inline Editing**: Edit todos without page refresh
-9. **Bulk Operations**: Delete todos with all children
-10. **PWA Features**: Install to home screen, offline functionality
+6. **Bulk Operations**: Delete all completed todos with confirmation dialog
+7. **Status Management**: Toggle between open/completed
+8. **Date Tracking**: Automatic timestamps for creation/completion
+9. **Inline Editing**: Edit todos without page refresh
+10. **Individual Deletion**: Delete todos with all children
+11. **PWA Features**: Install to home screen, offline functionality
 
 ### UI/UX
 - **Responsive Design**: Works perfectly on mobile, tablet, desktop
 - **Intuitive Interface**: Clean, modern Material UI design
 - **Dark Mode**: Automatic theme switching with system preferences
 - **Search Experience**: Ghost button design with collapsible search field
+- **Bulk Operations**: Confirmation dialogs for destructive operations
 - **Focused Interaction**: Mutual exclusivity prevents conflicting operations
 - **Fast Interactions**: Immediate feedback on all actions
 - **Accessibility**: Keyboard navigation and screen reader friendly

@@ -33,7 +33,7 @@ export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
 
   const refreshTodos = async () => {
     if (!user) return;
-    
+
     setLoading(true);
     try {
       const fetchedTodos = await todoApi.getTodos();
@@ -66,6 +66,11 @@ export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
     await refreshTodos();
   };
 
+  const deleteCompletedTodos = async () => {
+    await todoApi.deleteCompletedTodos();
+    await refreshTodos();
+  };
+
   const value: TodoContextType = {
     todos,
     loading,
@@ -73,6 +78,7 @@ export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
     updateTodo,
     toggleTodo,
     deleteTodo,
+    deleteCompletedTodos,
     refreshTodos,
   };
 

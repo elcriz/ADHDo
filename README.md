@@ -1,6 +1,11 @@
 # ADHDO - Full-Stack Todo Application
 
-A modern, responsive todo application built for neurodivergent human beings with React, TypeScript, Node.js, and MongoDB. Features hierarchical todos, user authentication, and mobile-optimized design.
+A modern, responsive todo application built for neurodivergent human beings w5. **Search todos** by clicking the search icon and typing (minimum 2 characters)
+6. **Toggle completion** by checking/unchecking the checkbox
+7. **Edit todos** by clicking the "Edit" button
+8. **Delete todos** by clicking the "Delete" button (includes all children)
+9. **Bulk delete completed** by clicking "Delete All Completed" on the Completed tab
+10. **Switch tabs** between "Open" and "Completed" todoseact, TypeScript, Node.js, and MongoDB. Features hierarchical todos, user authentication, and mobile-optimized design.
 
 This application is the result of experimenting with Agent mode in VS Code.
 
@@ -11,6 +16,7 @@ This application is the result of experimenting with Agent mode in VS Code.
 - **Status Management**: Toggle between open and completed todos
 - **Real-time Search**: Search todos by title and description with live filtering
 - **Smart UI Management**: Mutual exclusivity between search and editing modes
+- **Bulk Operations**: Delete all completed todos with confirmation dialog
 - **Progressive Web App**: Installable with offline functionality
 - **Dark Mode**: Automatic theme switching based on system preferences
 - **Responsive Design**: Mobile-first, responsive UI design
@@ -123,6 +129,11 @@ PORT=5000
 - **Search mode**: Filters todos in real-time as you type
 - **Editing mode**: Edit individual todos with inline forms
 - **Mutual exclusivity**: Search and editing modes cannot be active simultaneously for focused user experience
+
+### Bulk Operations
+- **Delete All Completed**: Remove all completed todos at once with confirmation dialog
+- **Safety features**: Confirmation required, disabled during other operations
+- **Hierarchical cleanup**: Properly handles deletion of parent todos and their children
 
 ## 🔌 API Endpoints
 

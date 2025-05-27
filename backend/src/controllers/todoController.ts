@@ -228,3 +228,66 @@ export const deleteTodo = async (req: AuthRequest, res: Response): Promise<void>
     });
   }
 };
+
+export const deleteCompletedTodos = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    if (!req.user) {
+      res.status(401).json({ success: false, message: 'User not authenticated' });
+      return;
+    }
+
+    // Find all completed todos for the user
+    const completedTodos = await Todo.find({
+      user: req.user._id,
+      completed: true
+    });
+
+    if (completedTodos.length === 0) {
+      res.json({
+        success: true,
+        message: 'No completed todos to delete',
+        deletedCount: 0
+      });
+      return;
+    }
+
+    // For each completed todo, handle its children
+    for (const todo of completedTodos) {
+      // Remove from parent's children array if it has a parent
+      if (todo.parent) {
+        await Todo.findByIdAndUpdate(todo.parent, {
+          $pull: { children: todo._id }
+        });
+      }
+
+      // Delete all child todos recursively (whether completed or not)
+      const deleteChildrenRecursively = async (todoId: string) => {
+        const childTodos = await Todo.find({ parent: todoId });
+        for (const child of childTodos) {
+          await deleteChildrenRecursively((child._id as any).toString());
+          await Todo.findByIdAndDelete(child._id);
+        }
+      };
+
+      await deleteChildrenRecursively((todo._id as any).toString());
+    }
+
+    // Delete all completed todos
+    const result = await Todo.deleteMany({
+      user: req.user._id,
+      completed: true
+    });
+
+    res.json({
+      success: true,
+      message: `Successfully deleted ${result.deletedCount} completed todos`,
+      deletedCount: result.deletedCount
+    });
+  } catch (error) {
+    console.error('Error in deleteCompletedTodos:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};

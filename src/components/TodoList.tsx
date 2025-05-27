@@ -15,6 +15,11 @@ import {
   InputAdornment,
   IconButton,
   Collapse,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  DialogContentText,
 } from '@mui/material';
 import { Add as AddIcon, Close as CloseIcon, Search as SearchIcon } from '@mui/icons-material';
 import { useTodos } from '../contexts/TodoContext';
@@ -24,12 +29,14 @@ import TodoItem from './TodoItem';
 import TodoForm from './TodoForm';
 
 const TodoList: React.FC = () => {
-  const { todos, loading } = useTodos();
+  const { todos, loading, deleteCompletedTodos } = useTodos();
   const { isAnyEditing, setIsAnyEditing } = useEditing();
   const [activeTab, setActiveTab] = useState<'open' | 'completed'>('open');
   const [showForm, setShowForm] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [deletingCompleted, setDeletingCompleted] = useState(false);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -46,6 +53,18 @@ const TodoList: React.FC = () => {
       setSearchQuery('');
     }
   }, [isAnyEditing, showSearch]);
+
+  const handleDeleteAllCompleted = async () => {
+    setDeletingCompleted(true);
+    try {
+      await deleteCompletedTodos();
+      setShowDeleteDialog(false);
+    } catch (error) {
+      console.error('Failed to delete completed todos:', error);
+    } finally {
+      setDeletingCompleted(false);
+    }
+  };
 
   // Ensure todos is always an array and filter by completion status
   const todoArray = Array.isArray(todos) ? todos : [];
@@ -253,6 +272,27 @@ const TodoList: React.FC = () => {
               sx={{ minHeight: 22, py: 1.5 }}
             />
           </Tabs>
+
+          {/* Delete All Completed Button */}
+          {activeTab === 'completed' && allCompletedTodos.length > 0 && (
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+              <Button
+                variant="contained"
+                color="error"
+                size="small"
+                disabled={isAnyEditing || showSearch || deletingCompleted}
+                onClick={() => setShowDeleteDialog(true)}
+                sx={{
+                  '&:disabled': {
+                    bgcolor: 'action.disabled',
+                    color: 'action.disabled',
+                  },
+                }}
+              >
+                {deletingCompleted ? 'Deleting...' : 'Delete All Completed'}
+              </Button>
+            </Box>
+          )}
         </Box>
 
         <Box
@@ -304,6 +344,37 @@ const TodoList: React.FC = () => {
           {showForm ? <CloseIcon /> : <AddIcon />}
         </Fab>
       )}
+
+      {/* Delete all completed todos dialog */}
+      <Dialog
+        open={showDeleteDialog}
+        onClose={() => setShowDeleteDialog(false)}
+        aria-labelledby="delete-all-completed-todos"
+      >
+        <DialogTitle id="delete-all-completed-todos">
+          Delete All Completed Todos
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete all completed todos? This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setShowDeleteDialog(false)}
+            color="primary"
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleDeleteAllCompleted}
+            color="error"
+            disabled={deletingCompleted}
+          >
+            {deletingCompleted ? <CircularProgress size={24} /> : 'Delete All'}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

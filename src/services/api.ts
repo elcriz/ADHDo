@@ -73,6 +73,11 @@ export const todoApi = {
     const response = await api.delete(`/todos/${id}`);
     return response.data;
   },
+
+  deleteCompletedTodos: async () => {
+    const response = await api.delete('/todos/completed');
+    return response.data;
+  },
 };
 
 export default api;
