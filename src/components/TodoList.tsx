@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Box,
   Paper,
@@ -18,12 +18,14 @@ import {
 } from '@mui/material';
 import { Add as AddIcon, Close as CloseIcon, Search as SearchIcon } from '@mui/icons-material';
 import { useTodos } from '../contexts/TodoContext';
+import { useEditing } from '../contexts/EditingContext';
 import type { Todo } from '../types';
 import TodoItem from './TodoItem';
 import TodoForm from './TodoForm';
 
 const TodoList: React.FC = () => {
   const { todos, loading } = useTodos();
+  const { isAnyEditing, setIsAnyEditing } = useEditing();
   const [activeTab, setActiveTab] = useState<'open' | 'completed'>('open');
   const [showForm, setShowForm] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
@@ -31,6 +33,19 @@ const TodoList: React.FC = () => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  // Update global editing state when showForm changes
+  useEffect(() => {
+    setIsAnyEditing(showForm);
+  }, [showForm, setIsAnyEditing]);
+
+  // Close search when editing starts
+  useEffect(() => {
+    if (isAnyEditing && showSearch) {
+      setShowSearch(false);
+      setSearchQuery('');
+    }
+  }, [isAnyEditing, showSearch]);
 
   // Ensure todos is always an array and filter by completion status
   const todoArray = Array.isArray(todos) ? todos : [];
@@ -122,6 +137,7 @@ const TodoList: React.FC = () => {
             <IconButton
               color="primary"
               aria-label="Search todos"
+              disabled={isAnyEditing || showForm}
               onClick={() => {
                 setShowSearch(!showSearch);
                 if (showSearch) {
@@ -135,8 +151,13 @@ const TodoList: React.FC = () => {
                   bgcolor: showSearch ? 'primary.dark' : 'primary.light',
                   color: showSearch ? 'primary.contrastText' : 'primary.dark',
                 },
+                '&:disabled': {
+                  bgcolor: 'transparent',
+                  color: 'action.disabled',
+                  borderColor: 'action.disabled',
+                },
                 border: '1px solid',
-                borderColor: 'primary.main',
+                borderColor: (isAnyEditing || showForm) ? 'action.disabled' : 'primary.main',
               }}
             >
               <SearchIcon />
@@ -145,6 +166,7 @@ const TodoList: React.FC = () => {
               <Button
                 variant="contained"
                 startIcon={<AddIcon />}
+                disabled={showSearch}
                 onClick={() => setShowForm(!showForm)}
               >
                 {showForm ? 'Cancel' : 'Add Todo'}
@@ -153,7 +175,7 @@ const TodoList: React.FC = () => {
           </Box>
         </Box>
 
-        <Collapse in={showSearch}>
+        <Collapse in={showSearch && !isAnyEditing}>
           <Box sx={{ mb: 3 }}>
             <TextField
               fullWidth
@@ -266,11 +288,16 @@ const TodoList: React.FC = () => {
         <Fab
           color={showForm ? 'error' : 'primary'}
           aria-label={showForm ? 'Cancel adding todo' : 'Add new todo'}
+          disabled={showSearch}
           sx={{
             position: 'fixed',
             bottom: 16,
             right: 16,
             zIndex: 1000,
+            '&:disabled': {
+              bgcolor: 'action.disabled',
+              color: 'action.disabled',
+            },
           }}
           onClick={() => setShowForm(!showForm)}
         >

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -23,6 +23,7 @@ import {
 import { format } from 'date-fns';
 import type { Todo } from '../types';
 import { useTodos } from '../contexts/TodoContext';
+import { useEditing } from '../contexts/EditingContext';
 import TodoForm from './TodoForm';
 
 interface TodoItemProps {
@@ -32,9 +33,21 @@ interface TodoItemProps {
 
 const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
   const { toggleTodo, deleteTodo } = useTodos();
+  const { isAnyEditing, setIsAnyEditing, editingTodoId, setEditingTodoId } = useEditing();
   const [isEditing, setIsEditing] = useState(false);
   const [showChildForm, setShowChildForm] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+  // Update global editing state when this todo is being edited
+  useEffect(() => {
+    if (isEditing || showChildForm) {
+      setIsAnyEditing(true);
+      setEditingTodoId(todo._id);
+    } else if (editingTodoId === todo._id) {
+      setIsAnyEditing(false);
+      setEditingTodoId(null);
+    }
+  }, [isEditing, showChildForm, todo._id, setIsAnyEditing, setEditingTodoId, editingTodoId]);
 
   // Filter out any children that are strings (IDs) instead of Todo objects
   const validChildren = todo.children?.filter(child => typeof child === 'object' && child._id) || [];
@@ -50,6 +63,10 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
   };
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    // Don't open menu if any other todo is being edited
+    if (isAnyEditing && editingTodoId !== todo._id) {
+      return;
+    }
     setAnchorEl(event.currentTarget);
   };
 
@@ -99,6 +116,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
           <Checkbox
             checked={todo.completed}
             onChange={handleToggle}
+            disabled={isAnyEditing && editingTodoId !== todo._id}
             size="small"
             sx={{ mt: -0.5 }}
           />
@@ -163,7 +181,13 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
           <IconButton
             size="small"
             onClick={handleMenuOpen}
-            sx={{ p: 0.5 }}
+            disabled={isAnyEditing && editingTodoId !== todo._id}
+            sx={{
+              p: 0.5,
+              '&:disabled': {
+                color: 'action.disabled',
+              }
+            }}
           >
             <MoreVertIcon
               fontSize="small"
