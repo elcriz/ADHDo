@@ -1,11 +1,6 @@
 # ADHDO - Full-Stack Todo Application
 
-A modern, responsive todo application built for neurodivergent human beings w5. **Search todos** by clicking the search icon and typing (minimum 2 characters)
-6. **Toggle completion** by checking/unchecking the checkbox
-7. **Edit todos** by clicking the "Edit" button
-8. **Delete todos** by clicking the "Delete" button (includes all children)
-9. **Bulk delete completed** by clicking "Delete All Completed" on the Completed tab
-10. **Switch tabs** between "Open" and "Completed" todoseact, TypeScript, Node.js, and MongoDB. Features hierarchical todos, user authentication, and mobile-optimized design.
+A modern, responsive todo application built for neurodivergent human beings with React, TypeScript, Node.js, and MongoDB. Features hierarchical todos, user authentication, and mobile-optimized design.
 
 This application is the result of experimenting with Agent mode in VS Code.
 
@@ -17,6 +12,7 @@ This application is the result of experimenting with Agent mode in VS Code.
 - **Real-time Search**: Search todos by title and description with live filtering
 - **Smart UI Management**: Mutual exclusivity between search and editing modes
 - **Bulk Operations**: Delete all completed todos with confirmation dialog
+- **Hamburger Menu**: Modern menu system for scalable user actions
 - **Progressive Web App**: Installable with offline functionality
 - **Dark Mode**: Automatic theme switching based on system preferences
 - **Responsive Design**: Mobile-first, responsive UI design
@@ -123,7 +119,9 @@ PORT=5000
 5. **Toggle completion** by checking/unchecking the checkbox
 6. **Edit todos** by clicking the "Edit" button
 7. **Delete todos** by clicking the "Delete" button (includes all children)
-8. **Switch tabs** between "Open" and "Completed" todos
+8. **Bulk delete completed** by clicking "Delete All Completed" on the Completed tab
+9. **Access user menu** by clicking the hamburger menu icon (top right)
+10. **Switch tabs** between "Open" and "Completed" todos
 
 ### Search & Editing Modes
 - **Search mode**: Filters todos in real-time as you type
@@ -147,6 +145,7 @@ PORT=5000
 - `POST /api/todos` - Create new todo
 - `PUT /api/todos/:id` - Update todo
 - `DELETE /api/todos/:id` - Delete todo and children
+- `DELETE /api/todos/completed` - Delete all completed todos (bulk operation)
 - `PUT /api/todos/:id/toggle` - Toggle todo completion
 
 ## 🚀 Deployment

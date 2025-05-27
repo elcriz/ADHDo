@@ -310,7 +310,7 @@ const TodoList: React.FC = () => {
                   ? `No ${activeTab} todos found matching "${searchQuery}"`
                   : activeTab === 'open'
                     ? "No open todos. Create one to get started!"
-                    : "No completed todos yet."}
+                    : "No completed todos yet. Time to get busy!"}
               </Typography>
             </Box>
           ) : (

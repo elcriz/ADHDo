@@ -8,6 +8,7 @@
 
 - **🔍 Search Functionality**: Real-time search with mutual exclusivity system
 - **🗑️ Bulk Delete**: Delete all completed todos with confirmation dialog
+- **🍔 Hamburger Menu**: Modern menu system replacing logout button for scalable user actions
 - **🎨 Material UI Design**: Complete UI overhaul with modern components
 - **🌙 Dark Mode**: Automatic theme switching based on system preferences
 - **📱 PWA Features**: Installable app with offline functionality and service worker
@@ -23,6 +24,7 @@
 - **Smart UI Management**: Mutual exclusivity between search and editing modes
 - **Progressive Web App**: Installable app with offline functionality
 - **Dark Mode**: Automatic theme switching based on system preferences
+- **Hamburger Menu**: Modern, scalable menu system for user actions
 - **Responsive Design**: Mobile-first, works on all devices
 - **Tab Navigation**: Separate views for open/completed todos
 - **Real-time Updates**: Immediate UI feedback
@@ -74,11 +76,12 @@
 4. **Real-time Search**: Search todos by title/description with live filtering
 5. **Smart Mode Management**: Mutual exclusivity between search and editing
 6. **Bulk Operations**: Delete all completed todos with confirmation dialog
-7. **Status Management**: Toggle between open/completed
-8. **Date Tracking**: Automatic timestamps for creation/completion
-9. **Inline Editing**: Edit todos without page refresh
-10. **Individual Deletion**: Delete todos with all children
-11. **PWA Features**: Install to home screen, offline functionality
+7. **Hamburger Menu**: Access user actions through modern menu interface
+8. **Status Management**: Toggle between open/completed
+9. **Date Tracking**: Automatic timestamps for creation/completion
+10. **Inline Editing**: Edit todos without page refresh
+11. **Individual Deletion**: Delete todos with all children
+12. **PWA Features**: Install to home screen, offline functionality
 
 ### UI/UX
 - **Responsive Design**: Works perfectly on mobile, tablet, desktop
