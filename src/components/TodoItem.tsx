@@ -111,7 +111,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
               sx={{
                 textDecoration: todo.completed ? 'line-through' : 'none',
                 color: todo.completed ? 'text.disabled' : 'text.primary',
-                fontWeight: 500,
+                fontWeight: 700,
                 lineHeight: 1.25,
               }}
             >
