@@ -2,7 +2,15 @@
 
 ## 🎯 Project Summary
 
-**ADHDO** is a fully functional, production-ready full-stack todo application with hierarchical task management, user authentication, and responsive design.
+**ADHDO** is a fully functional, production-ready full-stack todo application with hierarchical task management, user authentication, responsive design, real-time search, and Progressive Web App capabilities.
+
+## 🆕 Latest Updates (May 2025)
+
+- **🔍 Search Functionality**: Real-time search with mutual exclusivity system
+- **🎨 Material UI Design**: Complete UI overhaul with modern components
+- **🌙 Dark Mode**: Automatic theme switching based on system preferences
+- **📱 PWA Features**: Installable app with offline functionality and service worker
+- **🎯 Smart UX**: Mutual exclusivity between search and editing modes for focused interaction
 
 ## 🚀 What We've Built
 
@@ -10,6 +18,10 @@
 - **Authentication System**: Login/Register with JWT tokens
 - **Todo Management**: Create, edit, delete, and toggle todos
 - **Hierarchical Todos**: Parent-child relationships with subtasks
+- **Real-time Search**: Live filtering of todos by title and description
+- **Smart UI Management**: Mutual exclusivity between search and editing modes
+- **Progressive Web App**: Installable app with offline functionality
+- **Dark Mode**: Automatic theme switching based on system preferences
 - **Responsive Design**: Mobile-first, works on all devices
 - **Tab Navigation**: Separate views for open/completed todos
 - **Real-time Updates**: Immediate UI feedback
@@ -58,17 +70,24 @@
 1. **User Registration/Login**: Secure account management
 2. **Todo Creation**: Add todos with title and description
 3. **Hierarchical Structure**: Create subtasks under any todo
-4. **Status Management**: Toggle between open/completed
-5. **Date Tracking**: Automatic timestamps for creation/completion
-6. **Inline Editing**: Edit todos without page refresh
-7. **Bulk Operations**: Delete todos with all children
+4. **Real-time Search**: Search todos by title/description with live filtering
+5. **Smart Mode Management**: Mutual exclusivity between search and editing
+6. **Status Management**: Toggle between open/completed
+7. **Date Tracking**: Automatic timestamps for creation/completion
+8. **Inline Editing**: Edit todos without page refresh
+9. **Bulk Operations**: Delete todos with all children
+10. **PWA Features**: Install to home screen, offline functionality
 
 ### UI/UX
 - **Responsive Design**: Works perfectly on mobile, tablet, desktop
-- **Intuitive Interface**: Clean, modern design
+- **Intuitive Interface**: Clean, modern Material UI design
+- **Dark Mode**: Automatic theme switching with system preferences
+- **Search Experience**: Ghost button design with collapsible search field
+- **Focused Interaction**: Mutual exclusivity prevents conflicting operations
 - **Fast Interactions**: Immediate feedback on all actions
 - **Accessibility**: Keyboard navigation and screen reader friendly
 - **Visual Hierarchy**: Clear organization of todos and subtasks
+- **PWA Experience**: Native app-like behavior when installed
 
 ## 🛠️ Development Setup
 
@@ -160,6 +179,11 @@ curl http://localhost:5000/api/health  # Test API health
 - ✅ MongoDB database integration
 - ✅ User authentication system
 - ✅ Hierarchical todo management
+- ✅ Real-time search functionality
+- ✅ Smart UI state management
+- ✅ Progressive Web App features
+- ✅ Automatic dark mode
+- ✅ Material UI design system
 - ✅ Responsive, mobile-friendly design
 - ✅ Production build configuration
 - ✅ Heroku deployment setup

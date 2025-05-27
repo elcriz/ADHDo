@@ -3,6 +3,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, Box, Typography } from '@mui/material';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { TodoProvider } from './contexts/TodoContext';
+import { EditingProvider } from './contexts/EditingContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './components/Login';
 import Register from './components/Register';
@@ -47,9 +48,11 @@ function AppContent() {
               path="/todos"
               element={
                 <ProtectedRoute>
-                  <TodoProvider>
-                    <TodoList />
-                  </TodoProvider>
+                  <EditingProvider>
+                    <TodoProvider>
+                      <TodoList />
+                    </TodoProvider>
+                  </EditingProvider>
                 </ProtectedRoute>
               }
             />

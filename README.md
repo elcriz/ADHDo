@@ -9,6 +9,10 @@ This application is the result of experimenting with Agent mode in VS Code.
 - **User Authentication**: Secure registration and login with JWT tokens
 - **Hierarchical Todos**: Create parent-child relationships between todos
 - **Status Management**: Toggle between open and completed todos
+- **Real-time Search**: Search todos by title and description with live filtering
+- **Smart UI Management**: Mutual exclusivity between search and editing modes
+- **Progressive Web App**: Installable with offline functionality
+- **Dark Mode**: Automatic theme switching based on system preferences
 - **Responsive Design**: Mobile-first, responsive UI design
 - **Date Tracking**: Automatic creation and completion date tracking
 - **RESTful API**: Clean backend API with proper error handling
@@ -20,9 +24,11 @@ This application is the result of experimenting with Agent mode in VS Code.
 - **React 19** with TypeScript
 - **Vite** for fast development and building
 - **React Router** for client-side routing
-- **Context API** for state management
+- **Context API** for state management with global editing state
+- **Material UI** for modern, accessible components
+- **PWA** with service worker and offline functionality
 - **Axios** for API communication
-- **CSS Utilities** for responsive styling
+- **Dark Mode** with automatic system preference detection
 
 ### Backend
 - **Node.js** with TypeScript
@@ -37,9 +43,10 @@ This application is the result of experimenting with Agent mode in VS Code.
 adhdo/
 ├── src/                    # Frontend source code
 │   ├── components/         # React components
-│   ├── contexts/          # React Context providers
+│   ├── contexts/          # React Context providers (Auth, Todo, Editing)
 │   ├── services/          # API service layer
 │   ├── types/             # TypeScript type definitions
+│   ├── theme.ts           # Material UI theme and dark mode
 │   └── App.tsx            # Main app component
 ├── backend/               # Backend source code
 │   ├── src/
@@ -106,10 +113,16 @@ PORT=5000
 1. **Register** a new account or **login** with existing credentials
 2. **Create todos** using the form at the top
 3. **Add subtasks** by clicking the "+ Sub" button on any todo
-4. **Toggle completion** by checking/unchecking the checkbox
-5. **Edit todos** by clicking the "Edit" button
-6. **Delete todos** by clicking the "Delete" button (includes all children)
-7. **Switch tabs** between "Open" and "Completed" todos
+4. **Search todos** by clicking the search icon and typing (minimum 2 characters)
+5. **Toggle completion** by checking/unchecking the checkbox
+6. **Edit todos** by clicking the "Edit" button
+7. **Delete todos** by clicking the "Delete" button (includes all children)
+8. **Switch tabs** between "Open" and "Completed" todos
+
+### Search & Editing Modes
+- **Search mode**: Filters todos in real-time as you type
+- **Editing mode**: Edit individual todos with inline forms
+- **Mutual exclusivity**: Search and editing modes cannot be active simultaneously for focused user experience
 
 ## 🔌 API Endpoints
 
@@ -226,10 +239,10 @@ curl -X POST http://localhost:5000/api/todos \
 - [ ] Todo categories and tags
 - [ ] File attachments
 - [ ] Collaboration features
-- [ ] Dark mode theme
-- [ ] Offline support with PWA
 - [ ] Export/import functionality
-- [ ] Advanced search and filtering
+- [ ] Batch operations for todos
+- [ ] Keyboard shortcuts for power users
+- [ ] Todo templates and recurring tasks
 
 ## 📄 License
 
