@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import {
   Box,
   Paper,
@@ -38,6 +38,8 @@ const TodoList: React.FC = () => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deletingCompleted, setDeletingCompleted] = useState(false);
 
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -53,6 +55,17 @@ const TodoList: React.FC = () => {
       setSearchQuery('');
     }
   }, [isAnyEditing, showSearch]);
+
+  // Focus search input when search becomes visible
+  useEffect(() => {
+    if (showSearch && !isAnyEditing && searchInputRef.current) {
+      // Small delay to ensure the Collapse animation doesn't interfere
+      const timer = setTimeout(() => {
+        searchInputRef.current?.focus();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [showSearch, isAnyEditing]);
 
   const handleDeleteAllCompleted = async () => {
     setDeletingCompleted(true);
@@ -194,12 +207,12 @@ const TodoList: React.FC = () => {
         <Collapse in={showSearch && !isAnyEditing}>
           <Box sx={{ mb: 2 }}>
             <TextField
+              ref={searchInputRef}
               size="small"
               fullWidth
               placeholder="Search todos... (minimum 2 characters)"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              autoFocus
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
