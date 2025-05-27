@@ -275,7 +275,7 @@ const TodoList: React.FC = () => {
 
           {/* Delete All Completed Button */}
           {activeTab === 'completed' && allCompletedTodos.length > 0 && (
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
               <Button
                 variant="contained"
                 color="error"
