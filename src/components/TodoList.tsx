@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Box,
   Paper,
@@ -11,8 +11,12 @@ import {
   Fab,
   useTheme,
   useMediaQuery,
+  TextField,
+  InputAdornment,
+  IconButton,
+  Collapse,
 } from '@mui/material';
-import { Add as AddIcon, Close as CloseIcon } from '@mui/icons-material';
+import { Add as AddIcon, Close as CloseIcon, Search as SearchIcon } from '@mui/icons-material';
 import { useTodos } from '../contexts/TodoContext';
 import type { Todo } from '../types';
 import TodoItem from './TodoItem';
@@ -22,14 +26,41 @@ const TodoList: React.FC = () => {
   const { todos, loading } = useTodos();
   const [activeTab, setActiveTab] = useState<'open' | 'completed'>('open');
   const [showForm, setShowForm] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   // Ensure todos is always an array and filter by completion status
   const todoArray = Array.isArray(todos) ? todos : [];
-  const openTodos = todoArray.filter(todo => !todo.completed && !todo.parent);
-  const completedTodos = todoArray.filter(todo => todo.completed && !todo.parent);
+
+  // Search function
+  const searchTodos = (todos: Todo[], query: string): Todo[] => {
+    if (!query || query.length < 2) return todos;
+
+    const lowerQuery = query.toLowerCase();
+    return todos.filter(todo => {
+      const titleMatch = todo.title.toLowerCase().includes(lowerQuery);
+      const descriptionMatch = todo.description?.toLowerCase().includes(lowerQuery);
+
+      // Also search in children
+      const childrenMatch = todo.children?.some(child =>
+        typeof child === 'object' && (
+          child.title.toLowerCase().includes(lowerQuery) ||
+          child.description?.toLowerCase().includes(lowerQuery)
+        )
+      );
+
+      return titleMatch || descriptionMatch || childrenMatch;
+    });
+  };
+
+  const allOpenTodos = todoArray.filter(todo => !todo.completed && !todo.parent);
+  const allCompletedTodos = todoArray.filter(todo => todo.completed && !todo.parent);
+
+  const openTodos = useMemo(() => searchTodos(allOpenTodos, searchQuery), [allOpenTodos, searchQuery]);
+  const completedTodos = useMemo(() => searchTodos(allCompletedTodos, searchQuery), [allCompletedTodos, searchQuery]);
 
   const currentTodos = activeTab === 'open' ? openTodos : completedTodos;  const renderTodoWithChildren = (todo: Todo, level: number = 0) => {
     // Filter out any children that are strings (IDs) instead of Todo objects
@@ -87,16 +118,63 @@ const TodoList: React.FC = () => {
           >
             My Todos
           </Typography>
-          {!isMobile && (
-            <Button
-              variant="contained"
-              startIcon={<AddIcon />}
-              onClick={() => setShowForm(!showForm)}
+          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+            <IconButton
+              color="primary"
+              aria-label="Search todos"
+              onClick={() => {
+                setShowSearch(!showSearch);
+                if (showSearch) {
+                  setSearchQuery('');
+                }
+              }}
+              sx={{
+                bgcolor: showSearch ? 'primary.main' : 'transparent',
+                color: showSearch ? 'primary.contrastText' : 'primary.main',
+                '&:hover': {
+                  bgcolor: showSearch ? 'primary.dark' : 'primary.light',
+                  color: showSearch ? 'primary.contrastText' : 'primary.dark',
+                },
+                border: '1px solid',
+                borderColor: 'primary.main',
+              }}
             >
-              {showForm ? 'Cancel' : 'Add Todo'}
-            </Button>
-          )}
+              <SearchIcon />
+            </IconButton>
+            {!isMobile && (
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={() => setShowForm(!showForm)}
+              >
+                {showForm ? 'Cancel' : 'Add Todo'}
+              </Button>
+            )}
+          </Box>
         </Box>
+
+        <Collapse in={showSearch}>
+          <Box sx={{ mb: 3 }}>
+            <TextField
+              fullWidth
+              placeholder="Search todos... (minimum 2 characters)"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon color="action" />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  bgcolor: 'background.paper',
+                }
+              }}
+            />
+          </Box>
+        </Collapse>
 
         {showForm && (
           <Paper
@@ -143,12 +221,12 @@ const TodoList: React.FC = () => {
             }}
           >
             <Tab
-              label={`Open (${openTodos.length})`}
+              label={`Open (${openTodos.length}${searchQuery.length >= 2 ? ` of ${allOpenTodos.length}` : ''})`}
               value="open"
               sx={{ minHeight: 22, py: 1.5 }}
             />
             <Tab
-              label={`Completed (${completedTodos.length})`}
+              label={`Completed (${completedTodos.length}${searchQuery.length >= 2 ? ` of ${allCompletedTodos.length}` : ''})`}
               value="completed"
               sx={{ minHeight: 22, py: 1.5 }}
             />
@@ -166,9 +244,11 @@ const TodoList: React.FC = () => {
                 variant="body1"
                 color="text.secondary"
               >
-                {activeTab === 'open'
-                  ? "No open todos. Create one to get started!"
-                  : "No completed todos yet."}
+                {searchQuery.length >= 2
+                  ? `No ${activeTab} todos found matching "${searchQuery}"`
+                  : activeTab === 'open'
+                    ? "No open todos. Create one to get started!"
+                    : "No completed todos yet."}
               </Typography>
             </Box>
           ) : (
