@@ -122,7 +122,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
           />
 
           <Box
-            sx={{ flexGrow: 1, minWidth: 0, mt: 0.75 }}
+            sx={{ flexGrow: 1, minWidth: 0, mt: 0.65 }}
           >
             <Typography
               variant="body1"

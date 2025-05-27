@@ -143,7 +143,7 @@ const TodoList: React.FC = () => {
         sx={{ p: 2 }}
       >
         <Box
-          sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}
+          sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: -2, ml: -2, mr: -2, mb: 2, px: 2, py: 1, backgroundColor: 'rgb(232, 234, 240)', borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
         >
           <Typography
             variant="h4"
@@ -154,7 +154,7 @@ const TodoList: React.FC = () => {
           </Typography>
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
             <IconButton
-              color="primary"
+              size="small"
               aria-label="Search todos"
               disabled={isAnyEditing || showForm}
               onClick={() => {
@@ -173,10 +173,7 @@ const TodoList: React.FC = () => {
                 '&:disabled': {
                   bgcolor: 'transparent',
                   color: 'action.disabled',
-                  borderColor: 'action.disabled',
                 },
-                border: '1px solid',
-                borderColor: (isAnyEditing || showForm) ? 'action.disabled' : 'primary.main',
               }}
             >
               <SearchIcon />
@@ -201,6 +198,7 @@ const TodoList: React.FC = () => {
               placeholder="Search todos... (minimum 2 characters)"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              autoFocus
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -233,6 +231,7 @@ const TodoList: React.FC = () => {
           >
             <TodoForm
               onSuccess={() => setShowForm(false)}
+              onCancel={() => setShowForm(false)}
             />
           </Paper>
         )}
