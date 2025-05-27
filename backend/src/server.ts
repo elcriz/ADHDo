@@ -34,8 +34,8 @@ app.use(limiter);
 
 // CORS
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? process.env.FRONTEND_URL || 'https://your-app.herokuapp.com'
+  origin: process.env.NODE_ENV === 'production'
+    ? process.env.FRONTEND_URL || 'https://adhdo-0c3ea92c2b90.herokuapp.com/'
     : ['http://localhost:5173', 'http://localhost:5174'],
   credentials: true
 }));
@@ -59,7 +59,7 @@ app.get('/api/health', (req, res) => {
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../../dist')));
-  
+
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../../dist/index.html'));
   });
@@ -68,9 +68,9 @@ if (process.env.NODE_ENV === 'production') {
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error(err.stack);
-  res.status(500).json({ 
-    success: false, 
-    message: process.env.NODE_ENV === 'production' ? 'Something went wrong!' : err.message 
+  res.status(500).json({
+    success: false,
+    message: process.env.NODE_ENV === 'production' ? 'Something went wrong!' : err.message
   });
 });
 
