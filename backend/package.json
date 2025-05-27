@@ -4,6 +4,10 @@
   "type": "module",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
@@ -26,9 +30,7 @@
     "morgan": "^1.10.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
-    "tsx": "^4.19.4"
-  },
-  "devDependencies": {
+    "tsx": "^4.19.4",
     "@types/bcryptjs": "^3.0.0",
     "@types/compression": "^1.8.0",
     "@types/cors": "^2.8.18",
@@ -38,8 +40,10 @@
     "@types/node": "^22.15.21",
     "@types/passport": "^1.0.17",
     "@types/passport-jwt": "^4.0.1",
-    "nodemon": "^3.1.10",
-    "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2"
   }
 }

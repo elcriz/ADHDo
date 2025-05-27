@@ -21,6 +21,8 @@ Welcome to the ADHDO (Attention Deficit Hyperactivity Disorder Organizer) docume
 ### Deployment & Infrastructure
 - [**DEPLOYMENT.md**](./DEPLOYMENT.md) - Production deployment guides and configurations
 - [**PWA-DEPLOYMENT-CHECKLIST.md**](./PWA-DEPLOYMENT-CHECKLIST.md) - 🚀 PWA deployment checklist and production setup
+- [**HEROKU-DEPLOYMENT-FIX.md**](./HEROKU-DEPLOYMENT-FIX.md) - ⚡ Heroku deployment issue fixes and solutions
+- [**HEROKU-DEPLOYMENT-READY.md**](./HEROKU-DEPLOYMENT-READY.md) - ✅ **READY FOR DEPLOYMENT - Final verification checklist**
 
 ## 🚀 Quick Start
 
