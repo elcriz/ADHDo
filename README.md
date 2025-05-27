@@ -13,6 +13,7 @@ This application is the result of experimenting with Agent mode in VS Code.
 - **Smart UI Management**: Mutual exclusivity between search and editing modes
 - **Bulk Operations**: Delete all completed todos with confirmation dialog
 - **Hamburger Menu**: Modern menu system for scalable user actions
+- **Decorative ColorBar**: Vibrant repeating color blocks for visual enhancement
 - **Progressive Web App**: Installable with offline functionality
 - **Dark Mode**: Automatic theme switching based on system preferences
 - **Responsive Design**: Mobile-first, responsive UI design
