@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import { Menu as MenuIcon, Logout as LogoutIcon } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
+import ColorBar from './ColorBar';
 
 const Header: React.FC = () => {
   const { user, logout } = useAuth();
@@ -37,18 +38,19 @@ const Header: React.FC = () => {
   const open = Boolean(anchorEl);
 
   return (
-    <AppBar
-      position="sticky"
-      elevation={1}
-      sx={{
-        bgcolor: 'background.paper',
-        color: 'text.primary',
-        borderRadius: 0,
-        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-        zIndex: (theme) => theme.zIndex.appBar,
-        top: 0
-      }}
-    >
+    <>
+      <AppBar
+        position="sticky"
+        elevation={1}
+        sx={{
+          bgcolor: 'background.paper',
+          color: 'text.primary',
+          borderRadius: 0,
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          zIndex: (theme) => theme.zIndex.appBar,
+          top: 0
+        }}
+      >
       <Toolbar>
         <Typography
           variant="h4"
@@ -72,7 +74,7 @@ const Header: React.FC = () => {
               variant="body2"
               color="text.secondary"
             >
-              Welcome, {user.name}
+              Hi, {user.name}
             </Typography>
             <IconButton
               onClick={handleMenuOpen}
@@ -156,6 +158,8 @@ const Header: React.FC = () => {
         )}
       </Toolbar>
     </AppBar>
+    <ColorBar />
+    </>
   );
 };
 
