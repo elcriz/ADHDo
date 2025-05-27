@@ -27,7 +27,7 @@ function AppContent() {
         >
           {!user && (
             <Typography
-              variant="h3"
+              variant="h2"
               component="h1"
               align="center"
               sx={{ mt: 4, px: 4, fontWeight: 200 }}
