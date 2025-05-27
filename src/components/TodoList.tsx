@@ -192,8 +192,9 @@ const TodoList: React.FC = () => {
         </Box>
 
         <Collapse in={showSearch && !isAnyEditing}>
-          <Box sx={{ mb: 3 }}>
+          <Box sx={{ mb: 2 }}>
             <TextField
+              size="small"
               fullWidth
               placeholder="Search todos... (minimum 2 characters)"
               value={searchQuery}
@@ -246,13 +247,19 @@ const TodoList: React.FC = () => {
             sx={{
               '& .MuiTabs-flexContainer': {
                 bgcolor: 'grey.100',
-                borderRadius: 2,
+                borderTopLeftRadius: 8,
+                borderTopRightRadius: 8,
                 p: 0.5,
               },
               '& .MuiTab-root': {
-                borderRadius: 1.5,
                 textTransform: 'none',
                 fontWeight: 500,
+                '&:first-of-type': {
+                  borderTopLeftRadius: 8,
+                },
+                '&:last-of-type': {
+                  borderTopRightRadius: 8,
+                }
               },
               '& .Mui-selected': {
                 bgcolor: 'background.paper',
