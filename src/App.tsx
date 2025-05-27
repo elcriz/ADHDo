@@ -9,7 +9,7 @@ import Register from './components/Register';
 import TodoList from './components/TodoList';
 import Header from './components/Header';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
-import { theme } from './theme';
+import { useAppTheme } from './theme';
 
 function AppContent() {
   const { user } = useAuth();
@@ -71,6 +71,8 @@ function AppContent() {
 }
 
 function App() {
+  const theme = useAppTheme();
+
   return (
     <ThemeProvider
       theme={theme}
