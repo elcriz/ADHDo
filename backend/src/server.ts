@@ -22,7 +22,36 @@ const PORT = process.env.PORT || 5000;
 connectDB();
 
 // Security middleware
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: [
+        "'self'",
+        "'unsafe-inline'",
+        "https://fonts.googleapis.com"
+      ],
+      fontSrc: [
+        "'self'",
+        "https://fonts.gstatic.com"
+      ],
+      connectSrc: [
+        "'self'",
+        "https://fonts.googleapis.com",
+        "https://fonts.gstatic.com"
+      ],
+      scriptSrc: [
+        "'self'",
+        "'unsafe-inline'"
+      ],
+      imgSrc: [
+        "'self'",
+        "data:",
+        "blob:"
+      ]
+    }
+  }
+}));
 app.use(compression());
 
 // Rate limiting
