@@ -8,6 +8,7 @@ This application is the result of experimenting with Agent mode in VS Code.
 
 - **User Authentication**: Secure registration and login with JWT tokens
 - **Hierarchical Todos**: Create parent-child relationships between todos
+- **Tag System**: Organize todos with colored tags - create new tags on-the-fly or select from existing ones
 - **Drag & Drop Reordering**: Touch-friendly drag and drop for reordering open todos with mobile optimization
 - **Status Management**: Toggle between open and completed todos
 - **Real-time Search**: Search todos by title and description with autofocus and live filtering
@@ -118,15 +119,20 @@ PORT=5000
 
 1. **Register** a new account or **login** with existing credentials
 2. **Create todos** using the form at the top
-3. **Add subtasks** by clicking the "+ Sub" button on any todo
-4. **Reorder todos** by touch-and-hold for 200ms (mobile) or click-and-drag (desktop) to rearrange open todos
-5. **Search todos** by clicking the search icon and typing (minimum 2 characters) - field automatically focuses for quick input
-6. **Toggle completion** by checking/unchecking the checkbox
-7. **Edit todos** by clicking the "Edit" button
-8. **Delete todos** by clicking the "Delete" button (includes all children)
-9. **Bulk delete completed** by clicking "Delete All Completed" on the Completed tab
-10. **Access user menu** by clicking the hamburger menu icon (top right)
-11. **Switch tabs** between "Open" and "Completed" todos
+3. **Add tags** to todos for better organization:
+   - Type tag names in the tag field during todo creation/editing
+   - Select from existing tags via autocomplete dropdown
+   - Create new tags on-the-fly by typing and pressing Enter
+   - Tags display with consistent colors automatically generated per tag name
+4. **Add subtasks** by clicking the "+ Sub" button on any todo
+5. **Reorder todos** by touch-and-hold for 200ms (mobile) or click-and-drag (desktop) to rearrange open todos
+6. **Search todos** by clicking the search icon and typing (minimum 2 characters) - field automatically focuses for quick input
+7. **Toggle completion** by checking/unchecking the checkbox
+8. **Edit todos** by clicking the "Edit" button
+9. **Delete todos** by clicking the "Delete" button (includes all children)
+10. **Bulk delete completed** by clicking "Delete All Completed" on the Completed tab
+11. **Access user menu** by clicking the hamburger menu icon (top right)
+12. **Switch tabs** between "Open" and "Completed" todos
 
 ### Drag & Drop Reordering
 - **Mobile**: Touch and hold a todo item for 200ms, then drag to reorder
@@ -141,10 +147,61 @@ PORT=5000
 - **Editing mode**: Edit individual todos with inline forms
 - **Mutual exclusivity**: Search and editing modes cannot be active simultaneously for focused user experience
 
+### Tag System
+- **Tag Creation**: Create new tags inline while adding or editing todos
+- **Tag Selection**: Choose from existing tags via autocomplete dropdown
+- **Color Consistency**: Each tag name automatically gets a consistent color across all todos
+- **Visual Display**: Tags appear as colored chips below date information in todo cards
+- **User Isolation**: Tags are private and user-specific
+- **Mobile Optimized**: Touch-friendly interface with appropriate sizing
+
 ### Bulk Operations
 - **Delete All Completed**: Remove all completed todos at once with confirmation dialog
 - **Safety features**: Confirmation required, disabled during other operations
 - **Hierarchical cleanup**: Properly handles deletion of parent todos and their children
+
+## 📊 Data Models
+
+### Todo Model
+```typescript
+interface Todo {
+  _id: string;
+  title: string;
+  description?: string;
+  completed: boolean;
+  completedAt?: string;
+  user: string;
+  parent?: string;
+  children: Todo[];
+  tags: Tag[];        // Array of associated tags
+  order?: number;     // For drag-and-drop ordering
+  createdAt: string;
+  updatedAt: string;
+}
+```
+
+### Tag Model
+```typescript
+interface Tag {
+  _id: string;
+  name: string;       // Tag name (max 50 characters)
+  color: string;      // Auto-generated hex color
+  user: string;       // Owner of the tag
+  createdAt: string;
+  updatedAt: string;
+}
+```
+
+### User Model
+```typescript
+interface User {
+  _id: string;
+  email: string;
+  name: string;
+  password: string;   // Hashed with bcrypt
+  createdAt: string;
+}
+```
 
 ## 🔌 API Endpoints
 
@@ -161,6 +218,12 @@ PORT=5000
 - `DELETE /api/todos/:id` - Delete todo and children
 - `DELETE /api/todos/completed` - Delete all completed todos (bulk operation)
 - `PUT /api/todos/:id/toggle` - Toggle todo completion
+
+### Tags
+- `GET /api/tags` - Get all user tags
+- `POST /api/tags` - Create new tag
+- `PUT /api/tags/:id` - Update tag
+- `DELETE /api/tags/:id` - Delete tag
 
 ## 🚀 Deployment
 

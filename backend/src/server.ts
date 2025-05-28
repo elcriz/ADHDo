@@ -10,6 +10,7 @@ import { fileURLToPath } from 'url';
 import connectDB from './config/database.js';
 import authRoutes from './routes/auth.js';
 import todoRoutes from './routes/todos.js';
+import tagRoutes from './routes/tags.js';
 import { authenticate } from './middleware/auth.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -79,6 +80,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/todos', authenticate as any, todoRoutes);
+app.use('/api/tags', authenticate as any, tagRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
