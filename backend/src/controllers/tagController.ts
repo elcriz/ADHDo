@@ -162,7 +162,6 @@ export const deleteTag = async (req: AuthRequest, res: Response): Promise<void> 
     }
 
     // Remove the tag reference from all todos that use it
-    const Todo = require('../models/Todo.js').default;
     await Todo.updateMany(
       { user: req.user._id, tags: id },
       { $pull: { tags: id } }
@@ -176,9 +175,11 @@ export const deleteTag = async (req: AuthRequest, res: Response): Promise<void> 
       message: 'Tag deleted successfully'
     });
   } catch (error: any) {
+    console.error('Error deleting tag:', error);
     res.status(500).json({
       success: false,
-      message: 'Internal server error'
+      message: 'Internal server error',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
 };
