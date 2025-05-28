@@ -78,6 +78,11 @@ export const todoApi = {
     const response = await api.delete('/todos/completed');
     return response.data;
   },
+
+  reorderTodos: async (todoIds: string[]) => {
+    const response = await api.patch('/todos/reorder', { todoIds });
+    return response.data;
+  },
 };
 
 export default api;

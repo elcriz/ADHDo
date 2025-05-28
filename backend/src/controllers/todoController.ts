@@ -10,7 +10,7 @@ export const getTodos = async (req: AuthRequest, res: Response): Promise<void> =
     }
 
     // First get all todos for the user
-    const allTodos = await Todo.find({ user: req.user._id }).sort({ createdAt: -1 });
+    const allTodos = await Todo.find({ user: req.user._id });
 
     // Create a map for quick lookup
     const todoMap = new Map<string, any>();
@@ -44,6 +44,30 @@ export const getTodos = async (req: AuthRequest, res: Response): Promise<void> =
         rootTodos.push(populatedTodo);
       }
     }
+
+    // Sort todos: completed todos by completedAt desc, open todos by order (if exists) then createdAt desc
+    rootTodos.sort((a, b) => {
+      if (a.completed && b.completed) {
+        // Both completed: sort by completedAt desc
+        return new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime();
+      } else if (!a.completed && !b.completed) {
+        // Both open: sort by order (if exists) then createdAt desc
+        if (a.order !== null && b.order !== null) {
+          return a.order - b.order;
+        } else if (a.order !== null) {
+          return -1; // a has order, b doesn't - a comes first
+        } else if (b.order !== null) {
+          return 1; // b has order, a doesn't - b comes first
+        } else {
+          // Neither has order - sort by createdAt desc
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        }
+      } else if (a.completed) {
+        return 1; // a is completed, b is not - b comes first
+      } else {
+        return -1; // b is completed, a is not - a comes first
+      }
+    });
 
     res.json({
       success: true,
@@ -285,6 +309,45 @@ export const deleteCompletedTodos = async (req: AuthRequest, res: Response): Pro
     });
   } catch (error) {
     console.error('Error in deleteCompletedTodos:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
+export const updateTodoOrder = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    if (!req.user) {
+      res.status(401).json({ success: false, message: 'User not authenticated' });
+      return;
+    }
+
+    const { todoIds } = req.body;
+
+    if (!Array.isArray(todoIds)) {
+      res.status(400).json({ success: false, message: 'todoIds must be an array' });
+      return;
+    }
+
+    const userId = req.user._id;
+
+    // Update the order field for each todo
+    const updates = todoIds.map((id: string, index: number) => ({
+      updateOne: {
+        filter: { _id: id, user: userId },
+        update: { order: index }
+      }
+    }));
+
+    await Todo.bulkWrite(updates);
+
+    res.json({
+      success: true,
+      message: 'Todo order updated successfully'
+    });
+  } catch (error) {
+    console.error('Error in updateTodoOrder:', error);
     res.status(500).json({
       success: false,
       message: 'Internal server error'

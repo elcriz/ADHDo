@@ -13,6 +13,7 @@ export interface Todo {
   user: string;
   parent?: string;
   children: Todo[];
+  order?: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -33,5 +34,6 @@ export interface TodoContextType {
   toggleTodo: (id: string) => Promise<void>;
   deleteTodo: (id: string) => Promise<void>;
   deleteCompletedTodos: () => Promise<void>;
+  reorderTodos: (todoIds: string[]) => Promise<void>;
   refreshTodos: () => Promise<void>;
 }

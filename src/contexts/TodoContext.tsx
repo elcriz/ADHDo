@@ -71,6 +71,11 @@ export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
     await refreshTodos();
   };
 
+  const reorderTodos = async (todoIds: string[]) => {
+    await todoApi.reorderTodos(todoIds);
+    await refreshTodos();
+  };
+
   const value: TodoContextType = {
     todos,
     loading,
@@ -79,6 +84,7 @@ export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
     toggleTodo,
     deleteTodo,
     deleteCompletedTodos,
+    reorderTodos,
     refreshTodos,
   };
 
