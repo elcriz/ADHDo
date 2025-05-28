@@ -75,6 +75,48 @@ import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 
 **Result**: Todo items can now only be dragged vertically for reordering, preventing horizontal movement out of viewport.
 
+### Mobile Touch Fix (May 28, 2025)
+**Issue**: Drag handle worked with mouse on desktop but not with touch on mobile devices. Users could see focus/active effects but dragging wouldn't work.
+
+**Root Cause**: Material-UI's `IconButton` component has its own touch event handling that conflicts with drag listeners on mobile devices.
+
+**Solution**: Replaced `IconButton` with a custom `Box` component that properly handles touch events:
+
+**Implementation**:
+```typescript
+// Before: IconButton conflicts with touch events
+<IconButton {...dragHandleProps}>
+  <DragIndicatorIcon />
+</IconButton>
+
+// After: Custom Box with proper touch handling
+<Box
+  component="div"
+  role="button"
+  tabIndex={0}
+  aria-label="Drag to reorder"
+  sx={{
+    // ... styling
+    touchAction: 'none',  // Essential for mobile drag
+    userSelect: 'none',
+    WebkitUserSelect: 'none',
+    WebkitTouchCallout: 'none',
+    WebkitTapHighlightColor: 'transparent',
+  }}
+  {...(!isAnyEditing ? dragHandleProps : {})}
+>
+  <DragIndicatorIcon fontSize="small" />
+</Box>
+```
+
+**Key Mobile Optimizations**:
+- `touchAction: 'none'` - Prevents browser scrolling during drag
+- `WebkitTouchCallout: 'none'` - Disables iOS long-press menu
+- `WebkitTapHighlightColor: 'transparent'` - Removes iOS tap highlight
+- Conditional drag props application based on editing state
+
+**Result**: Drag handle now works perfectly on both desktop (mouse) and mobile (touch) devices.
+
 ## User Experience
 
 ### Mobile Interaction

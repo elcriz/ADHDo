@@ -183,29 +183,54 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
 
           {/* Drag Handle - only show for open todos in draggable context */}
           {showDragHandle && !todo.completed && (
-            <IconButton
-              size="small"
-              disabled={isAnyEditing}
+            <Box
+              component="div"
+              role="button"
+              tabIndex={0}
+              aria-label="Drag to reorder"
               sx={{
-                p: 0.5,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 32,
+                height: 32,
+                borderRadius: 1,
                 cursor: isAnyEditing ? 'default' : 'grab',
-                '&:active': {
-                  cursor: isAnyEditing ? 'default' : 'grabbing',
-                },
-                '&:disabled': {
-                  color: 'action.disabled',
-                  cursor: 'default',
-                },
                 color: 'text.secondary',
                 '&:hover': {
                   color: 'primary.main',
                   backgroundColor: 'action.hover',
-                }
+                },
+                '&:active': {
+                  cursor: isAnyEditing ? 'default' : 'grabbing',
+                },
+                // Disable the drag handle when editing
+                ...(isAnyEditing && {
+                  color: 'action.disabled',
+                  cursor: 'default',
+                  pointerEvents: 'none',
+                }),
+                // Ensure touch events work properly on mobile
+                touchAction: 'none',
+                userSelect: 'none',
+                WebkitUserSelect: 'none',
+                WebkitTouchCallout: 'none',
+                WebkitTapHighlightColor: 'transparent',
+                // Prevent default button/link behaviors
+                border: 'none',
+                background: 'none',
+                outline: 'none',
+                // Ensure proper focus styles for accessibility
+                '&:focus-visible': {
+                  outline: '2px solid',
+                  outlineColor: 'primary.main',
+                  outlineOffset: 2,
+                },
               }}
-              {...dragHandleProps}
+              {...(!isAnyEditing ? dragHandleProps : {})}
             >
               <DragIndicatorIcon fontSize="small" />
-            </IconButton>
+            </Box>
           )}
 
           <IconButton
