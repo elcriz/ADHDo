@@ -232,13 +232,14 @@ const TodoList: React.FC = () => {
   return (
     <Container
       maxWidth="lg"
+      sx={{ p: isMobile ? 0 : 4 }}
     >
       <Paper
-        elevation={2}
-        sx={{ p: 2 }}
+        elevation={isMobile ? 0 : 2}
+        sx={{ px: 2, pb: 2, pt: 0, backgroundColor: isMobile ? 'transparent': 'auto', borderRadius: isMobile ? 0 : 2 }}
       >
         <Box
-          sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: -2, ml: -2, mr: -2, mb: 2, px: 2, py: 1, backgroundColor: 'ui', borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
+          sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', ml: -2,  mr: -2, mb: 2, px: 2, py: 1, backgroundColor: 'ui', borderTopLeftRadius: isMobile ? 0 : 8, borderTopRightRadius: isMobile ? 0 : 8 }}
         >
           <Typography
             variant="h4"
@@ -341,7 +342,7 @@ const TodoList: React.FC = () => {
             variant="fullWidth"
             sx={{
               '& .MuiTabs-flexContainer': {
-                bgcolor: 'uiTabs',
+                bgcolor: 'ui',
                 borderTopLeftRadius: 8,
                 borderTopRightRadius: 8,
                 p: 0.5,
@@ -376,7 +377,7 @@ const TodoList: React.FC = () => {
 
           {/* Delete All Completed Button */}
           {activeTab === 'completed' && allCompletedTodos.length > 0 && (
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
               <Button
                 variant="contained"
                 color="error"
@@ -397,7 +398,7 @@ const TodoList: React.FC = () => {
         </Box>
 
         <Box
-          sx={{ mt: 2 }}
+          sx={{ mt: -1 }}
         >
           {activeTab === 'open' ? (
             // Render open todos normally

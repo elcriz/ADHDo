@@ -23,7 +23,7 @@ function AppContent() {
         <Header />
         <Box
           component="main"
-          sx={{ maxWidth: '1200px', mx: 'auto', px: 0, py: 2 }}
+          sx={{ maxWidth: '1200px', mx: 'auto', px: 0, py: 0 }}
         >
           {!user && (
             <Typography
