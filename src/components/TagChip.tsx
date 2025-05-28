@@ -35,7 +35,7 @@ export const TagList: React.FC<TagListProps> = ({ tags, size = 'small', onTagDel
   }
 
   return (
-    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mt: 0.5 }}>
+    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mt: 1 }}>
       {tags.map((tag) => (
         <TagChip
           key={tag._id}

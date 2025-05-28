@@ -160,7 +160,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
                 label={`Created: ${formatDate(todo.createdAt)}`}
                 size="small"
                 variant="outlined"
-                sx={{ fontSize: '0.7rem', height: 20, pt: 0.35 }}
+                sx={{ fontSize: '0.7rem', height: 20, pt: 0 }}
               />
               {todo.completedAt && (
                 <Chip
@@ -168,7 +168,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
                   size="small"
                   variant="outlined"
                   color="success"
-                  sx={{ fontSize: '0.7rem', height: 20, pt: 0.35 }}
+                  sx={{ fontSize: '0.7rem', height: 20, pt: 0 }}
                 />
               )}
               {validChildren.length > 0 && (
@@ -177,7 +177,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
                   size="small"
                   variant="outlined"
                   color="info"
-                  sx={{ fontSize: '0.7rem', height: 20, pt: 0.35 }}
+                  sx={{ fontSize: '0.7rem', height: 20, pt: 0 }}
                 />
               )}
             </Box>
@@ -320,7 +320,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
         {isEditing && (
           <Paper
             elevation={1}
-            sx={{ mt: 2, p: 2, bgcolor: 'grey.50' }}
+            sx={{ mt: 2, mb: -2, p: 2, bgcolor: 'uiForm' }}
           >
             <TodoForm
               todo={todo}
@@ -333,7 +333,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
         {showChildForm && (
           <Paper
             elevation={1}
-            sx={{ mt: 2, p: 2, bgcolor: 'primary.50' }}
+            sx={{ mt: 2, mb: -2, p: 2, bgcolor: 'uiForm' }}
           >
             <TodoForm
               parent={todo._id}

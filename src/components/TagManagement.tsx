@@ -194,7 +194,9 @@ const TagManagement: React.FC = () => {
       <Paper
         elevation={isMobile ? 0 : 2}
         sx={{
-          p: 3,
+          px: 1,
+          pt: 2,
+          pb: 1,
           backgroundColor: isMobile ? 'transparent' : 'auto',
           borderRadius: isMobile ? 0 : 2
         }}
@@ -264,7 +266,7 @@ const TagManagement: React.FC = () => {
         {showNewTagForm && (
           <Paper
             elevation={1}
-            sx={{ p: 2, mb: 3, bgcolor: 'grey.50' }}
+            sx={{ p: 2, mb: 3, bgcolor: 'uiForm' }}
           >
             <Typography
               variant="h6"
@@ -295,7 +297,7 @@ const TagManagement: React.FC = () => {
                   }
                 }}
               />
-              <Box sx={{ display: 'flex', gap: 1 }}>
+              <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', gap: 1, mt: 1 }}>
                 <Button
                   variant="contained"
                   size="small"
@@ -459,7 +461,6 @@ const TagManagement: React.FC = () => {
                         sx={{
                           flexShrink: 0,
                           alignSelf: 'flex-start',
-                          mt: -0.5
                         }}
                       >
                         <MoreVertIcon fontSize="small" />

@@ -6,6 +6,10 @@ import {
   Alert,
   CircularProgress,
 } from '@mui/material';
+import {
+  Save as SaveIcon,
+  Cancel as CancelIcon,
+} from '@mui/icons-material';
 import type { Todo, Tag } from '../types';
 import { useTodos } from '../contexts/TodoContext';
 import TagSelector from './TagSelector';
@@ -107,7 +111,7 @@ const TodoForm: React.FC<TodoFormProps> = ({ todo, parent, onSuccess, onCancel }
           type="submit"
           variant="contained"
           disabled={loading}
-          startIcon={loading ? <CircularProgress size={16} /> : null}
+          startIcon={loading ? <CircularProgress size={16} /> : <SaveIcon />}
           size="small"
         >
           {loading ? 'Saving...' : (todo ? 'Update todo' : 'Create todo ')}
@@ -120,6 +124,7 @@ const TodoForm: React.FC<TodoFormProps> = ({ todo, parent, onSuccess, onCancel }
             onClick={onCancel}
             disabled={loading}
             size="small"
+            startIcon={<CancelIcon />}
           >
             Cancel
           </Button>
