@@ -427,46 +427,55 @@ const TagManagement: React.FC = () => {
                     <Box
                       sx={{
                         display: 'flex',
-                        alignItems: 'center',
+                        alignItems: 'flex-start',
                         justifyContent: 'space-between',
                         width: '100%',
-                        gap: 2,
-                        flexDirection: isMobile ? 'column' : 'row'
+                        gap: 2
                       }}
                     >
-                      <ListItemText
-                        primary={
-                          <Box
-                            sx={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: 1,
-                              flexWrap: 'wrap'
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: 0.5,
+                          flexGrow: 1,
+                          minWidth: 0
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 1,
+                            flexWrap: 'wrap'
+                          }}
+                        >
+                          <Chip
+                            label={tag.name}
+                            size="medium"
+                            style={{
+                              backgroundColor: tag.color,
+                              color: 'white',
                             }}
-                          >
-                            <Chip
-                              label={tag.name}
-                              size="medium"
-                              style={{
-                                backgroundColor: tag.color,
-                                color: 'white',
-                              }}
-                            />
-                            <Typography
-                              variant="body2"
-                              color="text.secondary"
-                              sx={{ fontSize: '0.75rem' }}
-                            >
-                              Created: {new Date(tag.createdAt).toLocaleDateString()}
-                            </Typography>
-                          </Box>
-                        }
-                      />
+                          />
+                        </Box>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{ fontSize: '0.75rem' }}
+                        >
+                          Created: {new Date(tag.createdAt).toLocaleDateString()}
+                        </Typography>
+                      </Box>
                       <IconButton
                         size="small"
                         onClick={(event) => handleMenuOpen(event, tag._id)}
                         disabled={editingTagId !== null}
-                        sx={{ flexShrink: 0 }}
+                        sx={{
+                          flexShrink: 0,
+                          alignSelf: 'flex-start',
+                          mt: -0.5
+                        }}
                       >
                         <MoreVertIcon fontSize="small" />
                       </IconButton>
