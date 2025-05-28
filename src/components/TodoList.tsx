@@ -66,7 +66,7 @@ const TodoList: React.FC = () => {
     useSensor(TouchSensor, {
       activationConstraint: {
         delay: 200, // 200ms delay before dragging starts
-        tolerance: 5, // Allow 5px movement during delay
+        tolerance: 200, // Allow significant movement during delay to enable scrolling
       },
     }),
     // Use PointerSensor for desktop (mouse/trackpad)
