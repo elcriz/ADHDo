@@ -100,6 +100,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
     <Card
       elevation={level > 0 ? 1 : 2}
       sx={{
+        position: 'relative',
         mb: 1,
         ml: level,
         borderLeft: level > 0 ? 3 : 0,
@@ -189,6 +190,9 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
               tabIndex={0}
               aria-label="Drag to reorder"
               sx={{
+                position: 'absolute',
+                bottom: 0,
+                right: 0,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
