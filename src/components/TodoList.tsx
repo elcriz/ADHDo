@@ -27,6 +27,7 @@ import {
   closestCenter,
   KeyboardSensor,
   PointerSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   type DragEndEvent,
@@ -61,10 +62,17 @@ const TodoList: React.FC = () => {
 
   // Drag and drop sensors
   const sensors = useSensors(
+    // Use TouchSensor for mobile with delay
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 200, // 200ms delay before dragging starts
+        tolerance: 5, // Allow 5px movement during delay
+      },
+    }),
+    // Use PointerSensor for desktop (mouse/trackpad)
     useSensor(PointerSensor, {
       activationConstraint: {
-        delay: 200, // 200ms delay before dragging starts (for mobile)
-        tolerance: 5, // Allow 5px movement during delay
+        distance: 8, // Small distance for desktop precision
       },
     }),
     useSensor(KeyboardSensor, {

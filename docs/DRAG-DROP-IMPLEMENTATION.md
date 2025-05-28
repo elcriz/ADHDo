@@ -161,20 +161,34 @@ rootTodos.sort((a, b) => {
 ### Touch Activation
 
 ```typescript
-useSensor(PointerSensor, {
+// Use TouchSensor for mobile with delay
+useSensor(TouchSensor, {
   activationConstraint: {
-    delay: 200, // 200ms delay before dragging starts (for mobile)
+    delay: 200, // 200ms delay before dragging starts
     tolerance: 5, // Allow 5px movement during delay
   },
-})
+}),
+// Use PointerSensor for desktop (mouse/trackpad)
+useSensor(PointerSensor, {
+  activationConstraint: {
+    distance: 8, // Small distance for desktop precision
+  },
+}),
 ```
 
 ### CSS Properties
 
 ```typescript
 sx={{
-  touchAction: 'none', // Prevents default touch behaviors
+  // Allow normal touch scrolling
+  touchAction: 'manipulation',
   cursor: isAnyEditing ? 'default' : (isDragging ? 'grabbing' : 'grab'),
+}}
+
+// On draggable content area only:
+sx={{
+  touchAction: 'none', // Only prevent touch on draggable elements
+  userSelect: 'none',
 }}
 ```
 

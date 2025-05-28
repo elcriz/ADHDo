@@ -44,16 +44,25 @@ const DraggableTodoItem: React.FC<DraggableTodoItemProps> = ({ todo, level }) =>
       ref={setNodeRef}
       style={style}
       {...attributes}
-      {...(!isAnyEditing ? listeners : {})} // Only apply listeners when not editing
       sx={{
-        touchAction: 'none', // Important for mobile drag and drop
+        // Allow normal touch scrolling
+        touchAction: 'manipulation',
         cursor: isAnyEditing ? 'default' : (isSortableDragging ? 'grabbing' : 'grab'),
       }}
     >
-      <TodoItem
-        todo={todo}
-        level={level}
-      />
+      <Box
+        {...(!isAnyEditing ? listeners : {})} // Only apply listeners when not editing
+        sx={{
+          // Only prevent touch actions on the draggable content
+          ...((!isAnyEditing && listeners) && { touchAction: 'none' }),
+          userSelect: 'none',
+        }}
+      >
+        <TodoItem
+          todo={todo}
+          level={level}
+        />
+      </Box>
       {validChildren.length > 0 && (
         <Box sx={{ ml: 2 }}>
           {validChildren.map(child => (
