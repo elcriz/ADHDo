@@ -189,7 +189,9 @@ const TodoList: React.FC = () => {
     }));
   }, [completedTodos]);
 
-  const currentTodos = activeTab === 'open' ? openTodos : completedTodos;  const renderTodoWithChildren = (todo: Todo, level: number = 0) => {
+  const currentTodos = activeTab === 'open' ? openTodos : completedTodos;
+
+  const renderTodoWithChildren = (todo: Todo, level: number = 0) => {
     // Filter out any children that are strings (IDs) instead of Todo objects
     const validChildren = todo.children?.filter(child => typeof child === 'object' && child._id) || [];
 
@@ -236,7 +238,7 @@ const TodoList: React.FC = () => {
         sx={{ p: 2 }}
       >
         <Box
-          sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: -2, ml: -2, mr: -2, mb: 2, px: 2, py: 1, backgroundColor: 'rgb(232, 234, 240)', borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
+          sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: -2, ml: -2, mr: -2, mb: 2, px: 2, py: 1, backgroundColor: 'ui', borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
         >
           <Typography
             variant="h4"
@@ -315,7 +317,7 @@ const TodoList: React.FC = () => {
             sx={{
               p: 2,
               mb: 3,
-              bgcolor: 'grey.50',
+              bgcolor: 'uiForm',
               ...(isMobile && {
                 position: 'sticky',
                 top: 80,
@@ -339,7 +341,7 @@ const TodoList: React.FC = () => {
             variant="fullWidth"
             sx={{
               '& .MuiTabs-flexContainer': {
-                bgcolor: 'grey.100',
+                bgcolor: 'uiTabs',
                 borderTopLeftRadius: 8,
                 borderTopRightRadius: 8,
                 p: 0.5,
@@ -448,12 +450,10 @@ const TodoList: React.FC = () => {
                         px: 2,
                         pt: 1.5,
                         mx: -2,
-                        color: 'text.secondary',
                         fontWeight: 600,
                         borderBottom: 1,
                         borderColor: 'divider',
                         pb: 1,
-                        bgcolor: 'background.paper',
                         backdropFilter: 'blur(8px)',
                         WebkitBackdropFilter: 'blur(8px)',
                       }}

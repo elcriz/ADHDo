@@ -110,6 +110,10 @@ const lightPalette = {
     primary: '#1f2937',
     secondary: '#6b7280',
   },
+  ui: 'rgb(232, 234, 240)',
+  uiForm: '#fafafa',
+  uiTabs: '#f5f5f5',
+  todoCompleted: '#fafafa'
 };
 
 // Dark theme colors
@@ -141,6 +145,10 @@ const darkPalette = {
     primary: '#f1f5f9',
     secondary: '#94a3b8',
   },
+  ui: 'rgb(32, 38, 48)',
+  uiForm: 'rgb(32, 38, 48)',
+  uiTabs: 'rgb(32, 38, 48)',
+  todoCompleted: 'rgb(32, 38, 48)',
 };
 
 // Create light theme

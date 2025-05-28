@@ -101,7 +101,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
         ml: level,
         borderLeft: level > 0 ? 3 : 0,
         borderLeftColor: level > 0 ? 'primary.light' : 'transparent',
-        bgcolor: todo.completed ? 'grey.50' : 'background.paper',
+        bgcolor: todo.completed ? 'todoCompleted' : 'background.paper',
         borderTopLeftRadius: level > 0 ? 0 : 8,
         borderTopRightRadius: level > 0 ? 0 : 8,
         borderBottomRightRadius: validChildren.length > 0 ? 0 : 8,
