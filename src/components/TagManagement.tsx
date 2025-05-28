@@ -20,6 +20,10 @@ import {
   Chip,
   useTheme,
   useMediaQuery,
+  Popover,
+  MenuList,
+  MenuItem,
+  ListItemIcon,
 } from '@mui/material';
 import {
   ArrowBack as ArrowBackIcon,
@@ -28,6 +32,7 @@ import {
   Add as AddIcon,
   Save as SaveIcon,
   Cancel as CancelIcon,
+  MoreVert as MoreVertIcon,
 } from '@mui/icons-material';
 import { tagApi } from '../services/api';
 import type { Tag } from '../types';
@@ -55,6 +60,10 @@ const TagManagement: React.FC = () => {
   // Delete confirmation state
   const [deleteTagId, setDeleteTagId] = useState<string | null>(null);
   const [deletingTag, setDeletingTag] = useState(false);
+
+  // Popover menu state
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
 
   useEffect(() => {
     loadTags();
@@ -155,6 +164,26 @@ const TagManagement: React.FC = () => {
 
   const handleBackToTodos = () => {
     navigate('/todos');
+  };
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, tagId: string) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedTagId(tagId);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setSelectedTagId(null);
+  };
+
+  const handleEditFromMenu = (tag: Tag) => {
+    handleStartEdit(tag);
+    handleMenuClose();
+  };
+
+  const handleDeleteFromMenu = (tagId: string) => {
+    setDeleteTagId(tagId);
+    handleMenuClose();
   };
 
   return (
@@ -433,24 +462,14 @@ const TagManagement: React.FC = () => {
                           </Box>
                         }
                       />
-                      <Box sx={{ display: 'flex', gap: 1, flexShrink: 0 }}>
-                        <IconButton
-                          size="small"
-                          color="primary"
-                          onClick={() => handleStartEdit(tag)}
-                          disabled={editingTagId !== null}
-                        >
-                          <EditIcon />
-                        </IconButton>
-                        <IconButton
-                          size="small"
-                          color="error"
-                          onClick={() => setDeleteTagId(tag._id)}
-                          disabled={editingTagId !== null}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </Box>
+                      <IconButton
+                        size="small"
+                        onClick={(event) => handleMenuOpen(event, tag._id)}
+                        disabled={editingTagId !== null}
+                        sx={{ flexShrink: 0 }}
+                      >
+                        <MoreVertIcon fontSize="small" />
+                      </IconButton>
                     </Box>
                   )}
                 </ListItem>
@@ -459,6 +478,58 @@ const TagManagement: React.FC = () => {
           </Paper>
         )}
       </Paper>
+
+      {/* Tag Actions Popover Menu */}
+      <Popover
+        open={Boolean(anchorEl)}
+        anchorEl={anchorEl}
+        onClose={handleMenuClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <MenuList
+          dense
+          sx={{ py: 0 }}
+        >
+          <MenuItem
+            onClick={() => {
+              const tag = tags.find(t => t._id === selectedTagId);
+              if (tag) handleEditFromMenu(tag);
+            }}
+          >
+            <ListItemIcon>
+              <EditIcon
+                fontSize="small"
+                color="primary"
+              />
+            </ListItemIcon>
+            <ListItemText
+              primary="Edit"
+            />
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              if (selectedTagId) handleDeleteFromMenu(selectedTagId);
+            }}
+          >
+            <ListItemIcon>
+              <DeleteIcon
+                fontSize="small"
+                color="error"
+              />
+            </ListItemIcon>
+            <ListItemText
+              primary="Delete"
+            />
+          </MenuItem>
+        </MenuList>
+      </Popover>
 
       {/* Delete confirmation dialog */}
       <Dialog
