@@ -11,7 +11,7 @@ This application is the result of experimenting with Agent mode in VS Code.
 - **Tag System**: Organize todos with colored tags - create new tags on-the-fly or select from existing ones
 - **Drag & Drop Reordering**: Touch-friendly drag and drop for reordering open todos with mobile optimization
 - **Status Management**: Toggle between open and completed todos
-- **Real-time Search**: Search todos by title and description with autofocus and live filtering
+- **Real-time Search**: Search todos by title, description, and tags with autofocus and live filtering
 - **Date-Based Organization**: Completed todos grouped by completion date with smart headings (Today, Yesterday, etc.)
 - **Smart UI Management**: Mutual exclusivity between search and editing modes
 - **Bulk Operations**: Delete all completed todos with confirmation dialog
@@ -126,7 +126,7 @@ PORT=5000
    - Tags display with consistent colors automatically generated per tag name
 4. **Add subtasks** by clicking the "+ Sub" button on any todo
 5. **Reorder todos** by touch-and-hold for 200ms (mobile) or click-and-drag (desktop) to rearrange open todos
-6. **Search todos** by clicking the search icon and typing (minimum 2 characters) - field automatically focuses for quick input
+6. **Search todos** by clicking the search icon and typing (minimum 2 characters) - searches title, description, and tags with automatic field focus
 7. **Toggle completion** by checking/unchecking the checkbox
 8. **Edit todos** by clicking the "Edit" button
 9. **Delete todos** by clicking the "Delete" button (includes all children)
@@ -143,7 +143,7 @@ PORT=5000
 - **Scroll-Friendly**: Delay prevents accidental dragging while scrolling
 
 ### Search & Editing Modes
-- **Search mode**: Filters todos in real-time as you type with automatic field focus
+- **Search mode**: Filters todos in real-time by title, description, and tags with automatic field focus
 - **Editing mode**: Edit individual todos with inline forms
 - **Mutual exclusivity**: Search and editing modes cannot be active simultaneously for focused user experience
 
@@ -325,7 +325,7 @@ curl -X POST http://localhost:5000/api/todos \
 ## 🛣️ Future Enhancements
 
 - [ ] Due dates and reminders
-- [ ] Todo categories and tags
+- [ ] Advanced tag filtering (multiple tag selection)
 - [ ] File attachments
 - [ ] Collaboration features
 - [ ] Export/import functionality

@@ -129,15 +129,21 @@ const TodoList: React.FC = () => {
       const titleMatch = todo.title.toLowerCase().includes(lowerQuery);
       const descriptionMatch = todo.description?.toLowerCase().includes(lowerQuery);
 
-      // Also search in children
+      // Search in tags
+      const tagsMatch = todo.tags?.some(tag =>
+        tag.name.toLowerCase().includes(lowerQuery)
+      );
+
+      // Also search in children (including their tags)
       const childrenMatch = todo.children?.some(child =>
         typeof child === 'object' && (
           child.title.toLowerCase().includes(lowerQuery) ||
-          child.description?.toLowerCase().includes(lowerQuery)
+          child.description?.toLowerCase().includes(lowerQuery) ||
+          child.tags?.some(tag => tag.name.toLowerCase().includes(lowerQuery))
         )
       );
 
-      return titleMatch || descriptionMatch || childrenMatch;
+      return titleMatch || descriptionMatch || tagsMatch || childrenMatch;
     });
   };
 
@@ -352,7 +358,7 @@ const TodoList: React.FC = () => {
               inputRef={searchInputRef}
               size="small"
               fullWidth
-              placeholder="Search todos... (minimum 2 characters)"
+              placeholder="Search todos by title, description, or tags... (minimum 2 characters)"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               InputProps={{

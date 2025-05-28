@@ -158,6 +158,7 @@ interface TodoContextType {
 - **Editing**: Modify tag assignments by editing the todo
 - **Colors**: Each tag name gets a consistent color across all todos
 - **Deletion**: Remove tags from individual todos via edit form
+- **Searching**: Type tag names in the search field to filter todos by tags
 
 ### Mobile Experience
 
@@ -173,6 +174,7 @@ interface TodoContextType {
 - ✅ **Mobile Optimizations**: Maintains touch-friendly interface
 - ✅ **Authentication**: Tags are user-scoped and private
 - ✅ **Date-based Completion**: Tags display alongside date chips
+- ✅ **Real-time Search**: Tags are fully searchable alongside title and description
 
 ### Data Migration
 - Existing todos without tags continue to work normally
@@ -212,6 +214,9 @@ interface TodoContextType {
 - [ ] Test tag editing in todo form
 - [ ] Verify mobile responsiveness
 - [ ] Check tag display in todo cards
+- [ ] **Test tag search functionality**: Search for todos by typing tag names
+- [ ] **Test combined search**: Verify search works across titles, descriptions, and tags
+- [ ] **Test hierarchical tag search**: Ensure parent todos appear when child tags match
 
 ### API Testing
 ```bash
@@ -227,10 +232,57 @@ POST /api/todos
 {"title": "Test", "tags": ["tag_id_here"]}
 ```
 
+## Search Integration
+
+### Real-time Tag Search
+The tagging system is fully integrated with the existing search functionality, providing seamless tag-based filtering:
+
+**Search Capabilities:**
+- **Tag Name Search**: Type any part of a tag name to filter todos
+- **Combined Search**: Search across titles, descriptions, and tags simultaneously
+- **Hierarchical Search**: Child todos with matching tags also surface their parents
+- **Case-Insensitive**: Search is not case-sensitive for better user experience
+
+**Implementation Details:**
+```typescript
+// Enhanced search function with tag support
+const searchTodos = (todos: Todo[], query: string): Todo[] => {
+  if (!query || query.length < 2) return todos;
+
+  const lowerQuery = query.toLowerCase();
+  return todos.filter(todo => {
+    const titleMatch = todo.title.toLowerCase().includes(lowerQuery);
+    const descriptionMatch = todo.description?.toLowerCase().includes(lowerQuery);
+    
+    // Search in tags
+    const tagsMatch = todo.tags?.some(tag => 
+      tag.name.toLowerCase().includes(lowerQuery)
+    );
+
+    // Also search in children (including their tags)
+    const childrenMatch = todo.children?.some(child =>
+      typeof child === 'object' && (
+        child.title.toLowerCase().includes(lowerQuery) ||
+        child.description?.toLowerCase().includes(lowerQuery) ||
+        child.tags?.some(tag => tag.name.toLowerCase().includes(lowerQuery))
+      )
+    );
+
+    return titleMatch || descriptionMatch || tagsMatch || childrenMatch;
+  });
+};
+```
+
+**User Experience:**
+- **Intuitive Interface**: Search field placeholder indicates tag search capability
+- **Real-time Results**: Instant filtering as user types tag names
+- **Visual Feedback**: Tagged todos remain highlighted during search
+- **Mobile Optimized**: Touch-friendly search with tag support
+
 ## Future Enhancements
 
 ### Potential Features
-- Tag-based filtering and search
+- Advanced tag-based filtering with multiple tag selection
 - Custom tag colors
 - Tag statistics and analytics
 - Tag templates or suggestions
