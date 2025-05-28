@@ -24,7 +24,6 @@ const ColorBar: React.FC = () => {
       sx={{
         width: '100vw',
         height: '8px',
-        marginBottom: '8px',
         position: 'relative',
         left: '50%',
         right: '50%',

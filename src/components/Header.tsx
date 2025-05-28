@@ -38,7 +38,6 @@ const Header: React.FC = () => {
   const open = Boolean(anchorEl);
 
   return (
-    <>
       <AppBar
         position="sticky"
         elevation={1}
@@ -157,9 +156,8 @@ const Header: React.FC = () => {
           </Box>
         )}
       </Toolbar>
+      <ColorBar />
     </AppBar>
-    <ColorBar />
-    </>
   );
 };
 

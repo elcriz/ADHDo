@@ -435,7 +435,7 @@ const TodoList: React.FC = () => {
                 </Typography>
               </Box>
             ) : (
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: -1 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: -2 }}>
                 {groupedCompletedTodos.map(({ date, todos }) => (
                   <Box key={date}>
                     <Typography
@@ -446,7 +446,7 @@ const TodoList: React.FC = () => {
                         zIndex: 10,
                         mb: 2,
                         px: 2,
-                        pt: 1,
+                        pt: 1.5,
                         mx: -2,
                         color: 'text.secondary',
                         fontWeight: 600,
