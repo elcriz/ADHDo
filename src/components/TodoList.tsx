@@ -435,18 +435,27 @@ const TodoList: React.FC = () => {
                 </Typography>
               </Box>
             ) : (
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: -1 }}>
                 {groupedCompletedTodos.map(({ date, todos }) => (
                   <Box key={date}>
                     <Typography
                       variant="h6"
                       sx={{
+                        position: 'sticky',
+                        top: { xs: 56, sm: 64 }, // Account for AppBar/Toolbar height
+                        zIndex: 10,
                         mb: 2,
+                        px: 2,
+                        pt: 1,
+                        mx: -2,
                         color: 'text.secondary',
                         fontWeight: 600,
                         borderBottom: 1,
                         borderColor: 'divider',
-                        pb: 1
+                        pb: 1,
+                        bgcolor: 'background.paper',
+                        backdropFilter: 'blur(8px)',
+                        WebkitBackdropFilter: 'blur(8px)',
                       }}
                     >
                       {formatDateHeading(date)}
