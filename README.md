@@ -10,6 +10,7 @@ This application is the result of experimenting with Agent mode in VS Code.
 - **Hierarchical Todos**: Create parent-child relationships between todos
 - **Status Management**: Toggle between open and completed todos
 - **Real-time Search**: Search todos by title and description with autofocus and live filtering
+- **Date-Based Organization**: Completed todos grouped by completion date with smart headings (Today, Yesterday, etc.)
 - **Smart UI Management**: Mutual exclusivity between search and editing modes
 - **Bulk Operations**: Delete all completed todos with confirmation dialog
 - **Hamburger Menu**: Modern menu system for scalable user actions

@@ -105,11 +105,89 @@ const TodoList: React.FC = () => {
     });
   };
 
+  // Group completed todos by completion date
+  const groupTodosByCompletionDate = (todos: Todo[]): { [date: string]: Todo[] } => {
+    const grouped: { [date: string]: Todo[] } = {};
+
+    todos.forEach(todo => {
+      if (todo.completedAt) {
+        const completionDate = new Date(todo.completedAt);
+        const dateKey = completionDate.toDateString(); // e.g., "Mon May 28 2025"
+
+        if (!grouped[dateKey]) {
+          grouped[dateKey] = [];
+        }
+        grouped[dateKey].push(todo);
+      }
+    });
+
+    // Sort todos within each date group by completion time (newest first)
+    Object.keys(grouped).forEach(dateKey => {
+      grouped[dateKey].sort((a, b) => {
+        const timeA = new Date(a.completedAt!).getTime();
+        const timeB = new Date(b.completedAt!).getTime();
+        return timeB - timeA; // Newest first
+      });
+    });
+
+    return grouped;
+  };
+
+  // Format date for display
+  const formatDateHeading = (dateString: string): string => {
+    const date = new Date(dateString);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    // Check if it's today
+    if (date.toDateString() === today.toDateString()) {
+      return 'Today';
+    }
+
+    // Check if it's yesterday
+    if (date.toDateString() === yesterday.toDateString()) {
+      return 'Yesterday';
+    }
+
+    // Check if it's this year
+    if (date.getFullYear() === today.getFullYear()) {
+      return date.toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric'
+      });
+    }
+
+    // Different year
+    return date.toLocaleDateString('en-US', {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
+
   const allOpenTodos = todoArray.filter(todo => !todo.completed && !todo.parent);
   const allCompletedTodos = todoArray.filter(todo => todo.completed && !todo.parent);
 
   const openTodos = useMemo(() => searchTodos(allOpenTodos, searchQuery), [allOpenTodos, searchQuery]);
   const completedTodos = useMemo(() => searchTodos(allCompletedTodos, searchQuery), [allCompletedTodos, searchQuery]);
+
+  // Group completed todos by completion date (newest dates first)
+  const groupedCompletedTodos = useMemo(() => {
+    const grouped = groupTodosByCompletionDate(completedTodos);
+    const sortedDateKeys = Object.keys(grouped).sort((a, b) => {
+      const dateA = new Date(a).getTime();
+      const dateB = new Date(b).getTime();
+      return dateB - dateA; // Newest dates first
+    });
+
+    return sortedDateKeys.map(dateKey => ({
+      date: dateKey,
+      todos: grouped[dateKey]
+    }));
+  }, [completedTodos]);
 
   const currentTodos = activeTab === 'open' ? openTodos : completedTodos;  const renderTodoWithChildren = (todo: Todo, level: number = 0) => {
     // Filter out any children that are strings (IDs) instead of Todo objects
@@ -319,27 +397,67 @@ const TodoList: React.FC = () => {
         <Box
           sx={{ mt: 2 }}
         >
-          {currentTodos.length === 0 ? (
-            <Box
-              sx={{ textAlign: 'center', py: 4 }}
-            >
-              <Typography
-                variant="body1"
-                color="text.secondary"
+          {activeTab === 'open' ? (
+            // Render open todos normally
+            currentTodos.length === 0 ? (
+              <Box
+                sx={{ textAlign: 'center', py: 4 }}
               >
-                {searchQuery.length >= 2
-                  ? `No ${activeTab} todos found matching "${searchQuery}"`
-                  : activeTab === 'open'
-                    ? "No open todos. Create one to get started!"
-                    : "No completed todos yet. Time to get busy!"}
-              </Typography>
-            </Box>
+                <Typography
+                  variant="body1"
+                  color="text.secondary"
+                >
+                  {searchQuery.length >= 2
+                    ? `No open todos found matching "${searchQuery}"`
+                    : "No open todos. Create one to get started!"}
+                </Typography>
+              </Box>
+            ) : (
+              <Box
+                sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
+              >
+                {currentTodos.map(todo => renderTodoWithChildren(todo))}
+              </Box>
+            )
           ) : (
-            <Box
-              sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
-            >
-              {currentTodos.map(todo => renderTodoWithChildren(todo))}
-            </Box>
+            // Render completed todos grouped by date
+            groupedCompletedTodos.length === 0 ? (
+              <Box
+                sx={{ textAlign: 'center', py: 4 }}
+              >
+                <Typography
+                  variant="body1"
+                  color="text.secondary"
+                >
+                  {searchQuery.length >= 2
+                    ? `No completed todos found matching "${searchQuery}"`
+                    : "No completed todos yet. Time to get busy!"}
+                </Typography>
+              </Box>
+            ) : (
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                {groupedCompletedTodos.map(({ date, todos }) => (
+                  <Box key={date}>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        mb: 2,
+                        color: 'text.secondary',
+                        fontWeight: 600,
+                        borderBottom: 1,
+                        borderColor: 'divider',
+                        pb: 1
+                      }}
+                    >
+                      {formatDateHeading(date)}
+                    </Typography>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                      {todos.map(todo => renderTodoWithChildren(todo))}
+                    </Box>
+                  </Box>
+                ))}
+              </Box>
+            )
           )}
         </Box>
       </Paper>
