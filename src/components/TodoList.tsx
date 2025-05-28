@@ -63,7 +63,8 @@ const TodoList: React.FC = () => {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8, // Minimum distance to start dragging
+        delay: 200, // 200ms delay before dragging starts (for mobile)
+        tolerance: 5, // Allow 5px movement during delay
       },
     }),
     useSensor(KeyboardSensor, {

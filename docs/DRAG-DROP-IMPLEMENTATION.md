@@ -136,7 +136,7 @@ rootTodos.sort((a, b) => {
 ### How to Use
 
 1. **Navigate to Open Todos**: Ensure you're on the "Open" tab
-2. **Touch and Hold (Mobile)**: Press and hold a todo item for a brief moment
+2. **Touch and Hold (Mobile)**: Press and hold a todo item for 200ms to activate dragging
 3. **Drag to Reorder**: Move the item to the desired position
 4. **Release**: Drop the item in the new position
 5. **Automatic Save**: The new order is automatically saved to the backend
@@ -146,7 +146,8 @@ rootTodos.sort((a, b) => {
 - **Grab Cursor**: Indicates draggable items (desktop)
 - **Opacity Change**: Dragged item becomes semi-transparent
 - **Smooth Transitions**: Animated reordering of other items
-- **Touch Actions**: Optimized for mobile touch gestures
+- **Touch Actions**: Optimized for mobile touch gestures with delay activation
+- **Scroll-Friendly**: 200ms delay prevents accidental dragging while scrolling
 
 ### Constraints
 
@@ -162,7 +163,8 @@ rootTodos.sort((a, b) => {
 ```typescript
 useSensor(PointerSensor, {
   activationConstraint: {
-    distance: 8, // Minimum 8px movement to start dragging
+    delay: 200, // 200ms delay before dragging starts (for mobile)
+    tolerance: 5, // Allow 5px movement during delay
   },
 })
 ```

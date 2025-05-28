@@ -119,7 +119,7 @@ PORT=5000
 1. **Register** a new account or **login** with existing credentials
 2. **Create todos** using the form at the top
 3. **Add subtasks** by clicking the "+ Sub" button on any todo
-4. **Reorder todos** by touch-and-hold (mobile) or click-and-drag (desktop) to rearrange open todos
+4. **Reorder todos** by touch-and-hold for 200ms (mobile) or click-and-drag (desktop) to rearrange open todos
 5. **Search todos** by clicking the search icon and typing (minimum 2 characters) - field automatically focuses for quick input
 6. **Toggle completion** by checking/unchecking the checkbox
 7. **Edit todos** by clicking the "Edit" button
@@ -129,11 +129,12 @@ PORT=5000
 11. **Switch tabs** between "Open" and "Completed" todos
 
 ### Drag & Drop Reordering
-- **Mobile**: Touch and hold a todo item, then drag to reorder
+- **Mobile**: Touch and hold a todo item for 200ms, then drag to reorder
 - **Desktop**: Click and drag todo items to new positions
 - **Visual Feedback**: Dragged items become semi-transparent during movement
 - **Auto-Save**: New order is automatically saved to the database
 - **Edit Mode**: Dragging is disabled when any todo is being edited
+- **Scroll-Friendly**: Delay prevents accidental dragging while scrolling
 
 ### Search & Editing Modes
 - **Search mode**: Filters todos in real-time as you type with automatic field focus
@@ -256,7 +257,7 @@ curl -X POST http://localhost:5000/api/todos \
 - Drag and drop with proper touch event handling
 - Optimized for various screen sizes
 - Fast loading and minimal bundle size
-- Touch-friendly drag activation (8px minimum distance)
+- Touch-friendly drag activation (200ms delay with 5px tolerance)
 
 ## 🛣️ Future Enhancements
 
