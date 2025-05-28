@@ -436,36 +436,21 @@ const TagManagement: React.FC = () => {
                       <Box
                         sx={{
                           display: 'flex',
-                          flexDirection: 'column',
-                          gap: 0.5,
+                          alignItems: 'center',
+                          gap: 1,
                           flexGrow: 1,
-                          minWidth: 0
+                          minWidth: 0,
+                          flexWrap: 'wrap'
                         }}
                       >
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 1,
-                            flexWrap: 'wrap'
+                        <Chip
+                          label={tag.name}
+                          size="medium"
+                          style={{
+                            backgroundColor: tag.color,
+                            color: 'white',
                           }}
-                        >
-                          <Chip
-                            label={tag.name}
-                            size="medium"
-                            style={{
-                              backgroundColor: tag.color,
-                              color: 'white',
-                            }}
-                          />
-                        </Box>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={{ fontSize: '0.75rem' }}
-                        >
-                          Created: {new Date(tag.createdAt).toLocaleDateString()}
-                        </Typography>
+                        />
                       </Box>
                       <IconButton
                         size="small"
