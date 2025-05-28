@@ -8,6 +8,7 @@ This application is the result of experimenting with Agent mode in VS Code.
 
 - **User Authentication**: Secure registration and login with JWT tokens
 - **Hierarchical Todos**: Create parent-child relationships between todos
+- **Drag & Drop Reordering**: Touch-friendly drag and drop for reordering open todos with mobile optimization
 - **Status Management**: Toggle between open and completed todos
 - **Real-time Search**: Search todos by title and description with autofocus and live filtering
 - **Date-Based Organization**: Completed todos grouped by completion date with smart headings (Today, Yesterday, etc.)
@@ -30,6 +31,7 @@ This application is the result of experimenting with Agent mode in VS Code.
 - **React Router** for client-side routing
 - **Context API** for state management with global editing state
 - **Material UI** for modern, accessible components
+- **@dnd-kit** for drag and drop functionality with mobile touch support
 - **PWA** with service worker and offline functionality
 - **Axios** for API communication
 - **Dark Mode** with automatic system preference detection
@@ -117,13 +119,21 @@ PORT=5000
 1. **Register** a new account or **login** with existing credentials
 2. **Create todos** using the form at the top
 3. **Add subtasks** by clicking the "+ Sub" button on any todo
-4. **Search todos** by clicking the search icon and typing (minimum 2 characters) - field automatically focuses for quick input
-5. **Toggle completion** by checking/unchecking the checkbox
-6. **Edit todos** by clicking the "Edit" button
-7. **Delete todos** by clicking the "Delete" button (includes all children)
-8. **Bulk delete completed** by clicking "Delete All Completed" on the Completed tab
-9. **Access user menu** by clicking the hamburger menu icon (top right)
-10. **Switch tabs** between "Open" and "Completed" todos
+4. **Reorder todos** by touch-and-hold (mobile) or click-and-drag (desktop) to rearrange open todos
+5. **Search todos** by clicking the search icon and typing (minimum 2 characters) - field automatically focuses for quick input
+6. **Toggle completion** by checking/unchecking the checkbox
+7. **Edit todos** by clicking the "Edit" button
+8. **Delete todos** by clicking the "Delete" button (includes all children)
+9. **Bulk delete completed** by clicking "Delete All Completed" on the Completed tab
+10. **Access user menu** by clicking the hamburger menu icon (top right)
+11. **Switch tabs** between "Open" and "Completed" todos
+
+### Drag & Drop Reordering
+- **Mobile**: Touch and hold a todo item, then drag to reorder
+- **Desktop**: Click and drag todo items to new positions
+- **Visual Feedback**: Dragged items become semi-transparent during movement
+- **Auto-Save**: New order is automatically saved to the database
+- **Edit Mode**: Dragging is disabled when any todo is being edited
 
 ### Search & Editing Modes
 - **Search mode**: Filters todos in real-time as you type with automatic field focus
@@ -146,6 +156,7 @@ PORT=5000
 - `GET /api/todos` - Get all user todos
 - `POST /api/todos` - Create new todo
 - `PUT /api/todos/:id` - Update todo
+- `PATCH /api/todos/reorder` - Reorder todos (drag and drop)
 - `DELETE /api/todos/:id` - Delete todo and children
 - `DELETE /api/todos/completed` - Delete all completed todos (bulk operation)
 - `PUT /api/todos/:id/toggle` - Toggle todo completion
@@ -240,10 +251,12 @@ curl -X POST http://localhost:5000/api/todos \
 ## 📱 Mobile Optimization
 
 - Responsive CSS Grid and Flexbox layouts
-- Touch-friendly button sizes
-- Mobile-first design approach
+- Touch-friendly button sizes and drag activation constraints
+- Mobile-first design approach with optimized touch gestures
+- Drag and drop with proper touch event handling
 - Optimized for various screen sizes
 - Fast loading and minimal bundle size
+- Touch-friendly drag activation (8px minimum distance)
 
 ## 🛣️ Future Enhancements
 
@@ -252,9 +265,10 @@ curl -X POST http://localhost:5000/api/todos \
 - [ ] File attachments
 - [ ] Collaboration features
 - [ ] Export/import functionality
-- [ ] Batch operations for todos
 - [ ] Keyboard shortcuts for power users
 - [ ] Todo templates and recurring tasks
+- [ ] Cross-list drag and drop (between open and completed)
+- [ ] Batch selection and operations for multiple todos
 
 ## 📄 License
 

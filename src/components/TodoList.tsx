@@ -22,14 +22,30 @@ import {
   DialogContentText,
 } from '@mui/material';
 import { Add as AddIcon, Close as CloseIcon, Search as SearchIcon } from '@mui/icons-material';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 import { useTodos } from '../contexts/TodoContext';
 import { useEditing } from '../contexts/EditingContext';
 import type { Todo } from '../types';
 import TodoItem from './TodoItem';
 import TodoForm from './TodoForm';
+import DraggableTodoItem from './DraggableTodoItem';
 
 const TodoList: React.FC = () => {
-  const { todos, loading, deleteCompletedTodos } = useTodos();
+  const { todos, loading, deleteCompletedTodos, reorderTodos } = useTodos();
   const { isAnyEditing, setIsAnyEditing } = useEditing();
   const [activeTab, setActiveTab] = useState<'open' | 'completed'>('open');
   const [showForm, setShowForm] = useState(false);
@@ -42,6 +58,18 @@ const TodoList: React.FC = () => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  // Drag and drop sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // Minimum distance to start dragging
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   // Update global editing state when showForm changes
   useEffect(() => {
@@ -166,6 +194,29 @@ const TodoList: React.FC = () => {
       day: 'numeric',
       year: 'numeric'
     });
+  };
+
+  // Handle drag end event
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (!over || active.id === over.id) {
+      return;
+    }
+
+    const activeIndex = openTodos.findIndex(todo => todo._id === active.id);
+    const overIndex = openTodos.findIndex(todo => todo._id === over.id);
+
+    if (activeIndex !== -1 && overIndex !== -1) {
+      const reorderedTodos = arrayMove(openTodos, activeIndex, overIndex);
+      const todoIds = reorderedTodos.map(todo => todo._id);
+
+      try {
+        await reorderTodos(todoIds);
+      } catch (error) {
+        console.error('Failed to reorder todos:', error);
+      }
+    }
   };
 
   const allOpenTodos = todoArray.filter(todo => !todo.completed && !todo.parent);
@@ -401,7 +452,7 @@ const TodoList: React.FC = () => {
           sx={{ mt: -1 }}
         >
           {activeTab === 'open' ? (
-            // Render open todos normally
+            // Render open todos with drag and drop
             currentTodos.length === 0 ? (
               <Box
                 sx={{ textAlign: 'center', py: 4 }}
@@ -416,11 +467,28 @@ const TodoList: React.FC = () => {
                 </Typography>
               </Box>
             ) : (
-              <Box
-                sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
               >
-                {currentTodos.map(todo => renderTodoWithChildren(todo))}
-              </Box>
+                <SortableContext
+                  items={currentTodos.map(todo => todo._id)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <Box
+                    sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
+                  >
+                    {currentTodos.map(todo => (
+                      <DraggableTodoItem
+                        key={todo._id}
+                        todo={todo}
+                        level={0}
+                      />
+                    ))}
+                  </Box>
+                </SortableContext>
+              </DndContext>
             )
           ) : (
             // Render completed todos grouped by date

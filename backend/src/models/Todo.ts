@@ -8,6 +8,7 @@ export interface ITodo extends Document {
   user: mongoose.Types.ObjectId;
   parent?: mongoose.Types.ObjectId;
   children: mongoose.Types.ObjectId[];
+  order?: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -45,7 +46,11 @@ const TodoSchema = new Schema<ITodo>({
   children: [{
     type: Schema.Types.ObjectId,
     ref: 'Todo'
-  }]
+  }],
+  order: {
+    type: Number,
+    default: null
+  }
 }, {
   timestamps: true
 });
