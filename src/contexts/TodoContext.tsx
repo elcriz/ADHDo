@@ -46,13 +46,13 @@ export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
     }
   };
 
-  const createTodo = async (title: string, description?: string, parent?: string) => {
-    await todoApi.createTodo({ title, description, parent });
+  const createTodo = async (title: string, description?: string, parent?: string, tags?: string[]) => {
+    await todoApi.createTodo({ title, description, parent, tags });
     await refreshTodos(); // Refresh to get updated hierarchy
   };
 
-  const updateTodo = async (id: string, title: string, description?: string) => {
-    await todoApi.updateTodo(id, { title, description });
+  const updateTodo = async (id: string, title: string, description?: string, tags?: string[]) => {
+    await todoApi.updateTodo(id, { title, description, tags });
     await refreshTodos();
   };
 

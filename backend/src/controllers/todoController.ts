@@ -10,7 +10,7 @@ export const getTodos = async (req: AuthRequest, res: Response): Promise<void> =
     }
 
     // First get all todos for the user
-    const allTodos = await Todo.find({ user: req.user._id });
+    const allTodos = await Todo.find({ user: req.user._id }).populate('tags');
 
     // Create a map for quick lookup
     const todoMap = new Map<string, any>();
@@ -89,13 +89,14 @@ export const createTodo = async (req: AuthRequest, res: Response): Promise<void>
       return;
     }
 
-    const { title, description, parent } = req.body;
+    const { title, description, parent, tags } = req.body;
 
     const todo = new Todo({
       title,
       description,
       user: req.user._id,
-      parent: parent || null
+      parent: parent || null,
+      tags: tags || []
     });
 
     await todo.save();
@@ -135,7 +136,7 @@ export const updateTodo = async (req: AuthRequest, res: Response): Promise<void>
     }
 
     const { id } = req.params;
-    const { title, description } = req.body;
+    const { title, description, tags } = req.body;
 
     const todo = await Todo.findOne({ _id: id, user: req.user._id });
 
@@ -149,6 +150,9 @@ export const updateTodo = async (req: AuthRequest, res: Response): Promise<void>
 
     todo.title = title ?? todo.title;
     todo.description = description ?? todo.description;
+    if (tags !== undefined) {
+      todo.tags = tags;
+    }
 
     await todo.save();
 

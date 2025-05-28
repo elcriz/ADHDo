@@ -4,6 +4,15 @@ export interface User {
   name: string;
 }
 
+export interface Tag {
+  _id: string;
+  name: string;
+  color: string;
+  user: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Todo {
   _id: string;
   title: string;
@@ -13,6 +22,7 @@ export interface Todo {
   user: string;
   parent?: string;
   children: Todo[];
+  tags: Tag[];
   order?: number;
   createdAt: string;
   updatedAt: string;
@@ -29,8 +39,8 @@ export interface AuthContextType {
 export interface TodoContextType {
   todos: Todo[];
   loading: boolean;
-  createTodo: (title: string, description?: string, parent?: string) => Promise<void>;
-  updateTodo: (id: string, title: string, description?: string) => Promise<void>;
+  createTodo: (title: string, description?: string, parent?: string, tags?: string[]) => Promise<void>;
+  updateTodo: (id: string, title: string, description?: string, tags?: string[]) => Promise<void>;
   toggleTodo: (id: string) => Promise<void>;
   deleteTodo: (id: string) => Promise<void>;
   deleteCompletedTodos: () => Promise<void>;

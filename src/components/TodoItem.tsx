@@ -26,6 +26,7 @@ import type { Todo } from '../types';
 import { useTodos } from '../contexts/TodoContext';
 import { useEditing } from '../contexts/EditingContext';
 import TodoForm from './TodoForm';
+import { TagList } from './TagChip';
 
 interface TodoItemProps {
   todo: Todo;
@@ -180,6 +181,9 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
                 />
               )}
             </Box>
+
+            {/* Tags display */}
+            <TagList tags={todo.tags || []} size="small" />
           </Box>
 
           {/* Drag Handle - only show for open todos in draggable context */}

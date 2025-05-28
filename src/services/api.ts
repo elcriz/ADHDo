@@ -54,12 +54,12 @@ export const todoApi = {
     return response.data.todos || response.data;
   },
 
-  createTodo: async (todoData: { title: string; description?: string; parent?: string }) => {
+  createTodo: async (todoData: { title: string; description?: string; parent?: string; tags?: string[] }) => {
     const response = await api.post('/todos', todoData);
     return response.data.todo || response.data;
   },
 
-  updateTodo: async (id: string, todoData: { title: string; description?: string }) => {
+  updateTodo: async (id: string, todoData: { title: string; description?: string; tags?: string[] }) => {
     const response = await api.put(`/todos/${id}`, todoData);
     return response.data.todo || response.data;
   },
@@ -81,6 +81,29 @@ export const todoApi = {
 
   reorderTodos: async (todoIds: string[]) => {
     const response = await api.patch('/todos/reorder', { todoIds });
+    return response.data;
+  },
+};
+
+// Tag API
+export const tagApi = {
+  getTags: async () => {
+    const response = await api.get('/tags');
+    return response.data.tags || response.data;
+  },
+
+  createTag: async (tagData: { name: string }) => {
+    const response = await api.post('/tags', tagData);
+    return response.data.tag || response.data;
+  },
+
+  updateTag: async (id: string, tagData: { name?: string; color?: string }) => {
+    const response = await api.put(`/tags/${id}`, tagData);
+    return response.data.tag || response.data;
+  },
+
+  deleteTag: async (id: string) => {
+    const response = await api.delete(`/tags/${id}`);
     return response.data;
   },
 };

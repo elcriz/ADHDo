@@ -6,8 +6,9 @@ import {
   Alert,
   CircularProgress,
 } from '@mui/material';
-import type { Todo } from '../types';
+import type { Todo, Tag } from '../types';
 import { useTodos } from '../contexts/TodoContext';
+import TagSelector from './TagSelector';
 
 interface TodoFormProps {
   todo?: Todo;
@@ -19,6 +20,7 @@ interface TodoFormProps {
 const TodoForm: React.FC<TodoFormProps> = ({ todo, parent, onSuccess, onCancel }) => {
   const [title, setTitle] = useState(todo?.title || '');
   const [description, setDescription] = useState(todo?.description || '');
+  const [selectedTags, setSelectedTags] = useState<Tag[]>(todo?.tags || []);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -36,12 +38,14 @@ const TodoForm: React.FC<TodoFormProps> = ({ todo, parent, onSuccess, onCancel }
     setLoading(true);
 
     try {
+      const tagIds = selectedTags.map(tag => tag._id);
+
       if (todo) {
         // Update existing todo
-        await updateTodo(todo._id, title.trim(), description.trim() || undefined);
+        await updateTodo(todo._id, title.trim(), description.trim() || undefined, tagIds);
       } else {
         // Create new todo
-        await createTodo(title.trim(), description.trim() || undefined, parent);
+        await createTodo(title.trim(), description.trim() || undefined, parent, tagIds);
       }
       onSuccess();
     } catch (err: any) {
@@ -87,6 +91,13 @@ const TodoForm: React.FC<TodoFormProps> = ({ todo, parent, onSuccess, onCancel }
         rows={3}
         size="small"
         fullWidth
+      />
+
+      <TagSelector
+        selectedTags={selectedTags}
+        onChange={setSelectedTags}
+        disabled={loading}
+        size="small"
       />
 
       <Box
