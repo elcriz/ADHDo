@@ -1,5 +1,6 @@
 import { Response } from 'express';
 import Tag from '../models/Tag.js';
+import Todo from '../models/Todo.js';
 import { AuthRequest } from '../middleware/auth.js';
 
 // Generate a consistent color for a tag name using a simple hash
@@ -160,6 +161,14 @@ export const deleteTag = async (req: AuthRequest, res: Response): Promise<void> 
       return;
     }
 
+    // Remove the tag reference from all todos that use it
+    const Todo = require('../models/Todo.js').default;
+    await Todo.updateMany(
+      { user: req.user._id, tags: id },
+      { $pull: { tags: id } }
+    );
+
+    // Delete the tag
     await Tag.findByIdAndDelete(id);
 
     res.json({

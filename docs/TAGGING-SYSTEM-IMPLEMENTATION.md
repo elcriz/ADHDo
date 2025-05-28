@@ -15,15 +15,18 @@ The tagging system allows users to:
 ### ✅ Core Functionality
 - **Tag Creation**: Create tags inline while adding/editing todos
 - **Tag Selection**: Choose from existing tags via autocomplete
+- **Tag Management**: Dedicated management page for organizing tags
 - **Color Consistency**: Auto-generated colors that remain consistent per tag
 - **User Isolation**: Tags are user-specific and private
 - **Visual Display**: Tags appear as colored chips below date information
+- **Safe Operations**: Tag updates/deletions automatically maintain data integrity
 
 ### ✅ User Experience
 - **Mobile Optimized**: Touch-friendly interface with appropriate sizing
 - **Responsive Design**: Works seamlessly across devices
 - **Intuitive Interface**: Autocomplete with tag creation built-in
 - **Visual Separation**: Tags displayed separately from date chips
+- **Dedicated Management**: Full CRUD operations in dedicated interface
 
 ## Technical Implementation
 
@@ -116,6 +119,14 @@ interface Todo {
 - Consistent color styling
 - Optional delete functionality
 
+**TagManagement** (`/src/components/TagManagement.tsx`)
+- Dedicated tag management interface
+- Full CRUD operations for tags
+- Responsive design with mobile optimization
+- Confirmation dialogs for destructive operations
+- Loading states and error handling
+- Navigation accessible via hamburger menu
+
 **TodoForm Integration**
 - Added TagSelector to todo creation/editing
 - Handles tag state management
@@ -147,7 +158,13 @@ interface TodoContextType {
    - Press Enter or select from autocomplete
    - Tag is automatically created with generated color
 
-2. **Tag Selection**:
+2. **Via Tag Management Page**:
+   - Access via hamburger menu → "Manage tags"
+   - Click "Add New Tag" button
+   - Enter tag name and create
+   - Tag is available immediately across all todos
+
+3. **Tag Selection**:
    - Click on tag field dropdown
    - Select from existing tags
    - Multiple tags can be selected
@@ -155,10 +172,15 @@ interface TodoContextType {
 ### Managing Tags
 
 - **Viewing**: Tags appear as colored chips below todo date information
-- **Editing**: Modify tag assignments by editing the todo
+- **Editing Todo Tags**: Modify tag assignments by editing the todo
+- **Tag Management Page**: Access via hamburger menu for full tag operations:
+  - **View All Tags**: See complete list of your tags
+  - **Create Tags**: Add new tags with automatic color generation
+  - **Edit Tag Names**: Rename tags (changes reflect across all todos)
+  - **Delete Tags**: Remove tags completely (automatically removed from todos)
 - **Colors**: Each tag name gets a consistent color across all todos
-- **Deletion**: Remove tags from individual todos via edit form
 - **Searching**: Type tag names in the search field to filter todos by tags
+- **Data Safety**: Tag updates/deletions maintain referential integrity
 
 ### Mobile Experience
 
@@ -217,6 +239,10 @@ interface TodoContextType {
 - [ ] **Test tag search functionality**: Search for todos by typing tag names
 - [ ] **Test combined search**: Verify search works across titles, descriptions, and tags
 - [ ] **Test hierarchical tag search**: Ensure parent todos appear when child tags match
+- [ ] **Test tag management page**: Access via hamburger menu → "Manage tags"
+- [ ] **Test tag CRUD operations**: Create, edit, delete tags from management page
+- [ ] **Test data integrity**: Verify tag changes reflect across todos immediately
+- [ ] **Test deletion safety**: Confirm deleted tags are removed from todos
 
 ### API Testing
 ```bash

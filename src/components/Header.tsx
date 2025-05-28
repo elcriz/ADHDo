@@ -12,7 +12,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
-import { Menu as MenuIcon, Logout as LogoutIcon } from '@mui/icons-material';
+import { Menu as MenuIcon, Logout as LogoutIcon, Label as LabelIcon } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 import ColorBar from './ColorBar';
 
@@ -112,6 +112,24 @@ const Header: React.FC = () => {
                 },
               }}
             >
+              <MenuItem
+                onClick={() => {
+                  navigate('/tags');
+                  setAnchorEl(null);
+                }}
+                sx={{
+                  '&:hover': {
+                    bgcolor: 'action.hover',
+                  },
+                }}
+              >
+                <ListItemIcon>
+                  <LabelIcon
+                    fontSize="small"
+                  />
+                </ListItemIcon>
+                <ListItemText primary="Manage tags" />
+              </MenuItem>
               <MenuItem
                 onClick={handleLogout}
                 sx={{

@@ -6,6 +6,7 @@
 
 ## 🆕 Latest Updates (May 2025)
 
+- **🏷️ Tag Management**: Comprehensive tagging system with dedicated management interface
 - **🔍 Search Functionality**: Real-time search with autofocus and mutual exclusivity system
 - **🗑️ Bulk Delete**: Delete all completed todos with confirmation dialog
 - **🍔 Hamburger Menu**: Modern menu system replacing logout button for scalable user actions
@@ -20,7 +21,8 @@
 - **Authentication System**: Login/Register with JWT tokens
 - **Todo Management**: Create, edit, delete, and toggle todos
 - **Hierarchical Todos**: Parent-child relationships with subtasks
-- **Real-time Search**: Live filtering of todos by title and description with automatic field focus
+- **Tagging System**: Comprehensive tag management with dedicated interface
+- **Real-time Search**: Live filtering of todos by title, description, and tags with automatic field focus
 - **Smart UI Management**: Mutual exclusivity between search and editing modes
 - **Progressive Web App**: Installable app with offline functionality
 - **Dark Mode**: Automatic theme switching based on system preferences
@@ -41,8 +43,10 @@
 ### ✅ Database (MongoDB)
 - **User Model**: Secure password storage with bcrypt
 - **Todo Model**: Hierarchical structure with parent-child relationships
+- **Tag Model**: User-specific tags with automatic color generation
 - **Automatic Timestamps**: Creation and completion date tracking
-- **Optimized Queries**: Efficient data retrieval
+- **Optimized Queries**: Efficient data retrieval with proper indexing
+- **Referential Integrity**: Safe tag operations maintaining todo relationships
 
 ## 🔧 Technical Features
 
@@ -73,15 +77,16 @@
 1. **User Registration/Login**: Secure account management
 2. **Todo Creation**: Add todos with title and description
 3. **Hierarchical Structure**: Create subtasks under any todo
-4. **Real-time Search**: Search todos by title/description with live filtering and automatic field focus
-5. **Smart Mode Management**: Mutual exclusivity between search and editing
-6. **Bulk Operations**: Delete all completed todos with confirmation dialog
-7. **Hamburger Menu**: Access user actions through modern menu interface
-8. **Status Management**: Toggle between open/completed
-9. **Date Tracking**: Automatic timestamps for creation/completion
-10. **Inline Editing**: Edit todos without page refresh
-11. **Individual Deletion**: Delete todos with all children
-12. **PWA Features**: Install to home screen, offline functionality
+4. **Tag Organization**: Create, manage, and assign tags to todos
+5. **Real-time Search**: Search todos by title, description, and tags with live filtering and automatic field focus
+6. **Smart Mode Management**: Mutual exclusivity between search and editing
+7. **Bulk Operations**: Delete all completed todos with confirmation dialog
+8. **Hamburger Menu**: Access user actions and tag management through modern menu interface
+9. **Status Management**: Toggle between open/completed
+10. **Date Tracking**: Automatic timestamps for creation/completion
+11. **Inline Editing**: Edit todos without page refresh
+12. **Individual Deletion**: Delete todos with all children
+13. **PWA Features**: Install to home screen, offline functionality
 
 ### UI/UX
 - **Responsive Design**: Works perfectly on mobile, tablet, desktop

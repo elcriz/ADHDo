@@ -131,8 +131,9 @@ PORT=5000
 8. **Edit todos** by clicking the "Edit" button
 9. **Delete todos** by clicking the "Delete" button (includes all children)
 10. **Bulk delete completed** by clicking "Delete All Completed" on the Completed tab
-11. **Access user menu** by clicking the hamburger menu icon (top right)
-12. **Switch tabs** between "Open" and "Completed" todos
+11. **Manage tags** by accessing "Manage tags" from the hamburger menu
+12. **Access user menu** by clicking the hamburger menu icon (top right)
+13. **Switch tabs** between "Open" and "Completed" todos
 
 ### Drag & Drop Reordering
 - **Mobile**: Touch and hold a todo item for 200ms, then drag to reorder
@@ -150,10 +151,12 @@ PORT=5000
 ### Tag System
 - **Tag Creation**: Create new tags inline while adding or editing todos
 - **Tag Selection**: Choose from existing tags via autocomplete dropdown
+- **Tag Management**: Dedicated tag management page accessible via hamburger menu
 - **Color Consistency**: Each tag name automatically gets a consistent color across all todos
 - **Visual Display**: Tags appear as colored chips below date information in todo cards
 - **User Isolation**: Tags are private and user-specific
 - **Mobile Optimized**: Touch-friendly interface with appropriate sizing
+- **Safe Operations**: Tag updates and deletions automatically maintain todo relationships
 
 ### Bulk Operations
 - **Delete All Completed**: Remove all completed todos at once with confirmation dialog
@@ -222,8 +225,8 @@ interface User {
 ### Tags
 - `GET /api/tags` - Get all user tags
 - `POST /api/tags` - Create new tag
-- `PUT /api/tags/:id` - Update tag
-- `DELETE /api/tags/:id` - Delete tag
+- `PUT /api/tags/:id` - Update tag (name/color)
+- `DELETE /api/tags/:id` - Delete tag (automatically removes from todos)
 
 ## 🚀 Deployment
 

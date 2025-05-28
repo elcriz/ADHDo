@@ -8,6 +8,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Login from './components/Login';
 import Register from './components/Register';
 import TodoList from './components/TodoList';
+import TagManagement from './components/TagManagement';
 import Header from './components/Header';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import { useAppTheme } from './theme';
@@ -53,6 +54,14 @@ function AppContent() {
                       <TodoList />
                     </TodoProvider>
                   </EditingProvider>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/tags"
+              element={
+                <ProtectedRoute>
+                  <TagManagement />
                 </ProtectedRoute>
               }
             />

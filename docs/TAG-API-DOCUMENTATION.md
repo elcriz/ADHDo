@@ -104,13 +104,18 @@ Content-Type: application/json
 
 ### DELETE /api/tags/:id
 
-Delete a tag.
+Delete a tag and automatically remove it from all todos.
 
 **Request:**
 ```http
 DELETE /api/tags/605c72ef1532076a41f5c8c2
 Authorization: Bearer <token>
 ```
+
+**Behavior:**
+- Removes tag reference from all todos that use it
+- Ensures no orphaned references remain
+- Maintains data integrity across the system
 
 **Response:**
 ```json
@@ -303,3 +308,60 @@ curl -X GET http://localhost:5000/api/todos \
   updatedAt: Date
 }
 ```
+
+## Data Integrity & Relationships
+
+### Tag-Todo Relationship Management
+
+The tag system maintains referential integrity through automated relationship management:
+
+#### Tag Updates
+When a tag is updated (name or color), the changes automatically propagate to all todos because:
+- Todos reference tags by `ObjectId`, not by name/color
+- No manual todo updates required
+- Changes are immediately visible across the application
+
+#### Tag Deletion Safety
+When a tag is deleted, the system ensures data integrity by:
+
+```javascript
+// 1. Remove tag references from all todos
+await Todo.updateMany(
+  { user: req.user._id, tags: tagId },
+  { $pull: { tags: tagId } }
+);
+
+// 2. Delete the tag itself
+await Tag.findByIdAndDelete(tagId);
+```
+
+**Benefits:**
+- No orphaned references in todos
+- No broken tag displays
+- Consistent data state maintained
+- Safe deletion without data corruption
+
+#### Population and Queries
+Tags are populated in todo queries using Mongoose populate:
+
+```javascript
+// Get todos with populated tag details
+const todos = await Todo.find({ user: userId }).populate('tags');
+```
+
+This ensures:
+- Full tag objects (name, color, etc.) are available in todos
+- Efficient single-query data fetching
+- Consistent tag display across the application
+
+### User Isolation
+- Tags are strictly user-scoped
+- Users cannot access or modify others' tags
+- All operations include user authentication checks
+- Database queries always filter by user ID
+
+### Performance Considerations
+- **Compound Index**: `{ user: 1, name: 1 }` ensures fast tag lookups and uniqueness
+- **Efficient Queries**: Tag operations use optimized MongoDB queries
+- **Bulk Operations**: Tag removal from todos uses `updateMany` for efficiency
+- **Population Strategy**: Strategic use of populate to minimize database round trips
