@@ -365,7 +365,7 @@ const TagManagement: React.FC = () => {
           >
             <Typography
               variant="h6"
-              sx={{ p: 2, bgcolor: 'grey.50' }}
+              sx={{ p: 2, bgcolor: 'ui', borderTopLeftRadius: 8, borderTopRightRadius: 8 }}
             >
               Your Tags ({tags.length})
             </Typography>
