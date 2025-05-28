@@ -45,31 +45,15 @@ const DraggableTodoItem: React.FC<DraggableTodoItemProps> = ({ todo, level }) =>
       style={style}
       {...attributes}
       sx={{
-        // Allow normal touch scrolling on the container
-        touchAction: 'manipulation',
-        cursor: isAnyEditing ? 'default' : (isSortableDragging ? 'grabbing' : 'grab'),
+        cursor: isAnyEditing ? 'default' : (isSortableDragging ? 'grabbing' : 'auto'),
       }}
     >
-      <Box
-        {...(!isAnyEditing ? listeners : {})} // Only apply listeners when not editing
-        sx={{
-          // Only prevent touch actions on the draggable content when actively dragging
-          ...((!isAnyEditing && listeners) && {
-            touchAction: 'none',
-            // Prevent text selection while dragging
-            userSelect: 'none',
-            WebkitUserSelect: 'none',
-            // Prevent default touch behaviors
-            WebkitTouchCallout: 'none',
-            WebkitTapHighlightColor: 'transparent',
-          }),
-        }}
-      >
-        <TodoItem
-          todo={todo}
-          level={level}
-        />
-      </Box>
+      <TodoItem
+        todo={todo}
+        level={level}
+        dragHandleProps={!isAnyEditing ? listeners : {}}
+        showDragHandle={true}
+      />
       {validChildren.length > 0 && (
         <Box sx={{ ml: 2 }}>
           {validChildren.map(child => (
@@ -77,6 +61,7 @@ const DraggableTodoItem: React.FC<DraggableTodoItemProps> = ({ todo, level }) =>
               key={child._id}
               todo={child}
               level={level + 1}
+              showDragHandle={false}
             />
           ))}
         </Box>

@@ -19,6 +19,7 @@ import {
   Delete as DeleteIcon,
   Add as AddIcon,
   MoreVert as MoreVertIcon,
+  DragIndicator as DragIndicatorIcon,
 } from '@mui/icons-material';
 import { format } from 'date-fns';
 import type { Todo } from '../types';
@@ -29,9 +30,11 @@ import TodoForm from './TodoForm';
 interface TodoItemProps {
   todo: Todo;
   level: number;
+  dragHandleProps?: any; // Props from useSortable for drag handle
+  showDragHandle?: boolean; // Whether to show the drag handle
 }
 
-const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
+const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showDragHandle = false }) => {
   const { toggleTodo, deleteTodo } = useTodos();
   const { isAnyEditing, setIsAnyEditing, editingTodoId, setEditingTodoId } = useEditing();
   const [isEditing, setIsEditing] = useState(false);
@@ -177,6 +180,33 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level }) => {
               )}
             </Box>
           </Box>
+
+          {/* Drag Handle - only show for open todos in draggable context */}
+          {showDragHandle && !todo.completed && (
+            <IconButton
+              size="small"
+              disabled={isAnyEditing}
+              sx={{
+                p: 0.5,
+                cursor: isAnyEditing ? 'default' : 'grab',
+                '&:active': {
+                  cursor: isAnyEditing ? 'default' : 'grabbing',
+                },
+                '&:disabled': {
+                  color: 'action.disabled',
+                  cursor: 'default',
+                },
+                color: 'text.secondary',
+                '&:hover': {
+                  color: 'primary.main',
+                  backgroundColor: 'action.hover',
+                }
+              }}
+              {...dragHandleProps}
+            >
+              <DragIndicatorIcon fontSize="small" />
+            </IconButton>
+          )}
 
           <IconButton
             size="small"

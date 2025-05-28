@@ -32,6 +32,7 @@ import {
   useSensors,
   type DragEndEvent,
 } from '@dnd-kit/core';
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import {
   arrayMove,
   SortableContext,
@@ -60,19 +61,17 @@ const TodoList: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  // Drag and drop sensors
+  // Drag and drop sensors - simplified since we now use a dedicated drag handle
   const sensors = useSensors(
-    // Use TouchSensor for mobile with delay
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 200, // 200ms delay before dragging starts
-        tolerance: 200, // Allow significant movement during delay to enable scrolling
-      },
-    }),
-    // Use PointerSensor for desktop (mouse/trackpad)
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8, // Small distance for desktop precision
+        distance: 3, // Small distance for immediate response on drag handle
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 0, // No delay needed since we have a dedicated handle
+        tolerance: 3, // Small tolerance for immediate response
       },
     }),
     useSensor(KeyboardSensor, {
@@ -480,6 +479,7 @@ const TodoList: React.FC = () => {
                 sensors={sensors}
                 collisionDetection={closestCenter}
                 onDragEnd={handleDragEnd}
+                modifiers={[restrictToVerticalAxis]}
               >
                 <SortableContext
                   items={currentTodos.map(todo => todo._id)}
