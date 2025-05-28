@@ -11,7 +11,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemSecondaryAction,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -396,7 +395,16 @@ const TagManagement: React.FC = () => {
                       </Box>
                     </Box>
                   ) : (
-                    <>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        width: '100%',
+                        gap: 2,
+                        flexDirection: isMobile ? 'column' : 'row'
+                      }}
+                    >
                       <ListItemText
                         primary={
                           <Box
@@ -425,27 +433,25 @@ const TagManagement: React.FC = () => {
                           </Box>
                         }
                       />
-                      <ListItemSecondaryAction>
-                        <Box sx={{ display: 'flex', gap: 1 }}>
-                          <IconButton
-                            size="small"
-                            color="primary"
-                            onClick={() => handleStartEdit(tag)}
-                            disabled={editingTagId !== null}
-                          >
-                            <EditIcon />
-                          </IconButton>
-                          <IconButton
-                            size="small"
-                            color="error"
-                            onClick={() => setDeleteTagId(tag._id)}
-                            disabled={editingTagId !== null}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </Box>
-                      </ListItemSecondaryAction>
-                    </>
+                      <Box sx={{ display: 'flex', gap: 1, flexShrink: 0 }}>
+                        <IconButton
+                          size="small"
+                          color="primary"
+                          onClick={() => handleStartEdit(tag)}
+                          disabled={editingTagId !== null}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() => setDeleteTagId(tag._id)}
+                          disabled={editingTagId !== null}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Box>
+                    </Box>
                   )}
                 </ListItem>
               ))}
