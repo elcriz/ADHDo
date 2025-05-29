@@ -12,6 +12,7 @@ The ADHDo application now supports drag and drop functionality for reordering op
 - **Visual Feedback**: Clear visual indicators during drag operations
 - **Backend Persistence**: Order changes are automatically saved to the database
 - **Hierarchical Structure**: Maintains parent-child todo relationships during reordering
+- **Auto Top Insertion Integration**: Works seamlessly with the new feature where todos are automatically added at the top
 
 ## Technical Implementation
 
@@ -250,6 +251,22 @@ Potential improvements for future iterations:
 }
 ```
 
+## Integration with Auto Top Insertion
+
+The drag and drop system works seamlessly with the new auto top insertion feature:
+
+### Complementary Functionality
+- **Auto Insertion**: New todos automatically appear at position 0 (top)
+- **Manual Reordering**: Users can drag and drop to customize order
+- **Order Preservation**: Both systems use the same `order` field in the database
+- **No Conflicts**: Auto insertion and manual reordering work together harmoniously
+
+### Combined User Experience
+1. **Create Todo**: New todo appears at top automatically
+2. **Manual Adjustment**: Use drag and drop to move to preferred position
+3. **Persistent Order**: Both auto and manual ordering are saved permanently
+4. **Flexible Workflow**: Best of both automatic and manual organization
+
 ## Implementation Status
 
 ✅ **Complete Features:**
@@ -261,6 +278,7 @@ Potential improvements for future iterations:
 - Error handling and logging
 - TypeScript type safety
 - Hierarchical todo support
+- Auto top insertion integration
 
 🔄 **Future Considerations:**
 - Performance optimization for large lists

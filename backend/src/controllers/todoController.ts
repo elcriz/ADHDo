@@ -91,12 +91,27 @@ export const createTodo = async (req: AuthRequest, res: Response): Promise<void>
 
     const { title, description, parent, tags } = req.body;
 
+    // If this is not a child todo, we need to update the order of existing todos
+    if (!parent) {
+      // Increment the order of all existing open todos (push them down)
+      await Todo.updateMany(
+        {
+          user: req.user._id,
+          completed: false,
+          parent: null,
+          order: { $ne: null }
+        },
+        { $inc: { order: 1 } }
+      );
+    }
+
     const todo = new Todo({
       title,
       description,
       user: req.user._id,
       parent: parent || null,
-      tags: tags || []
+      tags: tags || [],
+      order: parent ? null : 0 // Set order to 0 for new parent todos, null for child todos
     });
 
     await todo.save();

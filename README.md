@@ -9,6 +9,7 @@ This application is the result of experimenting with Agent mode in VS Code.
 - **User Authentication**: Secure registration and login with JWT tokens
 - **Hierarchical Todos**: Create parent-child relationships between todos
 - **Tag System**: Organize todos with colored tags - create new tags on-the-fly or select from existing ones
+- **Smart Todo Ordering**: New todos automatically appear at the top of the list for immediate focus
 - **Drag & Drop Reordering**: Touch-friendly drag and drop for reordering open todos with mobile optimization
 - **Status Management**: Toggle between open and completed todos
 - **Real-time Search**: Search todos by title, description, and tags with autofocus and live filtering
@@ -118,7 +119,7 @@ PORT=5000
 ## 📱 Usage
 
 1. **Register** a new account or **login** with existing credentials
-2. **Create todos** using the form at the top
+2. **Create todos** using the form at the top - new todos automatically appear at the top of the list for immediate focus
 3. **Add tags** to todos for better organization:
    - Type tag names in the tag field during todo creation/editing
    - Select from existing tags via autocomplete dropdown
@@ -134,6 +135,12 @@ PORT=5000
 11. **Manage tags** by accessing "Manage tags" from the hamburger menu
 12. **Access user menu** by clicking the hamburger menu icon (top right)
 13. **Switch tabs** between "Open" and "Completed" todos
+
+### Smart Todo Ordering
+- **Auto Top Insertion**: New todos automatically appear at the top of the list with order 0
+- **Existing Todo Shift**: All existing open todos are pushed down when a new todo is created
+- **Manual Reordering**: Use drag and drop to manually rearrange todos as needed
+- **Subtask Positioning**: Child todos (subtasks) remain grouped under their parent regardless of order
 
 ### Drag & Drop Reordering
 - **Mobile**: Touch and hold a todo item for 200ms, then drag to reorder

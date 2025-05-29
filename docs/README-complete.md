@@ -6,7 +6,16 @@ A modern, responsive todo application built for neurodivergent human beings with
 
 - **User Authentication**: Secure registration and login with JWT tokens
 - **Hierarchical Todos**: Create parent-child relationships between todos
+- **Smart Todo Ordering**: New todos automatically appear at the top of the list for immediate focus
+- **Drag & Drop Reordering**: Touch-friendly manual reordering with mobile optimization
+- **Tag System**: Organize todos with colored tags and intelligent autocomplete
 - **Status Management**: Toggle between open and completed todos
+- **Real-time Search**: Search todos by title, description, and tags with live filtering
+- **Date-Based Organization**: Completed todos grouped by completion date
+- **Smart UI Management**: Mutual exclusivity between search and editing modes
+- **Bulk Operations**: Delete all completed todos with confirmation
+- **Progressive Web App**: Installable with offline functionality
+- **Dark Mode**: Automatic theme switching based on system preferences
 - **Responsive Design**: Mobile-first, responsive UI design
 - **Date Tracking**: Automatic creation and completion date tracking
 - **RESTful API**: Clean backend API with proper error handling
