@@ -297,7 +297,7 @@ const TodoList: React.FC = () => {
   return (
     <Container
       maxWidth="lg"
-      sx={{ p: isMobile ? 0 : 4 }}
+      sx={{ pt: isMobile ? 0 : 4, pb: isMobile ? 8.25 : 4, px: isMobile ? 0 : 4 }}
     >
       <Paper
         elevation={isMobile ? 0 : 2}
