@@ -4,6 +4,7 @@ import { CssBaseline, Box, Typography } from '@mui/material';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { TodoProvider } from './contexts/TodoContext';
 import { EditingProvider } from './contexts/EditingContext';
+import { ToastProvider } from './contexts/ToastContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './components/Login';
 import Register from './components/Register';
@@ -11,6 +12,7 @@ import TodoList from './components/TodoList';
 import TagManagement from './components/TagManagement';
 import Header from './components/Header';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
+import { ToastContainer } from './components/Toast';
 import { useAppTheme } from './theme';
 
 function AppContent() {
@@ -77,6 +79,7 @@ function AppContent() {
           </Routes>
         </Box>
         <PWAInstallPrompt />
+        <ToastContainer />
       </Box>
     </Router>
   );
@@ -90,9 +93,11 @@ function App() {
       theme={theme}
     >
       <CssBaseline />
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
+      <ToastProvider>
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
+      </ToastProvider>
     </ThemeProvider>
   );
 }

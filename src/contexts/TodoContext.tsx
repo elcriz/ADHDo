@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { todoApi } from '../services/api';
 import type { Todo, TodoContextType } from '../types';
 import { useAuth } from './AuthContext';
+import { useToast } from './ToastContext';
 
 const TodoContext = createContext<TodoContextType | undefined>(undefined);
 
@@ -22,6 +23,7 @@ export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (user) {
@@ -57,8 +59,36 @@ export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
   };
 
   const toggleTodo = async (id: string) => {
+    // Find the todo to check its current state before toggling
+    const findTodoById = (todoList: Todo[], targetId: string): Todo | null => {
+      for (const todo of todoList) {
+        if (todo._id === targetId) return todo;
+
+        if (todo.children) {
+          for (const child of todo.children) {
+            if (typeof child === 'object') {
+              const found = findTodoById([child], targetId);
+              if (found) return found;
+            }
+          }
+        }
+      }
+      return null;
+    };
+
+    const todoItem = findTodoById(todos, id);
+
     await todoApi.toggleTodo(id);
     await refreshTodos();
+
+    // Show appropriate toast notification
+    if (todoItem) {
+      if (todoItem.completed) {
+        showToast(`"${todoItem.title}" marked as incomplete`, 'info');
+      } else {
+        showToast(`"${todoItem.title}" completed!`, 'success');
+      }
+    }
   };
 
   const deleteTodo = async (id: string) => {

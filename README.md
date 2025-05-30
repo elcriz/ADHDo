@@ -12,6 +12,7 @@ This application is the result of experimenting with Agent mode in VS Code.
 - **Smart Todo Ordering**: New todos automatically appear at the top of the list for immediate focus
 - **Drag & Drop Reordering**: Touch-friendly drag and drop for reordering open todos with mobile optimization
 - **Status Management**: Toggle between open and completed todos
+- **Toast Notifications**: Non-obstructive feedback for user actions with completion/incompletion notifications
 - **Real-time Search**: Search todos by title, description, and tags with autofocus and live filtering
 - **Date-Based Organization**: Completed todos grouped by completion date with smart headings (Today, Yesterday, etc.)
 - **Smart UI Management**: Mutual exclusivity between search and editing modes
@@ -128,7 +129,7 @@ PORT=5000
 4. **Add subtasks** by clicking the "+ Sub" button on any todo
 5. **Reorder todos** by touch-and-hold for 200ms (mobile) or click-and-drag (desktop) to rearrange open todos
 6. **Search todos** by clicking the search icon and typing (minimum 2 characters) - searches title, description, and tags with automatic field focus
-7. **Toggle completion** by checking/unchecking the checkbox
+7. **Toggle completion** by checking/unchecking the checkbox - receive instant visual feedback with toast notifications
 8. **Edit todos** by clicking the "Edit" button
 9. **Delete todos** by clicking the "Delete" button (includes all children)
 10. **Bulk delete completed** by clicking "Delete All Completed" on the Completed tab
@@ -164,6 +165,15 @@ PORT=5000
 - **User Isolation**: Tags are private and user-specific
 - **Mobile Optimized**: Touch-friendly interface with appropriate sizing
 - **Safe Operations**: Tag updates and deletions automatically maintain todo relationships
+
+### Toast Notifications
+- **Completion Feedback**: Success notifications when todos are completed with fade-out animation
+- **Incompletion Feedback**: Info notifications when todos are marked as incomplete
+- **Smart Positioning**: Positioned above the floating action button to avoid obstruction
+- **Auto-dismiss**: Notifications automatically disappear after 3 seconds
+- **Manual Dismiss**: Users can manually close notifications with the close button
+- **Non-intrusive**: Smooth slide animations and proper z-index management
+- **Expandable System**: Generic toast system ready for future notification needs
 
 ### Bulk Operations
 - **Delete All Completed**: Remove all completed todos at once with confirmation dialog
