@@ -72,7 +72,7 @@ const Register: React.FC = () => {
             component="p"
             align="center"
           >
-            It's entirely free and it always will be!
+            It's entirely free and always will be!
           </Typography>
 
           {error && (
