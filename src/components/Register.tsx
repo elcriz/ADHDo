@@ -68,6 +68,12 @@ const Register: React.FC = () => {
           >
             Register
           </Typography>
+          <Typography
+            component="p"
+            align="center"
+          >
+            It's entirely free and it always will be!
+          </Typography>
 
           {error && (
             <Alert
