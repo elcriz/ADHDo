@@ -18,7 +18,7 @@ const Register: React.FC = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ const Register: React.FC = () => {
       return;
     }
 
-    setLoading(true);
+    setIsLoading(true);
 
     try {
       await register(name, email, password);
@@ -45,7 +45,7 @@ const Register: React.FC = () => {
     } catch (err: any) {
       setError(err.message || 'Registration failed');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -146,11 +146,11 @@ const Register: React.FC = () => {
               fullWidth
               variant="contained"
               size="large"
-              disabled={loading}
+              disabled={isLoading}
               sx={{ mt: 3, mb: 2 }}
-              startIcon={loading ? <CircularProgress size={20} /> : null}
+              startIcon={isLoading ? <CircularProgress size={20} /> : null}
             >
-              {loading ? 'Creating account...' : 'Register'}
+              {isLoading ? 'Creating account...' : 'Register'}
             </Button>
           </Box>
 

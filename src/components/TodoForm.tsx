@@ -25,7 +25,7 @@ const TodoForm: React.FC<TodoFormProps> = ({ todo, parent, onSuccess, onCancel }
   const [title, setTitle] = useState(todo?.title || '');
   const [description, setDescription] = useState(todo?.description || '');
   const [selectedTags, setSelectedTags] = useState<Tag[]>(todo?.tags || []);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   const { createTodo, updateTodo } = useTodos();
@@ -39,7 +39,7 @@ const TodoForm: React.FC<TodoFormProps> = ({ todo, parent, onSuccess, onCancel }
       return;
     }
 
-    setLoading(true);
+    setIsLoading(true);
 
     try {
       const tagIds = selectedTags.map(tag => tag._id);
@@ -55,7 +55,7 @@ const TodoForm: React.FC<TodoFormProps> = ({ todo, parent, onSuccess, onCancel }
     } catch (err: any) {
       setError(err.message || 'Failed to save todo');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -78,7 +78,7 @@ const TodoForm: React.FC<TodoFormProps> = ({ todo, parent, onSuccess, onCancel }
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Enter todo title"
-        disabled={loading}
+        disabled={isLoading}
         required
         size="small"
         fullWidth
@@ -90,7 +90,7 @@ const TodoForm: React.FC<TodoFormProps> = ({ todo, parent, onSuccess, onCancel }
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         placeholder="Enter todo description (optional)"
-        disabled={loading}
+        disabled={isLoading}
         multiline
         rows={3}
         size="small"
@@ -100,7 +100,7 @@ const TodoForm: React.FC<TodoFormProps> = ({ todo, parent, onSuccess, onCancel }
       <TagSelector
         selectedTags={selectedTags}
         onChange={setSelectedTags}
-        disabled={loading}
+        disabled={isLoading}
         size="small"
       />
 
@@ -110,11 +110,11 @@ const TodoForm: React.FC<TodoFormProps> = ({ todo, parent, onSuccess, onCancel }
         <Button
           type="submit"
           variant="contained"
-          disabled={loading}
-          startIcon={loading ? <CircularProgress size={16} /> : <SaveIcon />}
+          disabled={isLoading}
+          startIcon={isLoading ? <CircularProgress size={16} /> : <SaveIcon />}
           size="small"
         >
-          {loading ? 'Saving...' : (todo ? 'Update todo' : 'Create todo ')}
+          {isLoading ? 'Saving...' : (todo ? 'Update todo' : 'Create todo ')}
         </Button>
 
         {onCancel && (
@@ -122,7 +122,7 @@ const TodoForm: React.FC<TodoFormProps> = ({ todo, parent, onSuccess, onCancel }
             type="button"
             variant="outlined"
             onClick={onCancel}
-            disabled={loading}
+            disabled={isLoading}
             size="small"
             startIcon={<CancelIcon />}
           >

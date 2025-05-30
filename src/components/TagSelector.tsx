@@ -23,7 +23,7 @@ const TagSelector: React.FC<TagSelectorProps> = ({
   size = 'small',
 }) => {
   const [availableTags, setAvailableTags] = useState<Tag[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
@@ -32,14 +32,14 @@ const TagSelector: React.FC<TagSelectorProps> = ({
 
   const loadTags = async () => {
     try {
-      setLoading(true);
+      setIsLoading(true);
       const tags = await tagApi.getTags();
       setAvailableTags(Array.isArray(tags) ? tags : []);
     } catch (error) {
       console.error('Failed to load tags:', error);
       setAvailableTags([]);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -120,7 +120,7 @@ const TagSelector: React.FC<TagSelectorProps> = ({
               ...params.InputProps,
               endAdornment: (
                 <>
-                  {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                  {isLoading ? <CircularProgress color="inherit" size={20} /> : null}
                   {params.InputProps.endAdornment}
                 </>
               ),

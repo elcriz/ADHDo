@@ -47,16 +47,16 @@ import TodoForm from './TodoForm';
 import DraggableTodoItem from './DraggableTodoItem';
 
 const TodoList: React.FC = () => {
-  const { todos, loading, deleteCompletedTodos, deleteTodosByDate, reorderTodos } = useTodos();
+  const { todos, isLoading, deleteCompletedTodos, deleteTodosByDate, reorderTodos } = useTodos();
   const { isAnyEditing, setIsAnyEditing } = useEditing();
   const [activeTab, setActiveTab] = useState<'open' | 'completed'>('open');
-  const [showForm, setShowForm] = useState(false);
-  const [showSearch, setShowSearch] = useState(false);
+  const [isShowingForm, setIsShowingForm] = useState(false);
+  const [isShowingSearch, setIsShowingSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [showDeleteDateDialog, setShowDeleteDateDialog] = useState(false);
-  const [deletingCompleted, setDeletingCompleted] = useState(false);
-  const [deletingDate, setDeletingDate] = useState(false);
+  const [isShowingDeleteDialog, setIsShowingDeleteDialog] = useState(false);
+  const [isShowingDeleteDateDialog, setIsShowingDeleteDateDialog] = useState(false);
+  const [isDeletingCompleted, setIsDeletingCompleted] = useState(false);
+  const [isDeletingDate, setIsDeletingDate] = useState(false);
   const [dateToDelete, setDateToDelete] = useState<string | null>(null);
 
   // View mode state with localStorage persistence
@@ -97,22 +97,22 @@ const TodoList: React.FC = () => {
     })
   );
 
-  // Update global editing state when showForm changes
+  // Update global editing state when isShowingForm changes
   useEffect(() => {
-    setIsAnyEditing(showForm);
-  }, [showForm, setIsAnyEditing]);
+    setIsAnyEditing(isShowingForm);
+  }, [isShowingForm, setIsAnyEditing]);
 
   // Close search when editing starts
   useEffect(() => {
-    if (isAnyEditing && showSearch) {
-      setShowSearch(false);
+    if (isAnyEditing && isShowingSearch) {
+      setIsShowingSearch(false);
       setSearchQuery('');
     }
-  }, [isAnyEditing, showSearch]);
+  }, [isAnyEditing, isShowingSearch]);
 
   // Focus search input when search becomes visible
   useEffect(() => {
-    if (showSearch && !isAnyEditing) {
+    if (isShowingSearch && !isAnyEditing) {
       // Small delay to ensure the Collapse animation doesn't interfere
       const timer = setTimeout(() => {
         if (searchInputRef.current) {
@@ -121,38 +121,38 @@ const TodoList: React.FC = () => {
       }, 150);
       return () => clearTimeout(timer);
     }
-  }, [showSearch, isAnyEditing]);
+  }, [isShowingSearch, isAnyEditing]);
 
   const handleDeleteAllCompleted = async () => {
-    setDeletingCompleted(true);
+    setIsDeletingCompleted(true);
     try {
       await deleteCompletedTodos();
-      setShowDeleteDialog(false);
+      setIsShowingDeleteDialog(false);
     } catch (error) {
       console.error('Failed to delete completed todos:', error);
     } finally {
-      setDeletingCompleted(false);
+      setIsDeletingCompleted(false);
     }
   };
 
   const handleDeleteTodosByDate = async () => {
     if (!dateToDelete) return;
 
-    setDeletingDate(true);
+    setIsDeletingDate(true);
     try {
       await deleteTodosByDate(dateToDelete);
-      setShowDeleteDateDialog(false);
+      setIsShowingDeleteDateDialog(false);
       setDateToDelete(null);
     } catch (error) {
       console.error('Failed to delete todos by date:', error);
     } finally {
-      setDeletingDate(false);
+      setIsDeletingDate(false);
     }
   };
 
   const handleDateDeleteClick = (dateString: string) => {
     setDateToDelete(dateString);
-    setShowDeleteDateDialog(true);
+    setIsShowingDeleteDateDialog(true);
   };
 
   // Ensure todos is always an array and filter by completion status
@@ -271,8 +271,8 @@ const TodoList: React.FC = () => {
     }
   };
 
-  const allOpenTodos = todoArray.filter(todo => !todo.completed && !todo.parent);
-  const allCompletedTodos = todoArray.filter(todo => todo.completed && !todo.parent);
+  const allOpenTodos = todoArray.filter(todo => !todo.isCompleted && !todo.parent);
+  const allCompletedTodos = todoArray.filter(todo => todo.isCompleted && !todo.parent);
 
   const openTodos = useMemo(() => searchTodos(allOpenTodos, searchQuery), [allOpenTodos, searchQuery]);
   const completedTodos = useMemo(() => searchTodos(allCompletedTodos, searchQuery), [allCompletedTodos, searchQuery]);
@@ -318,7 +318,7 @@ const TodoList: React.FC = () => {
     );
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Box
         sx={{
@@ -370,19 +370,19 @@ const TodoList: React.FC = () => {
             <IconButton
               size="small"
               aria-label="Search todos"
-              disabled={isAnyEditing || showForm}
+              disabled={isAnyEditing || isShowingForm}
               onClick={() => {
-                setShowSearch(!showSearch);
-                if (showSearch) {
+                setIsShowingSearch(!isShowingSearch);
+                if (isShowingSearch) {
                   setSearchQuery('');
                 }
               }}
               sx={{
-                bgcolor: showSearch ? 'primary.main' : 'transparent',
-                color: showSearch ? 'primary.contrastText' : 'primary.main',
+                bgcolor: isShowingSearch ? 'primary.main' : 'transparent',
+                color: isShowingSearch ? 'primary.contrastText' : 'primary.main',
                 '&:hover': {
-                  bgcolor: showSearch ? 'primary.dark' : 'primary.light',
-                  color: showSearch ? 'primary.contrastText' : 'primary.dark',
+                  bgcolor: isShowingSearch ? 'primary.dark' : 'primary.light',
+                  color: isShowingSearch ? 'primary.contrastText' : 'primary.dark',
                 },
                 '&:disabled': {
                   bgcolor: 'transparent',
@@ -396,16 +396,16 @@ const TodoList: React.FC = () => {
               <Button
                 variant="contained"
                 startIcon={<AddIcon />}
-                disabled={showSearch}
-                onClick={() => setShowForm(!showForm)}
+                disabled={isShowingSearch}
+                onClick={() => setIsShowingForm(!isShowingForm)}
               >
-                {showForm ? 'Cancel' : 'Add Todo'}
+                {isShowingForm ? 'Cancel' : 'Add Todo'}
               </Button>
             )}
           </Box>
         </Box>
 
-        <Collapse in={showSearch && !isAnyEditing}>
+        <Collapse in={isShowingSearch && !isAnyEditing}>
           <Box sx={{ mb: 2 }}>
             <TextField
               inputRef={searchInputRef}
@@ -430,7 +430,7 @@ const TodoList: React.FC = () => {
           </Box>
         </Collapse>
 
-        {showForm && (
+        {isShowingForm && (
           <Paper
             elevation={1}
             sx={{
@@ -445,8 +445,8 @@ const TodoList: React.FC = () => {
             }}
           >
             <TodoForm
-              onSuccess={() => setShowForm(false)}
-              onCancel={() => setShowForm(false)}
+              onSuccess={() => setIsShowingForm(false)}
+              onCancel={() => setIsShowingForm(false)}
             />
           </Paper>
         )}
@@ -500,8 +500,8 @@ const TodoList: React.FC = () => {
                 variant="contained"
                 color="error"
                 size="small"
-                disabled={isAnyEditing || showSearch || deletingCompleted}
-                onClick={() => setShowDeleteDialog(true)}
+                disabled={isAnyEditing || isShowingSearch || isDeletingCompleted}
+                onClick={() => setIsShowingDeleteDialog(true)}
                 sx={{
                   '&:disabled': {
                     bgcolor: 'action.disabled',
@@ -509,7 +509,7 @@ const TodoList: React.FC = () => {
                   },
                 }}
               >
-                {deletingCompleted ? 'Deleting...' : 'Delete All Completed'}
+                {isDeletingCompleted ? 'Deleting...' : 'Delete All Completed'}
               </Button>
             </Box>
           )}
@@ -634,9 +634,9 @@ const TodoList: React.FC = () => {
       {/* Floating Action Button for mobile devices */}
       {isMobile && (
         <Fab
-          color={showForm ? 'error' : 'primary'}
-          aria-label={showForm ? 'Cancel adding todo' : 'Add new todo'}
-          disabled={showSearch}
+          color={isShowingForm ? 'error' : 'primary'}
+          aria-label={isShowingForm ? 'Cancel adding todo' : 'Add new todo'}
+          disabled={isShowingSearch}
           sx={{
             position: 'fixed',
             bottom: 16,
@@ -647,16 +647,16 @@ const TodoList: React.FC = () => {
               color: 'action.disabled',
             },
           }}
-          onClick={() => setShowForm(!showForm)}
+          onClick={() => setIsShowingForm(!isShowingForm)}
         >
-          {showForm ? <CloseIcon /> : <AddIcon />}
+          {isShowingForm ? <CloseIcon /> : <AddIcon />}
         </Fab>
       )}
 
       {/* Delete all completed todos dialog */}
       <Dialog
-        open={showDeleteDialog}
-        onClose={() => setShowDeleteDialog(false)}
+        open={isShowingDeleteDialog}
+        onClose={() => setIsShowingDeleteDialog(false)}
         aria-labelledby="delete-all-completed-todos"
       >
         <DialogTitle id="delete-all-completed-todos">
@@ -669,7 +669,7 @@ const TodoList: React.FC = () => {
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={() => setShowDeleteDialog(false)}
+            onClick={() => setIsShowingDeleteDialog(false)}
             color="primary"
           >
             Cancel
@@ -677,17 +677,17 @@ const TodoList: React.FC = () => {
           <Button
             onClick={handleDeleteAllCompleted}
             color="error"
-            disabled={deletingCompleted}
+            disabled={isDeletingCompleted}
           >
-            {deletingCompleted ? <CircularProgress size={24} /> : 'Delete All'}
+            {isDeletingCompleted ? <CircularProgress size={24} /> : 'Delete All'}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Delete todos by date dialog */}
       <Dialog
-        open={showDeleteDateDialog}
-        onClose={() => setShowDeleteDateDialog(false)}
+        open={isShowingDeleteDateDialog}
+        onClose={() => setIsShowingDeleteDateDialog(false)}
         aria-labelledby="delete-todos-by-date"
       >
         <DialogTitle id="delete-todos-by-date">
@@ -700,18 +700,18 @@ const TodoList: React.FC = () => {
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={() => setShowDeleteDateDialog(false)}
+            onClick={() => setIsShowingDeleteDateDialog(false)}
             color="primary"
-            disabled={deletingDate}
+            disabled={isDeletingDate}
           >
             Cancel
           </Button>
           <Button
             onClick={handleDeleteTodosByDate}
             color="error"
-            disabled={deletingDate}
+            disabled={isDeletingDate}
           >
-            {deletingDate ? <CircularProgress size={24} /> : 'Delete'}
+            {isDeletingDate ? <CircularProgress size={24} /> : 'Delete'}
           </Button>
         </DialogActions>
       </Dialog>

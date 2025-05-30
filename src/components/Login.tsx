@@ -16,7 +16,7 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setLoading(true);
+    setIsLoading(true);
 
     try {
       await login(email, password);
@@ -32,7 +32,7 @@ const Login: React.FC = () => {
     } catch (err: any) {
       setError(err.message || 'Login failed');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -101,11 +101,11 @@ const Login: React.FC = () => {
               fullWidth
               variant="contained"
               size="large"
-              disabled={loading}
+              disabled={isLoading}
               sx={{ mt: 3, mb: 2 }}
-              startIcon={loading ? <CircularProgress size={20} /> : null}
+              startIcon={isLoading ? <CircularProgress size={20} /> : null}
             >
-              {loading ? 'Logging in...' : 'Login'}
+              {isLoading ? 'Logging in...' : 'Login'}
             </Button>
           </Box>
 

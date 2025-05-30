@@ -47,10 +47,10 @@ export const getTodos = async (req: AuthRequest, res: Response): Promise<void> =
 
     // Sort todos: completed todos by completedAt desc, open todos by order (if exists) then createdAt desc
     rootTodos.sort((a, b) => {
-      if (a.completed && b.completed) {
+      if (a.isCompleted && b.isCompleted) {
         // Both completed: sort by completedAt desc
         return new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime();
-      } else if (!a.completed && !b.completed) {
+      } else if (!a.isCompleted && !b.isCompleted) {
         // Both open: sort by order (if exists) then createdAt desc
         if (a.order !== null && b.order !== null) {
           return a.order - b.order;
@@ -62,7 +62,7 @@ export const getTodos = async (req: AuthRequest, res: Response): Promise<void> =
           // Neither has order - sort by createdAt desc
           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
         }
-      } else if (a.completed) {
+      } else if (a.isCompleted) {
         return 1; // a is completed, b is not - b comes first
       } else {
         return -1; // b is completed, a is not - a comes first
@@ -97,7 +97,7 @@ export const createTodo = async (req: AuthRequest, res: Response): Promise<void>
       await Todo.updateMany(
         {
           user: req.user._id,
-          completed: false,
+          isCompleted: false,
           parent: null,
           order: { $ne: null }
         },
@@ -202,8 +202,8 @@ export const toggleTodo = async (req: AuthRequest, res: Response): Promise<void>
       return;
     }
 
-    todo.completed = !todo.completed;
-    if (todo.completed) {
+    todo.isCompleted = !todo.isCompleted;
+    if (todo.isCompleted) {
       todo.completedAt = new Date();
     } else {
       todo.completedAt = undefined;
@@ -282,7 +282,7 @@ export const deleteCompletedTodos = async (req: AuthRequest, res: Response): Pro
     // Find all completed todos for the user
     const completedTodos = await Todo.find({
       user: req.user._id,
-      completed: true
+      isCompleted: true
     });
 
     if (completedTodos.length === 0) {

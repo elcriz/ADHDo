@@ -17,7 +17,7 @@ export interface Todo {
   _id: string;
   title: string;
   description?: string;
-  completed: boolean;
+  isCompleted: boolean;
   completedAt?: string;
   user: string;
   parent?: string;
@@ -33,12 +33,12 @@ export interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
-  loading: boolean;
+  isLoading: boolean;
 }
 
 export interface TodoContextType {
   todos: Todo[];
-  loading: boolean;
+  isLoading: boolean;
   createTodo: (title: string, description?: string, parent?: string, tags?: string[]) => Promise<void>;
   updateTodo: (id: string, title: string, description?: string, tags?: string[]) => Promise<void>;
   toggleTodo: (id: string) => Promise<void>;

@@ -3,7 +3,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 export interface ITodo extends Document {
   title: string;
   description?: string;
-  completed: boolean;
+  isCompleted: boolean;
   completedAt?: Date;
   user: mongoose.Types.ObjectId;
   parent?: mongoose.Types.ObjectId;
@@ -26,7 +26,7 @@ const TodoSchema = new Schema<ITodo>({
     trim: true,
     maxlength: [1000, 'Description cannot be more than 1000 characters']
   },
-  completed: {
+  isCompleted: {
     type: Boolean,
     default: false
   },
@@ -61,13 +61,13 @@ const TodoSchema = new Schema<ITodo>({
 });
 
 // Index for efficient queries
-TodoSchema.index({ user: 1, completed: 1 });
+TodoSchema.index({ user: 1, isCompleted: 1 });
 TodoSchema.index({ user: 1, parent: 1 });
 
 // Middleware to update completedAt when completed status changes
 TodoSchema.pre('save', function(next) {
-  if (this.isModified('completed')) {
-    if (this.completed) {
+  if (this.isModified('isCompleted')) {
+    if (this.isCompleted) {
       this.completedAt = new Date();
     } else {
       this.completedAt = undefined;

@@ -19,7 +19,7 @@ declare global {
 
 export default function PWAInstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [showInstallPrompt, setShowInstallPrompt] = useState(false);
+  const [isShowingInstallPrompt, setIsShowingInstallPrompt] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
 
   useEffect(() => {
@@ -39,13 +39,13 @@ export default function PWAInstallPrompt() {
       // Save the event so it can be triggered later
       setDeferredPrompt(e);
       // Show our custom install prompt
-      setShowInstallPrompt(true);
+      setIsShowingInstallPrompt(true);
     };
 
     // Listen for the app being installed
     const handleAppInstalled = () => {
       setIsInstalled(true);
-      setShowInstallPrompt(false);
+      setIsShowingInstallPrompt(false);
       setDeferredPrompt(null);
     };
 
@@ -75,11 +75,11 @@ export default function PWAInstallPrompt() {
 
     // Clear the deferred prompt
     setDeferredPrompt(null);
-    setShowInstallPrompt(false);
+    setIsShowingInstallPrompt(false);
   };
 
   const handleDismiss = () => {
-    setShowInstallPrompt(false);
+    setIsShowingInstallPrompt(false);
     // Don't show again for this session
     sessionStorage.setItem('pwa-prompt-dismissed', 'true');
   };
@@ -91,7 +91,7 @@ export default function PWAInstallPrompt() {
 
   return (
     <Snackbar
-      open={showInstallPrompt && !!deferredPrompt}
+      open={isShowingInstallPrompt && !!deferredPrompt}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       sx={{ mb: 2 }}
     >

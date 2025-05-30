@@ -20,16 +20,16 @@ interface ToastItemProps {
 
 const ToastItem: React.FC<ToastItemProps> = ({ toast }) => {
   const { hideToast } = useToast();
-  const [show, setShow] = useState(false);
+  const [isShowing, setIsShowing] = useState(false);
 
   useEffect(() => {
     // Trigger slide-in animation
-    const timer = setTimeout(() => setShow(true), 50);
+    const timer = setTimeout(() => setIsShowing(true), 50);
     return () => clearTimeout(timer);
   }, []);
 
   const handleClose = () => {
-    setShow(false);
+    setIsShowing(false);
     // Wait for slide-out animation before removing
     setTimeout(() => hideToast(toast.id), 200);
   };
@@ -53,7 +53,7 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast }) => {
   };
 
   return (
-    <Slide direction="up" in={show} mountOnEnter unmountOnExit>
+    <Slide direction="up" in={isShowing} mountOnEnter unmountOnExit>
       <Alert
         severity={getSeverity()}
         icon={getIcon()}

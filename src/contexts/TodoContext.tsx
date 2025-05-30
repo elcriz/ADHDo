@@ -21,7 +21,7 @@ interface TodoProviderProps {
 
 export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
   const { showToast } = useToast();
 
@@ -36,7 +36,7 @@ export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
   const refreshTodos = async () => {
     if (!user) return;
 
-    setLoading(true);
+    setIsLoading(true);
     try {
       const fetchedTodos = await todoApi.getTodos();
       setTodos(Array.isArray(fetchedTodos) ? fetchedTodos : []);
@@ -44,7 +44,7 @@ export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
       console.error('Failed to fetch todos:', error);
       setTodos([]);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -83,7 +83,7 @@ export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
 
     // Show appropriate toast notification
     if (todoItem) {
-      if (todoItem.completed) {
+      if (todoItem.isCompleted) {
         showToast(`"${todoItem.title}" marked as incomplete`, 'info');
       } else {
         showToast(`"${todoItem.title}" completed!`, 'success');
@@ -114,7 +114,7 @@ export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
 
   const value: TodoContextType = {
     todos,
-    loading,
+    isLoading,
     createTodo,
     updateTodo,
     toggleTodo,

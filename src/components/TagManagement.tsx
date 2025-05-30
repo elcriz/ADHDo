@@ -45,22 +45,22 @@ const TagManagement: React.FC = () => {
   const { showToast } = useToast();
 
   const [tags, setTags] = useState<Tag[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   // New tag form state
-  const [showNewTagForm, setShowNewTagForm] = useState(false);
+  const [isShowingNewTagForm, setIsShowingNewTagForm] = useState(false);
   const [newTagName, setNewTagName] = useState('');
-  const [creatingTag, setCreatingTag] = useState(false);
+  const [isCreatingTag, setIsCreatingTag] = useState(false);
 
   // Edit tag state
   const [editingTagId, setEditingTagId] = useState<string | null>(null);
   const [editTagName, setEditTagName] = useState('');
-  const [updatingTag, setUpdatingTag] = useState(false);
+  const [isUpdatingTag, setIsUpdatingTag] = useState(false);
 
   // Delete confirmation state
   const [deleteTagId, setDeleteTagId] = useState<string | null>(null);
-  const [deletingTag, setDeletingTag] = useState(false);
+  const [isDeletingTag, setIsDeletingTag] = useState(false);
 
   // Popover menu state
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -72,7 +72,7 @@ const TagManagement: React.FC = () => {
 
   const loadTags = async () => {
     try {
-      setLoading(true);
+      setIsLoading(true);
       setError('');
       const fetchedTags = await tagApi.getTags();
       setTags(Array.isArray(fetchedTags) ? fetchedTags : []);
@@ -80,7 +80,7 @@ const TagManagement: React.FC = () => {
       setError(err.message || 'Failed to load tags');
       setTags([]);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -90,19 +90,19 @@ const TagManagement: React.FC = () => {
       return;
     }
 
-    setCreatingTag(true);
+    setIsCreatingTag(true);
     setError('');
 
     try {
       const newTag = await tagApi.createTag({ name: newTagName.trim() });
       setTags(prev => [...prev, newTag].sort((a, b) => a.name.localeCompare(b.name)));
       setNewTagName('');
-      setShowNewTagForm(false);
+      setIsShowingNewTagForm(false);
       showToast(`Tag "${newTag.name}" created successfully!`, 'success');
     } catch (err: any) {
       setError(err.message || 'Failed to create tag');
     } finally {
-      setCreatingTag(false);
+      setIsCreatingTag(false);
     }
   };
 
@@ -124,7 +124,7 @@ const TagManagement: React.FC = () => {
       return;
     }
 
-    setUpdatingTag(true);
+    setIsUpdatingTag(true);
     setError('');
 
     try {
@@ -139,12 +139,12 @@ const TagManagement: React.FC = () => {
     } catch (err: any) {
       setError(err.message || 'Failed to update tag');
     } finally {
-      setUpdatingTag(false);
+      setIsUpdatingTag(false);
     }
   };
 
   const handleDeleteTag = async (tagId: string) => {
-    setDeletingTag(true);
+    setIsDeletingTag(true);
     setError('');
 
     try {
@@ -157,7 +157,7 @@ const TagManagement: React.FC = () => {
       setError(err.message || 'Failed to delete tag');
       setDeleteTagId(null);
     } finally {
-      setDeletingTag(false);
+      setIsDeletingTag(false);
     }
   };
 
@@ -232,8 +232,8 @@ const TagManagement: React.FC = () => {
           <Button
             variant="contained"
             startIcon={<AddIcon />}
-            onClick={() => setShowNewTagForm(true)}
-            disabled={showNewTagForm || loading}
+            onClick={() => setIsShowingNewTagForm(true)}
+            disabled={isShowingNewTagForm || isLoading}
             size={isMobile ? 'small' : 'medium'}
           >
             Add Tag
@@ -252,7 +252,7 @@ const TagManagement: React.FC = () => {
         )}
 
         {/* New tag form */}
-        {showNewTagForm && (
+        {isShowingNewTagForm && (
           <Paper
             elevation={1}
             sx={{ p: 2, mb: 3, bgcolor: 'uiForm' }}
@@ -277,7 +277,7 @@ const TagManagement: React.FC = () => {
                 onChange={(e) => setNewTagName(e.target.value)}
                 placeholder="Enter tag name..."
                 size="small"
-                disabled={creatingTag}
+                disabled={isCreatingTag}
                 autoFocus
                 sx={{ flexGrow: 1, minWidth: isMobile ? '100%' : 200 }}
                 onKeyPress={(e) => {
@@ -291,20 +291,20 @@ const TagManagement: React.FC = () => {
                   variant="contained"
                   size="small"
                   onClick={handleCreateTag}
-                  disabled={creatingTag || !newTagName.trim()}
-                  startIcon={creatingTag ? <CircularProgress size={16} /> : <SaveIcon />}
+                  disabled={isCreatingTag || !newTagName.trim()}
+                  startIcon={isCreatingTag ? <CircularProgress size={16} /> : <SaveIcon />}
                 >
-                  {creatingTag ? 'Creating...' : 'Create'}
+                  {isCreatingTag ? 'Creating...' : 'Create'}
                 </Button>
                 <Button
                   variant="outlined"
                   size="small"
                   onClick={() => {
-                    setShowNewTagForm(false);
+                    setIsShowingNewTagForm(false);
                     setNewTagName('');
                     setError('');
                   }}
-                  disabled={creatingTag}
+                  disabled={isCreatingTag}
                   startIcon={<CancelIcon />}
                 >
                   Cancel
@@ -315,7 +315,7 @@ const TagManagement: React.FC = () => {
         )}
 
         {/* Tags list */}
-        {loading ? (
+        {isLoading ? (
           <Box
             sx={{
               display: 'flex',
@@ -386,7 +386,7 @@ const TagManagement: React.FC = () => {
                         value={editTagName}
                         onChange={(e) => setEditTagName(e.target.value)}
                         size="small"
-                        disabled={updatingTag}
+                        disabled={isUpdatingTag}
                         autoFocus
                         sx={{ flexGrow: 1, minWidth: isMobile ? '100%' : 200 }}
                         onKeyPress={(e) => {
@@ -400,15 +400,15 @@ const TagManagement: React.FC = () => {
                           size="small"
                           color="primary"
                           onClick={() => handleUpdateTag(tag._id)}
-                          disabled={updatingTag || !editTagName.trim()}
+                          disabled={isUpdatingTag || !editTagName.trim()}
                         >
-                          {updatingTag ? <CircularProgress size={16} /> : <SaveIcon />}
+                          {isUpdatingTag ? <CircularProgress size={16} /> : <SaveIcon />}
                         </IconButton>
                         <IconButton
                           size="small"
                           color="secondary"
                           onClick={handleCancelEdit}
-                          disabled={updatingTag}
+                          disabled={isUpdatingTag}
                         >
                           <CancelIcon />
                         </IconButton>
@@ -518,7 +518,7 @@ const TagManagement: React.FC = () => {
       {/* Delete confirmation dialog */}
       <Dialog
         open={deleteTagId !== null}
-        onClose={() => !deletingTag && setDeleteTagId(null)}
+        onClose={() => !isDeletingTag && setDeleteTagId(null)}
       >
         <DialogTitle>Delete Tag</DialogTitle>
         <DialogContent>
@@ -530,17 +530,17 @@ const TagManagement: React.FC = () => {
         <DialogActions>
           <Button
             onClick={() => setDeleteTagId(null)}
-            disabled={deletingTag}
+            disabled={isDeletingTag}
           >
             Cancel
           </Button>
           <Button
             onClick={() => deleteTagId && handleDeleteTag(deleteTagId)}
             color="error"
-            disabled={deletingTag}
-            startIcon={deletingTag ? <CircularProgress size={16} /> : undefined}
+            disabled={isDeletingTag}
+            startIcon={isDeletingTag ? <CircularProgress size={16} /> : undefined}
           >
-            {deletingTag ? 'Deleting...' : 'Delete'}
+            {isDeletingTag ? 'Deleting...' : 'Delete'}
           </Button>
         </DialogActions>
       </Dialog>

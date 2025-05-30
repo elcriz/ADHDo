@@ -40,27 +40,27 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
   const { toggleTodo, deleteTodo } = useTodos();
   const { isAnyEditing, setIsAnyEditing, editingTodoId, setEditingTodoId } = useEditing();
   const [isEditing, setIsEditing] = useState(false);
-  const [showChildForm, setShowChildForm] = useState(false);
+  const [isShowingChildForm, setIsShowingChildForm] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [isCompleting, setIsCompleting] = useState(false);
 
   // Update global editing state when this todo is being edited
   useEffect(() => {
-    if (isEditing || showChildForm) {
+    if (isEditing || isShowingChildForm) {
       setIsAnyEditing(true);
       setEditingTodoId(todo._id);
     } else if (editingTodoId === todo._id) {
       setIsAnyEditing(false);
       setEditingTodoId(null);
     }
-  }, [isEditing, showChildForm, todo._id, setIsAnyEditing, setEditingTodoId, editingTodoId]);
+  }, [isEditing, isShowingChildForm, todo._id, setIsAnyEditing, setEditingTodoId, editingTodoId]);
 
   // Filter out any children that are strings (IDs) instead of Todo objects
   const validChildren = todo.children?.filter(child => typeof child === 'object' && child._id) || [];
 
   const handleToggle = async () => {
     // If marking as completed (was not completed before), trigger fade animation
-    if (!todo.completed) {
+    if (!todo.isCompleted) {
       setIsCompleting(true);
 
       // Wait for fade animation to complete before calling the API
@@ -93,7 +93,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
   };
 
   const handleAddSubtask = () => {
-    setShowChildForm(!showChildForm);
+    setIsShowingChildForm(!isShowingChildForm);
     handleMenuClose();
   };
 
@@ -120,7 +120,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
         ml: level,
         borderLeft: level > 0 ? 3 : 0,
         borderLeftColor: level > 0 ? 'primary.light' : 'transparent',
-        bgcolor: todo.completed ? 'todoCompleted' : 'background.paper',
+        bgcolor: todo.isCompleted ? 'todoCompleted' : 'background.paper',
         borderTopLeftRadius: level > 0 ? 0 : 8,
         borderTopRightRadius: level > 0 ? 0 : 8,
         borderBottomRightRadius: validChildren.length > 0 ? 0 : 8,
@@ -141,7 +141,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
           sx={{ display: 'flex', alignItems: 'flex-start', gap: 0.5 }}
         >
           <Checkbox
-            checked={todo.completed}
+            checked={todo.isCompleted}
             onChange={handleToggle}
             disabled={isAnyEditing && editingTodoId !== todo._id || isCompleting}
             size="small"
@@ -154,8 +154,8 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
             <Typography
               variant="body1"
               sx={{
-                textDecoration: todo.completed ? 'line-through' : 'none',
-                color: todo.completed ? 'text.disabled' : 'text.primary',
+                textDecoration: todo.isCompleted ? 'line-through' : 'none',
+                color: todo.isCompleted ? 'text.disabled' : 'text.primary',
                 fontWeight: 700,
                 lineHeight: 1.25,
               }}
@@ -168,7 +168,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
                 variant="body2"
                 sx={{
                   mt: 0.5,
-                  color: todo.completed ? 'text.disabled' : 'text.secondary',
+                  color: todo.isCompleted ? 'text.disabled' : 'text.secondary',
                 }}
               >
                 {todo.description}
@@ -224,7 +224,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
           </Box>
 
           {/* Drag Handle - only show for open todos in draggable context */}
-          {showDragHandle && !todo.completed && (
+          {showDragHandle && !todo.isCompleted && (
             <Box
               component="div"
               role="button"
@@ -367,15 +367,15 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
           </Paper>
         )}
 
-        {showChildForm && (
+        {isShowingChildForm && (
           <Paper
             elevation={1}
             sx={{ mt: 2, mb: -2, p: 2, bgcolor: 'uiForm' }}
           >
             <TodoForm
               parent={todo._id}
-              onSuccess={() => setShowChildForm(false)}
-              onCancel={() => setShowChildForm(false)}
+              onSuccess={() => setIsShowingChildForm(false)}
+              onCancel={() => setIsShowingChildForm(false)}
             />
           </Paper>
         )}
