@@ -11,6 +11,7 @@ This application is the result of experimenting with Agent mode in VS Code.
 - **Tag System**: Organize todos with colored tags - create new tags on-the-fly or select from existing ones
 - **Smart Todo Ordering**: New todos automatically appear at the top of the list for immediate focus
 - **Drag & Drop Reordering**: Touch-friendly drag and drop for reordering open todos with mobile optimization
+- **View Mode Toggle**: Switch between detailed and compact display modes with persistent user preference
 - **Status Management**: Toggle between open and completed todos
 - **Toast Notifications**: Non-obstructive feedback for user actions including todo completion/incompletion and tag management operations
 - **Real-time Search**: Search todos by title, description, and tags with autofocus and live filtering
@@ -130,13 +131,14 @@ PORT=5000
 4. **Add subtasks** by clicking the "+ Sub" button on any todo
 5. **Reorder todos** by touch-and-hold for 200ms (mobile) or click-and-drag (desktop) to rearrange open todos
 6. **Search todos** by clicking the search icon and typing (minimum 2 characters) - searches title, description, and tags with automatic field focus
-7. **Toggle completion** by checking/unchecking the checkbox - receive instant visual feedback with toast notifications
-8. **Edit todos** by clicking the "Edit" button
-9. **Delete todos** by clicking the "Delete" button (includes all children)
-10. **Bulk delete completed** by clicking "Delete All Completed" on the Completed tab
-11. **Manage tags** by accessing "Manage tags" from the hamburger menu - receive instant feedback via toast notifications for all tag operations
-12. **Access user menu** by clicking the hamburger menu icon (top right)
-13. **Switch tabs** between "Open" and "Completed" todos
+7. **Toggle view mode** by clicking the view icon to switch between detailed and compact display modes
+8. **Toggle completion** by checking/unchecking the checkbox - receive instant visual feedback with toast notifications
+9. **Edit todos** by clicking the "Edit" button
+10. **Delete todos** by clicking the "Delete" button (includes all children)
+11. **Bulk delete completed** by clicking "Delete All Completed" on the Completed tab
+12. **Manage tags** by accessing "Manage tags" from the hamburger menu - receive instant feedback via toast notifications for all tag operations
+13. **Access user menu** by clicking the hamburger menu icon (top right)
+14. **Switch tabs** between "Open" and "Completed" todos
 
 ### Smart Todo Ordering
 - **Auto Top Insertion**: New todos automatically appear at the top of the list with order 0
@@ -156,6 +158,14 @@ PORT=5000
 - **Search mode**: Filters todos in real-time by title, description, and tags with automatic field focus
 - **Editing mode**: Edit individual todos with inline forms
 - **Mutual exclusivity**: Search and editing modes cannot be active simultaneously for focused user experience
+
+### View Mode Toggle
+- **Detailed Mode** (default): Shows all todo information including description, tags, creation/completion dates, and subtask counts
+- **Compact Mode**: Shows only essential information (title, checkbox, menu button, drag handle, and subtask count if present)
+- **Persistent Setting**: Your view preference is automatically saved and restored across browser sessions
+- **Hierarchical Consistency**: Both parent todos and their subtasks display in the same mode for consistent viewing
+- **Full Functionality**: All features (edit, delete, drag & drop, etc.) work identically in both modes
+- **Smart Information**: Subtask count always visible as it's crucial information for task organization
 
 ### Tag System
 - **Tag Creation**: Create new tags inline while adding or editing todos

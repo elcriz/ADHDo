@@ -33,9 +33,10 @@ interface TodoItemProps {
   level: number;
   dragHandleProps?: any; // Props from useSortable for drag handle
   showDragHandle?: boolean; // Whether to show the drag handle
+  viewMode?: 'detailed' | 'compact'; // View mode for rendering
 }
 
-const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showDragHandle = false }) => {
+const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showDragHandle = false, viewMode = 'detailed' }) => {
   const { toggleTodo, deleteTodo } = useTodos();
   const { isAnyEditing, setIsAnyEditing, editingTodoId, setEditingTodoId } = useEditing();
   const [isEditing, setIsEditing] = useState(false);
@@ -162,7 +163,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
               {todo.title}
             </Typography>
 
-            {todo.description && (
+            {viewMode === 'detailed' && todo.description && (
               <Typography
                 variant="body2"
                 sx={{
@@ -174,37 +175,52 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
               </Typography>
             )}
 
-            <Box
-              sx={{ mt: 1, display: 'flex', flexWrap: 'wrap', gap: 0.5 }}
-            >
-              <Chip
-                label={`Created: ${formatDate(todo.createdAt)}`}
-                size="small"
-                variant="outlined"
-                sx={{ fontSize: '0.7rem', height: 20, pt: 0 }}
-              />
-              {todo.completedAt && (
+            {viewMode === 'detailed' ? (
+              <Box
+                sx={{ mt: 1, display: 'flex', flexWrap: 'wrap', gap: 0.5 }}
+              >
                 <Chip
-                  label={`Completed: ${formatDate(todo.completedAt)}`}
+                  label={`Created: ${formatDate(todo.createdAt)}`}
                   size="small"
                   variant="outlined"
-                  color="success"
                   sx={{ fontSize: '0.7rem', height: 20, pt: 0 }}
                 />
-              )}
-              {validChildren.length > 0 && (
-                <Chip
-                  label={`${validChildren.length} subtask${validChildren.length > 1 ? 's' : ''}`}
-                  size="small"
-                  variant="outlined"
-                  color="info"
-                  sx={{ fontSize: '0.7rem', height: 20, pt: 0 }}
-                />
-              )}
-            </Box>
+                {todo.completedAt && (
+                  <Chip
+                    label={`Completed: ${formatDate(todo.completedAt)}`}
+                    size="small"
+                    variant="outlined"
+                    color="success"
+                    sx={{ fontSize: '0.7rem', height: 20, pt: 0 }}
+                  />
+                )}
+                {validChildren.length > 0 && (
+                  <Chip
+                    label={`${validChildren.length} subtask${validChildren.length > 1 ? 's' : ''}`}
+                    size="small"
+                    variant="outlined"
+                    color="info"
+                    sx={{ fontSize: '0.7rem', height: 20, pt: 0 }}
+                  />
+                )}
+              </Box>
+            ) : (
+              // Compact mode: only show subtask count if present
+              validChildren.length > 0 && (
+                <Box sx={{ mt: 0.5 }}>
+                  <Chip
+                    label={`${validChildren.length} subtask${validChildren.length > 1 ? 's' : ''}`}
+                    size="small"
+                    variant="outlined"
+                    color="info"
+                    sx={{ fontSize: '0.7rem', height: 20, pt: 0 }}
+                  />
+                </Box>
+              )
+            )}
 
-            {/* Tags display */}
-            <TagList tags={todo.tags || []} size="small" />
+            {/* Tags display - only in detailed mode */}
+            {viewMode === 'detailed' && <TagList tags={todo.tags || []} size="small" />}
           </Box>
 
           {/* Drag Handle - only show for open todos in draggable context */}

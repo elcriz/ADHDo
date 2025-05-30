@@ -9,9 +9,10 @@ import TodoItem from './TodoItem';
 interface DraggableTodoItemProps {
   todo: Todo;
   level: number;
+  viewMode?: 'detailed' | 'compact';
 }
 
-const DraggableTodoItem: React.FC<DraggableTodoItemProps> = ({ todo, level }) => {
+const DraggableTodoItem: React.FC<DraggableTodoItemProps> = ({ todo, level, viewMode = 'detailed' }) => {
   const { isAnyEditing } = useEditing();
 
   const {
@@ -53,6 +54,7 @@ const DraggableTodoItem: React.FC<DraggableTodoItemProps> = ({ todo, level }) =>
         level={level}
         dragHandleProps={!isAnyEditing ? listeners : {}}
         showDragHandle={true}
+        viewMode={viewMode}
       />
       {validChildren.length > 0 && (
         <Box sx={{ ml: 2 }}>
@@ -62,6 +64,7 @@ const DraggableTodoItem: React.FC<DraggableTodoItemProps> = ({ todo, level }) =>
               todo={child}
               level={level + 1}
               showDragHandle={false}
+              viewMode={viewMode}
             />
           ))}
         </Box>

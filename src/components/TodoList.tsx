@@ -21,7 +21,7 @@ import {
   DialogActions,
   DialogContentText,
 } from '@mui/material';
-import { Add as AddIcon, Close as CloseIcon, Search as SearchIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { Add as AddIcon, Close as CloseIcon, Search as SearchIcon, Delete as DeleteIcon, ViewList as ViewListIcon, ViewModule as ViewModuleIcon } from '@mui/icons-material';
 import {
   DndContext,
   closestCenter,
@@ -58,6 +58,21 @@ const TodoList: React.FC = () => {
   const [deletingCompleted, setDeletingCompleted] = useState(false);
   const [deletingDate, setDeletingDate] = useState(false);
   const [dateToDelete, setDateToDelete] = useState<string | null>(null);
+
+  // View mode state with localStorage persistence
+  const [viewMode, setViewMode] = useState<'detailed' | 'compact'>(() => {
+    const saved = localStorage.getItem('todoViewMode');
+    return (saved === 'compact') ? 'compact' : 'detailed';
+  });
+
+  // Save view mode to localStorage when it changes
+  useEffect(() => {
+    localStorage.setItem('todoViewMode', viewMode);
+  }, [viewMode]);
+
+  const toggleViewMode = () => {
+    setViewMode(prev => prev === 'detailed' ? 'compact' : 'detailed');
+  };
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -290,6 +305,7 @@ const TodoList: React.FC = () => {
         <TodoItem
           todo={todo}
           level={level}
+          viewMode={viewMode}
         />
         {validChildren.length > 0 && (
           <Box
@@ -337,6 +353,20 @@ const TodoList: React.FC = () => {
             My Todos
           </Typography>
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+            <IconButton
+              size="small"
+              aria-label={viewMode === 'detailed' ? 'Switch to compact view' : 'Switch to detailed view'}
+              onClick={toggleViewMode}
+              sx={{
+                color: 'primary.main',
+                '&:hover': {
+                  bgcolor: 'primary.light',
+                  color: 'primary.dark',
+                },
+              }}
+            >
+              {viewMode === 'detailed' ? <ViewListIcon /> : <ViewModuleIcon />}
+            </IconButton>
             <IconButton
               size="small"
               aria-label="Search todos"
@@ -522,6 +552,7 @@ const TodoList: React.FC = () => {
                         key={todo._id}
                         todo={todo}
                         level={0}
+                        viewMode={viewMode}
                       />
                     ))}
                   </Box>
