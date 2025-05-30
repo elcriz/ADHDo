@@ -1,47 +1,15 @@
 import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import react from 'eslint-plugin-react'
 import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
-  { ignores: ['dist', 'backend', 'dev-dist'] },
+  { ignores: ['dist', '../dist', '../node_modules', '../dev-dist'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
-    files: ['**/*.{ts,tsx}'],
+    files: ['**/*.{ts,js}'],
     languageOptions: {
       ecmaVersion: 2020,
-      globals: globals.browser,
-      parserOptions: {
-        ecmaFeatures: {
-          jsx: true,
-        },
-      },
-    },
-    plugins: {
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
-      'react': react,
     },
     rules: {
-      ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
-      'react/jsx-max-props-per-line': [
-        'error',
-        { maximum: 1, when: 'always' }
-      ],
-      'react/jsx-first-prop-new-line': [
-        'error',
-        'multiline-multiprop'
-      ],
-      'react/jsx-closing-bracket-location': [
-        'error',
-        'tag-aligned'
-      ],
       // Boolean variable naming convention enforcement
       '@typescript-eslint/naming-convention': [
         'warn',
@@ -59,6 +27,10 @@ export default tseslint.config(
           failureMessage: 'Boolean-like variable names should start with is, has, should, can, will, did, was, were, are, am, be, been, or being'
         }
       ],
+      // Additional code quality rules
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/explicit-function-return-type': 'warn',
+      '@typescript-eslint/no-explicit-any': 'warn'
     },
   },
 )
