@@ -69,7 +69,7 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast }) => {
         }
         sx={{
           mb: 1,
-          ml: 2,
+          ml: 1,
           boxShadow: 3,
           borderRadius: 2,
           minWidth: 280,
