@@ -41,6 +41,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
   const [isEditing, setIsEditing] = useState(false);
   const [showChildForm, setShowChildForm] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [isCompleting, setIsCompleting] = useState(false);
 
   // Update global editing state when this todo is being edited
   useEffect(() => {
@@ -56,8 +57,20 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
   // Filter out any children that are strings (IDs) instead of Todo objects
   const validChildren = todo.children?.filter(child => typeof child === 'object' && child._id) || [];
 
-  const handleToggle = () => {
-    toggleTodo(todo._id);
+  const handleToggle = async () => {
+    // If marking as completed (was not completed before), trigger fade animation
+    if (!todo.completed) {
+      setIsCompleting(true);
+
+      // Wait for fade animation to complete before calling the API
+      setTimeout(async () => {
+        await toggleTodo(todo._id);
+        setIsCompleting(false);
+      }, 500); // 500ms animation duration
+    } else {
+      // If uncompleting, no animation needed - just toggle immediately
+      toggleTodo(todo._id);
+    }
   };
 
   const handleDelete = () => {
@@ -110,6 +123,14 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
         borderTopLeftRadius: level > 0 ? 0 : 8,
         borderTopRightRadius: level > 0 ? 0 : 8,
         borderBottomRightRadius: validChildren.length > 0 ? 0 : 8,
+        // Animation styles
+        opacity: isCompleting ? 0 : 1,
+        transform: isCompleting ? 'scale(0.95)' : 'scale(1)',
+        transition: 'opacity 500ms ease-out, transform 500ms ease-out',
+        // Slightly reduce height when fading out for smoother effect
+        ...(isCompleting && {
+          overflow: 'hidden',
+        }),
       }}
     >
       <CardContent
@@ -121,7 +142,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
           <Checkbox
             checked={todo.completed}
             onChange={handleToggle}
-            disabled={isAnyEditing && editingTodoId !== todo._id}
+            disabled={isAnyEditing && editingTodoId !== todo._id || isCompleting}
             size="small"
             sx={{ mt: -0.5 }}
           />
@@ -244,7 +265,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
           <IconButton
             size="small"
             onClick={handleMenuOpen}
-            disabled={isAnyEditing && editingTodoId !== todo._id}
+            disabled={isAnyEditing && editingTodoId !== todo._id || isCompleting}
             sx={{
               p: 0.5,
               '&:disabled': {
