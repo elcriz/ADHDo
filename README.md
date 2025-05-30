@@ -17,6 +17,7 @@ This application is the result of experimenting with Agent mode in VS Code.
 - **Date-Based Organization**: Completed todos grouped by completion date with smart headings (Today, Yesterday, etc.)
 - **Smart UI Management**: Mutual exclusivity between search and editing modes
 - **Bulk Operations**: Delete all completed todos with confirmation dialog
+- **Bulk Delete by Date**: Delete all todos completed on a specific day with individual date-specific delete buttons
 - **Hamburger Menu**: Modern menu system for scalable user actions
 - **Decorative ColorBar**: Vibrant repeating color blocks for visual enhancement
 - **Progressive Web App**: Installable with offline functionality

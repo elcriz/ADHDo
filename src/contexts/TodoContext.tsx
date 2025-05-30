@@ -101,6 +101,12 @@ export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
     await refreshTodos();
   };
 
+  const deleteTodosByDate = async (date: string) => {
+    await todoApi.deleteTodosByDate(date);
+    await refreshTodos();
+    showToast(`Deleted all todos completed on ${date}`, 'success');
+  };
+
   const reorderTodos = async (todoIds: string[]) => {
     await todoApi.reorderTodos(todoIds);
     await refreshTodos();
@@ -114,6 +120,7 @@ export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
     toggleTodo,
     deleteTodo,
     deleteCompletedTodos,
+    deleteTodosByDate,
     reorderTodos,
     refreshTodos,
   };

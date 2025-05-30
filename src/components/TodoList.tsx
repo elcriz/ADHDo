@@ -21,7 +21,7 @@ import {
   DialogActions,
   DialogContentText,
 } from '@mui/material';
-import { Add as AddIcon, Close as CloseIcon, Search as SearchIcon } from '@mui/icons-material';
+import { Add as AddIcon, Close as CloseIcon, Search as SearchIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import {
   DndContext,
   closestCenter,
@@ -47,14 +47,17 @@ import TodoForm from './TodoForm';
 import DraggableTodoItem from './DraggableTodoItem';
 
 const TodoList: React.FC = () => {
-  const { todos, loading, deleteCompletedTodos, reorderTodos } = useTodos();
+  const { todos, loading, deleteCompletedTodos, deleteTodosByDate, reorderTodos } = useTodos();
   const { isAnyEditing, setIsAnyEditing } = useEditing();
   const [activeTab, setActiveTab] = useState<'open' | 'completed'>('open');
   const [showForm, setShowForm] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showDeleteDateDialog, setShowDeleteDateDialog] = useState(false);
   const [deletingCompleted, setDeletingCompleted] = useState(false);
+  const [deletingDate, setDeletingDate] = useState(false);
+  const [dateToDelete, setDateToDelete] = useState<string | null>(null);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -115,6 +118,26 @@ const TodoList: React.FC = () => {
     } finally {
       setDeletingCompleted(false);
     }
+  };
+
+  const handleDeleteTodosByDate = async () => {
+    if (!dateToDelete) return;
+
+    setDeletingDate(true);
+    try {
+      await deleteTodosByDate(dateToDelete);
+      setShowDeleteDateDialog(false);
+      setDateToDelete(null);
+    } catch (error) {
+      console.error('Failed to delete todos by date:', error);
+    } finally {
+      setDeletingDate(false);
+    }
+  };
+
+  const handleDateDeleteClick = (dateString: string) => {
+    setDateToDelete(dateString);
+    setShowDeleteDateDialog(true);
   };
 
   // Ensure todos is always an array and filter by completion status
@@ -524,8 +547,7 @@ const TodoList: React.FC = () => {
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: -2 }}>
                 {groupedCompletedTodos.map(({ date, todos }) => (
                   <Box key={date}>
-                    <Typography
-                      variant="h6"
+                    <Box
                       sx={{
                         position: 'sticky',
                         top: { xs: 56, sm: 64 }, // Account for AppBar/Toolbar height
@@ -534,16 +556,39 @@ const TodoList: React.FC = () => {
                         px: 2,
                         pt: 1.5,
                         mx: -2,
-                        fontWeight: 600,
                         borderBottom: 1,
                         borderColor: 'divider',
                         pb: 1,
                         backdropFilter: 'blur(8px)',
                         WebkitBackdropFilter: 'blur(8px)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
                       }}
                     >
-                      {formatDateHeading(date)}
-                    </Typography>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontWeight: 600,
+                        }}
+                      >
+                        {formatDateHeading(date)}
+                      </Typography>
+                      <IconButton
+                        size="small"
+                        onClick={() => handleDateDeleteClick(date)}
+                        sx={{
+                          color: 'text.secondary',
+                          '&:hover': {
+                            color: 'error.main',
+                            backgroundColor: 'error.light',
+                          },
+                        }}
+                        title={`Delete all todos completed on ${formatDateHeading(date)}`}
+                      >
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                    </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                       {todos.map(todo => renderTodoWithChildren(todo))}
                     </Box>
@@ -604,6 +649,38 @@ const TodoList: React.FC = () => {
             disabled={deletingCompleted}
           >
             {deletingCompleted ? <CircularProgress size={24} /> : 'Delete All'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Delete todos by date dialog */}
+      <Dialog
+        open={showDeleteDateDialog}
+        onClose={() => setShowDeleteDateDialog(false)}
+        aria-labelledby="delete-todos-by-date"
+      >
+        <DialogTitle id="delete-todos-by-date">
+          Delete Todos for {dateToDelete ? formatDateHeading(dateToDelete) : ''}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete all todos completed on {dateToDelete ? formatDateHeading(dateToDelete) : 'this date'}? This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setShowDeleteDateDialog(false)}
+            color="primary"
+            disabled={deletingDate}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleDeleteTodosByDate}
+            color="error"
+            disabled={deletingDate}
+          >
+            {deletingDate ? <CircularProgress size={24} /> : 'Delete'}
           </Button>
         </DialogActions>
       </Dialog>

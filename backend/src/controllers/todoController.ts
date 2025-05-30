@@ -335,6 +335,86 @@ export const deleteCompletedTodos = async (req: AuthRequest, res: Response): Pro
   }
 };
 
+export const deleteTodosByDate = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    if (!req.user) {
+      res.status(401).json({ success: false, message: 'User not authenticated' });
+      return;
+    }
+
+    const { date } = req.params;
+
+    // Parse the date string to get start and end of day
+    const targetDate = new Date(date);
+    const startOfDay = new Date(targetDate);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(targetDate);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    // Find all completed todos for the user completed on the specified date
+    const completedTodos = await Todo.find({
+      user: req.user._id,
+      completed: true,
+      completedAt: {
+        $gte: startOfDay,
+        $lte: endOfDay
+      }
+    });
+
+    if (completedTodos.length === 0) {
+      res.json({
+        success: true,
+        message: 'No completed todos found for this date',
+        deletedCount: 0
+      });
+      return;
+    }
+
+    // For each completed todo, handle its children
+    for (const todo of completedTodos) {
+      // Remove from parent's children array if it has a parent
+      if (todo.parent) {
+        await Todo.findByIdAndUpdate(todo.parent, {
+          $pull: { children: todo._id }
+        });
+      }
+
+      // Delete all child todos recursively (whether completed or not)
+      const deleteChildrenRecursively = async (todoId: string) => {
+        const childTodos = await Todo.find({ parent: todoId });
+        for (const child of childTodos) {
+          await deleteChildrenRecursively((child._id as any).toString());
+          await Todo.findByIdAndDelete(child._id);
+        }
+      };
+
+      await deleteChildrenRecursively((todo._id as any).toString());
+    }
+
+    // Delete all completed todos for the specified date
+    const result = await Todo.deleteMany({
+      user: req.user._id,
+      completed: true,
+      completedAt: {
+        $gte: startOfDay,
+        $lte: endOfDay
+      }
+    });
+
+    res.json({
+      success: true,
+      message: `Successfully deleted ${result.deletedCount} todos completed on ${targetDate.toDateString()}`,
+      deletedCount: result.deletedCount
+    });
+  } catch (error) {
+    console.error('Error in deleteTodosByDate:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
 export const updateTodoOrder = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     if (!req.user) {

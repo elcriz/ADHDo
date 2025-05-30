@@ -44,6 +44,7 @@ export interface TodoContextType {
   toggleTodo: (id: string) => Promise<void>;
   deleteTodo: (id: string) => Promise<void>;
   deleteCompletedTodos: () => Promise<void>;
+  deleteTodosByDate: (date: string) => Promise<void>;
   reorderTodos: (todoIds: string[]) => Promise<void>;
   refreshTodos: () => Promise<void>;
 }
