@@ -33,7 +33,7 @@ function AppContent() {
               variant="h1"
               component="h1"
               align="center"
-              sx={{ mt: 4, px: 4, fontWeight: 200 }}
+              sx={{ mt: 8, pb: 2, px: 4, fontWeight: 200 }}
             >
               The <strong>pragmatic</strong> todo app for neurodivergent <strong>human</strong> beings
             </Typography>

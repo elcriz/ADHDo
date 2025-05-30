@@ -12,7 +12,7 @@ This application is the result of experimenting with Agent mode in VS Code.
 - **Smart Todo Ordering**: New todos automatically appear at the top of the list for immediate focus
 - **Drag & Drop Reordering**: Touch-friendly drag and drop for reordering open todos with mobile optimization
 - **Status Management**: Toggle between open and completed todos
-- **Toast Notifications**: Non-obstructive feedback for user actions with completion/incompletion notifications
+- **Toast Notifications**: Non-obstructive feedback for user actions including todo completion/incompletion and tag management operations
 - **Real-time Search**: Search todos by title, description, and tags with autofocus and live filtering
 - **Date-Based Organization**: Completed todos grouped by completion date with smart headings (Today, Yesterday, etc.)
 - **Smart UI Management**: Mutual exclusivity between search and editing modes
@@ -133,7 +133,7 @@ PORT=5000
 8. **Edit todos** by clicking the "Edit" button
 9. **Delete todos** by clicking the "Delete" button (includes all children)
 10. **Bulk delete completed** by clicking "Delete All Completed" on the Completed tab
-11. **Manage tags** by accessing "Manage tags" from the hamburger menu
+11. **Manage tags** by accessing "Manage tags" from the hamburger menu - receive instant feedback via toast notifications for all tag operations
 12. **Access user menu** by clicking the hamburger menu icon (top right)
 13. **Switch tabs** between "Open" and "Completed" todos
 
@@ -167,8 +167,8 @@ PORT=5000
 - **Safe Operations**: Tag updates and deletions automatically maintain todo relationships
 
 ### Toast Notifications
-- **Completion Feedback**: Success notifications when todos are completed with fade-out animation
-- **Incompletion Feedback**: Info notifications when todos are marked as incomplete
+- **Todo Feedback**: Success notifications when todos are completed with fade-out animation, info notifications for incompletion
+- **Tag Management**: Success notifications for tag creation, updates, and deletions with contextual tag names
 - **Smart Positioning**: Positioned above the floating action button to avoid obstruction
 - **Auto-dismiss**: Notifications automatically disappear after 3 seconds
 - **Manual Dismiss**: Users can manually close notifications with the close button

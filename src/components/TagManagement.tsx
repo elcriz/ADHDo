@@ -36,16 +36,17 @@ import {
 } from '@mui/icons-material';
 import { tagApi } from '../services/api';
 import type { Tag } from '../types';
+import { useToast } from '../contexts/ToastContext';
 
 const TagManagement: React.FC = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { showToast } = useToast();
 
   const [tags, setTags] = useState<Tag[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
 
   // New tag form state
   const [showNewTagForm, setShowNewTagForm] = useState(false);
@@ -97,8 +98,7 @@ const TagManagement: React.FC = () => {
       setTags(prev => [...prev, newTag].sort((a, b) => a.name.localeCompare(b.name)));
       setNewTagName('');
       setShowNewTagForm(false);
-      setSuccess('Tag created successfully!');
-      setTimeout(() => setSuccess(''), 3000);
+      showToast(`Tag "${newTag.name}" created successfully!`, 'success');
     } catch (err: any) {
       setError(err.message || 'Failed to create tag');
     } finally {
@@ -135,8 +135,7 @@ const TagManagement: React.FC = () => {
       );
       setEditingTagId(null);
       setEditTagName('');
-      setSuccess('Tag updated successfully!');
-      setTimeout(() => setSuccess(''), 3000);
+      showToast(`Tag "${updatedTag.name}" updated successfully!`, 'success');
     } catch (err: any) {
       setError(err.message || 'Failed to update tag');
     } finally {
@@ -149,11 +148,11 @@ const TagManagement: React.FC = () => {
     setError('');
 
     try {
+      const tagToDelete = tags.find(tag => tag._id === tagId);
       await tagApi.deleteTag(tagId);
       setTags(prev => prev.filter(tag => tag._id !== tagId));
       setDeleteTagId(null);
-      setSuccess('Tag deleted successfully!');
-      setTimeout(() => setSuccess(''), 3000);
+      showToast(`Tag "${tagToDelete?.name || 'Unknown'}" deleted successfully!`, 'success');
     } catch (err: any) {
       setError(err.message || 'Failed to delete tag');
       setDeleteTagId(null);
@@ -249,16 +248,6 @@ const TagManagement: React.FC = () => {
             onClose={() => setError('')}
           >
             {error}
-          </Alert>
-        )}
-
-        {success && (
-          <Alert
-            severity="success"
-            sx={{ mb: 2 }}
-            onClose={() => setSuccess('')}
-          >
-            {success}
           </Alert>
         )}
 
