@@ -15,8 +15,10 @@ import {
   InputAdornment,
   IconButton,
   Collapse,
+  Popover,
+  Chip,
 } from '@mui/material';
-import { Add as AddIcon, Close as CloseIcon, Search as SearchIcon, Delete as DeleteIcon, ViewList as ViewListIcon, ViewModule as ViewModuleIcon } from '@mui/icons-material';
+import { Add as AddIcon, Close as CloseIcon, Search as SearchIcon, Delete as DeleteIcon, ViewList as ViewListIcon, ViewModule as ViewModuleIcon, FilterList as FilterListIcon } from '@mui/icons-material';
 import {
   DndContext,
   closestCenter,
@@ -36,11 +38,12 @@ import {
 } from '@dnd-kit/sortable';
 import { useTodos } from '../contexts/TodoContext';
 import { useEditing } from '../contexts/EditingContext';
-import type { Todo } from '../types';
+import type { Todo, Tag } from '../types';
 import TodoItem from './TodoItem';
 import TodoForm from './TodoForm';
 import DraggableTodoItem from './DraggableTodoItem';
 import ConfirmationDialog from './ConfirmationDialog';
+import TagSelector from './TagSelector';
 
 const TodoList: React.FC = () => {
   const { todos, loading, deleteCompletedTodos, deleteTodosByDate, reorderTodos } = useTodos();
@@ -49,6 +52,9 @@ const TodoList: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showTagFilter, setShowTagFilter] = useState(false);
+  const [selectedFilterTags, setSelectedFilterTags] = useState<Tag[]>([]);
+  const [tagFilterAnchor, setTagFilterAnchor] = useState<HTMLElement | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showDeleteDateDialog, setShowDeleteDateDialog] = useState(false);
   const [deletingCompleted, setDeletingCompleted] = useState(false);
@@ -98,13 +104,17 @@ const TodoList: React.FC = () => {
     setIsAnyEditing(showForm);
   }, [showForm, setIsAnyEditing]);
 
-  // Close search when editing starts
+  // Close search and tag filter when editing starts
   useEffect(() => {
     if (isAnyEditing && showSearch) {
       setShowSearch(false);
       setSearchQuery('');
     }
-  }, [isAnyEditing, showSearch]);
+    if (isAnyEditing && showTagFilter) {
+      setShowTagFilter(false);
+      setTagFilterAnchor(null);
+    }
+  }, [isAnyEditing, showSearch, showTagFilter]);
 
   // Focus search input when search becomes visible
   useEffect(() => {
@@ -151,6 +161,26 @@ const TodoList: React.FC = () => {
     setShowDeleteDateDialog(true);
   };
 
+  const handleTagFilterClick = (event: React.MouseEvent<HTMLElement>) => {
+    setTagFilterAnchor(event.currentTarget);
+    setShowTagFilter(true);
+  };
+
+  const handleTagFilterClose = () => {
+    setTagFilterAnchor(null);
+    setShowTagFilter(false);
+  };
+
+  const handleTagFilterChange = (tags: Tag[]) => {
+    setSelectedFilterTags(tags);
+  };
+
+  const clearTagFilter = () => {
+    setSelectedFilterTags([]);
+    setShowTagFilter(false);
+    setTagFilterAnchor(null);
+  };
+
   // Ensure todos is always an array and filter by completion status
   const todoArray = Array.isArray(todos) ? todos : [];
 
@@ -178,6 +208,27 @@ const TodoList: React.FC = () => {
       );
 
       return titleMatch || descriptionMatch || tagsMatch || childrenMatch;
+    });
+  };
+
+  // Filter todos by selected tags
+  const filterTodosByTags = (todos: Todo[], filterTags: Tag[]): Todo[] => {
+    if (!filterTags || filterTags.length === 0) return todos;
+
+    return todos.filter(todo => {
+      // Check if todo has any of the selected tags
+      const hasMatchingTag = filterTags.some(filterTag =>
+        todo.tags?.some(todoTag => todoTag._id === filterTag._id)
+      );
+
+      // Also check children for matching tags
+      const childrenHaveMatchingTag = todo.children?.some(child =>
+        typeof child === 'object' && filterTags.some(filterTag =>
+          child.tags?.some(childTag => childTag._id === filterTag._id)
+        )
+      );
+
+      return hasMatchingTag || childrenHaveMatchingTag;
     });
   };
 
@@ -270,8 +321,25 @@ const TodoList: React.FC = () => {
   const allOpenTodos = todoArray.filter(todo => !todo.completed && !todo.parent);
   const allCompletedTodos = todoArray.filter(todo => todo.completed && !todo.parent);
 
-  const openTodos = useMemo(() => searchTodos(allOpenTodos, searchQuery), [allOpenTodos, searchQuery]);
-  const completedTodos = useMemo(() => searchTodos(allCompletedTodos, searchQuery), [allCompletedTodos, searchQuery]);
+  const openTodos = useMemo(() => {
+    let filtered = allOpenTodos;
+    // Apply tag filter first
+    if (selectedFilterTags.length > 0) {
+      filtered = filterTodosByTags(filtered, selectedFilterTags);
+    }
+    // Then apply search filter
+    return searchTodos(filtered, searchQuery);
+  }, [allOpenTodos, searchQuery, selectedFilterTags]);
+
+  const completedTodos = useMemo(() => {
+    let filtered = allCompletedTodos;
+    // Apply tag filter first
+    if (selectedFilterTags.length > 0) {
+      filtered = filterTodosByTags(filtered, selectedFilterTags);
+    }
+    // Then apply search filter
+    return searchTodos(filtered, searchQuery);
+  }, [allCompletedTodos, searchQuery, selectedFilterTags]);
 
   // Group completed todos by completion date (newest dates first)
   const groupedCompletedTodos = useMemo(() => {
@@ -388,6 +456,26 @@ const TodoList: React.FC = () => {
             >
               <SearchIcon />
             </IconButton>
+            <IconButton
+              size="small"
+              aria-label="Filter todos by tags"
+              disabled={isAnyEditing || showForm}
+              onClick={handleTagFilterClick}
+              sx={{
+                bgcolor: selectedFilterTags.length > 0 ? 'primary.main' : 'transparent',
+                color: selectedFilterTags.length > 0 ? 'primary.contrastText' : 'primary.main',
+                '&:hover': {
+                  bgcolor: selectedFilterTags.length > 0 ? 'primary.dark' : 'primary.light',
+                  color: selectedFilterTags.length > 0 ? 'primary.contrastText' : 'primary.dark',
+                },
+                '&:disabled': {
+                  bgcolor: 'transparent',
+                  color: 'action.disabled',
+                },
+              }}
+            >
+              <FilterListIcon />
+            </IconButton>
             {!isMobile && (
               <Button
                 variant="contained"
@@ -425,6 +513,93 @@ const TodoList: React.FC = () => {
             />
           </Box>
         </Collapse>
+
+        <Popover
+          open={showTagFilter}
+          anchorEl={tagFilterAnchor}
+          onClose={handleTagFilterClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+        >
+          <Box sx={{ p: 2, minWidth: 300 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+              <Typography variant="h6">Filter by Tags</Typography>
+              {selectedFilterTags.length > 0 && (
+                <Button
+                  size="small"
+                  onClick={clearTagFilter}
+                  sx={{ minWidth: 'auto' }}
+                >
+                  Clear All
+                </Button>
+              )}
+            </Box>
+            <TagSelector
+              selectedTags={selectedFilterTags}
+              onChange={handleTagFilterChange}
+              size="small"
+            />
+            {selectedFilterTags.length > 0 && (
+              <Box sx={{ mt: 2 }}>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                  Active Filters:
+                </Typography>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                  {selectedFilterTags.map(tag => (
+                    <Chip
+                      key={tag._id}
+                      label={tag.name}
+                      size="small"
+                      style={{ backgroundColor: tag.color, color: '#fff' }}
+                      onDelete={() => {
+                        const newTags = selectedFilterTags.filter(t => t._id !== tag._id);
+                        setSelectedFilterTags(newTags);
+                      }}
+                    />
+                  ))}
+                </Box>
+              </Box>
+            )}
+          </Box>
+        </Popover>
+
+        {/* Active Tag Filters Display */}
+        {selectedFilterTags.length > 0 && (
+          <Box sx={{ mb: 2, p: 2, bgcolor: 'action.hover', borderRadius: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+              <Typography variant="body2" color="text.secondary">
+                Filtering by tags:
+              </Typography>
+              <Button
+                size="small"
+                onClick={clearTagFilter}
+                sx={{ minWidth: 'auto', fontSize: '0.75rem' }}
+              >
+                Clear All
+              </Button>
+            </Box>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+              {selectedFilterTags.map(tag => (
+                <Chip
+                  key={tag._id}
+                  label={tag.name}
+                  size="small"
+                  style={{ backgroundColor: tag.color, color: '#fff' }}
+                  onDelete={() => {
+                    const newTags = selectedFilterTags.filter(t => t._id !== tag._id);
+                    setSelectedFilterTags(newTags);
+                  }}
+                />
+              ))}
+            </Box>
+          </Box>
+        )}
 
         {showForm && (
           <Paper
@@ -478,12 +653,12 @@ const TodoList: React.FC = () => {
             }}
           >
             <Tab
-              label={`Open (${openTodos.length}${searchQuery.length >= 2 ? ` of ${allOpenTodos.length}` : ''})`}
+              label={`Open (${openTodos.length}${searchQuery.length >= 2 || selectedFilterTags.length > 0 ? ` of ${allOpenTodos.length}` : ''})`}
               value="open"
               sx={{ minHeight: 22, py: 1.5 }}
             />
             <Tab
-              label={`Completed (${completedTodos.length}${searchQuery.length >= 2 ? ` of ${allCompletedTodos.length}` : ''})`}
+              label={`Completed (${completedTodos.length}${searchQuery.length >= 2 || selectedFilterTags.length > 0 ? ` of ${allCompletedTodos.length}` : ''})`}
               value="completed"
               sx={{ minHeight: 22, py: 1.5 }}
             />

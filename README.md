@@ -9,6 +9,7 @@ This application is the result of experimenting with Agent mode in VS Code.
 - **User Authentication**: Secure registration and login with JWT tokens
 - **Hierarchical Todos**: Create parent-child relationships between todos
 - **Tag System**: Organize todos with colored tags - create new tags on-the-fly or select from existing ones
+- **Tag Filtering**: Filter todos by selecting specific tags with visual indicators and clear all functionality
 - **Smart Todo Ordering**: New todos automatically appear at the top of the list for immediate focus
 - **Drag & Drop Reordering**: Touch-friendly drag and drop for reordering open todos with mobile optimization
 - **View Mode Toggle**: Switch between detailed and compact display modes with persistent user preference
@@ -31,6 +32,7 @@ This application is the result of experimenting with Agent mode in VS Code.
 ## 🏗️ Architecture
 
 ### Frontend
+
 - **React 19** with TypeScript
 - **Vite** for fast development and building
 - **React Router** for client-side routing
@@ -42,6 +44,7 @@ This application is the result of experimenting with Agent mode in VS Code.
 - **Dark Mode** with automatic system preference detection
 
 ### Backend
+
 - **Node.js** with TypeScript
 - **Express.js** web framework
 - **MongoDB** with Mongoose ODM
@@ -75,6 +78,7 @@ adhdo/
 ## 🛠️ Development Setup
 
 ### Prerequisites
+
 - Node.js (v18 or higher)
 - MongoDB (local or cloud instance)
 - npm or yarn
@@ -84,11 +88,13 @@ adhdo/
 Create `.env` files in both root and backend directories:
 
 **Root `.env`:**
+
 ```
 VITE_API_URL=http://localhost:5000/api
 ```
 
 **Backend `.env`:**
+
 ```
 MONGODB_URI=mongodb://localhost:27017/adhdo
 JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
@@ -99,6 +105,7 @@ PORT=5000
 ### Installation & Running
 
 1. **Install dependencies:**
+
    ```bash
    npm install
    cd backend && npm install && cd ..
@@ -107,10 +114,11 @@ PORT=5000
 2. **Start MongoDB** (if running locally)
 
 3. **Start development servers:**
+
    ```bash
    # Terminal 1: Backend
    cd backend && npm run dev
-   
+
    # Terminal 2: Frontend
    npm run dev
    ```
@@ -141,12 +149,14 @@ PORT=5000
 14. **Switch tabs** between "Open" and "Completed" todos
 
 ### Smart Todo Ordering
+
 - **Auto Top Insertion**: New todos automatically appear at the top of the list with order 0
 - **Existing Todo Shift**: All existing open todos are pushed down when a new todo is created
 - **Manual Reordering**: Use drag and drop to manually rearrange todos as needed
 - **Subtask Positioning**: Child todos (subtasks) remain grouped under their parent regardless of order
 
 ### Drag & Drop Reordering
+
 - **Mobile**: Touch and hold a todo item for 200ms, then drag to reorder
 - **Desktop**: Click and drag todo items to new positions
 - **Visual Feedback**: Dragged items become semi-transparent during movement
@@ -155,11 +165,13 @@ PORT=5000
 - **Scroll-Friendly**: Delay prevents accidental dragging while scrolling
 
 ### Search & Editing Modes
+
 - **Search mode**: Filters todos in real-time by title, description, and tags with automatic field focus
 - **Editing mode**: Edit individual todos with inline forms
 - **Mutual exclusivity**: Search and editing modes cannot be active simultaneously for focused user experience
 
 ### View Mode Toggle
+
 - **Detailed Mode** (default): Shows all todo information including description, tags, creation/completion dates, and subtask counts
 - **Compact Mode**: Shows only essential information (title, checkbox, menu button, drag handle, and subtask count if present)
 - **Persistent Setting**: Your view preference is automatically saved and restored across browser sessions
@@ -168,6 +180,7 @@ PORT=5000
 - **Smart Information**: Subtask count always visible as it's crucial information for task organization
 
 ### Tag System
+
 - **Tag Creation**: Create new tags inline while adding or editing todos
 - **Tag Selection**: Choose from existing tags via autocomplete dropdown
 - **Tag Management**: Dedicated tag management page accessible via hamburger menu
@@ -178,6 +191,7 @@ PORT=5000
 - **Safe Operations**: Tag updates and deletions automatically maintain todo relationships
 
 ### Toast Notifications
+
 - **Todo Feedback**: Success notifications when todos are completed with fade-out animation, info notifications for incompletion
 - **Tag Management**: Success notifications for tag creation, updates, and deletions with contextual tag names
 - **Smart Positioning**: Positioned above the floating action button to avoid obstruction
@@ -187,6 +201,7 @@ PORT=5000
 - **Expandable System**: Generic toast system ready for future notification needs
 
 ### Bulk Operations
+
 - **Delete All Completed**: Remove all completed todos at once with confirmation dialog
 - **Safety features**: Confirmation required, disabled during other operations
 - **Hierarchical cleanup**: Properly handles deletion of parent todos and their children
@@ -194,6 +209,7 @@ PORT=5000
 ## 📊 Data Models
 
 ### Todo Model
+
 ```typescript
 interface Todo {
   _id: string;
@@ -204,32 +220,34 @@ interface Todo {
   user: string;
   parent?: string;
   children: Todo[];
-  tags: Tag[];        // Array of associated tags
-  order?: number;     // For drag-and-drop ordering
+  tags: Tag[]; // Array of associated tags
+  order?: number; // For drag-and-drop ordering
   createdAt: string;
   updatedAt: string;
 }
 ```
 
 ### Tag Model
+
 ```typescript
 interface Tag {
   _id: string;
-  name: string;       // Tag name (max 50 characters)
-  color: string;      // Auto-generated hex color
-  user: string;       // Owner of the tag
+  name: string; // Tag name (max 50 characters)
+  color: string; // Auto-generated hex color
+  user: string; // Owner of the tag
   createdAt: string;
   updatedAt: string;
 }
 ```
 
 ### User Model
+
 ```typescript
 interface User {
   _id: string;
   email: string;
   name: string;
-  password: string;   // Hashed with bcrypt
+  password: string; // Hashed with bcrypt
   createdAt: string;
 }
 ```
@@ -237,11 +255,13 @@ interface User {
 ## 🔌 API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/register` - User registration
 - `POST /api/auth/login` - User login
 - `GET /api/auth/me` - Get current user profile
 
 ### Todos
+
 - `GET /api/todos` - Get all user todos
 - `POST /api/todos` - Create new todo
 - `PUT /api/todos/:id` - Update todo
@@ -251,6 +271,7 @@ interface User {
 - `PUT /api/todos/:id/toggle` - Toggle todo completion
 
 ### Tags
+
 - `GET /api/tags` - Get all user tags
 - `POST /api/tags` - Create new tag
 - `PUT /api/tags/:id` - Update tag (name/color)
@@ -261,16 +282,19 @@ interface User {
 ### Heroku Deployment
 
 1. **Prepare for deployment:**
+
    ```bash
    npm run build
    ```
 
 2. **Create Heroku app:**
+
    ```bash
    heroku create your-app-name
    ```
 
 3. **Set environment variables:**
+
    ```bash
    heroku config:set MONGODB_URI=your-mongodb-uri
    heroku config:set JWT_SECRET=your-production-jwt-secret
@@ -287,6 +311,7 @@ interface User {
 ### Environment Variables for Production
 
 Ensure these are set in your production environment:
+
 - `MONGODB_URI`: Your MongoDB connection string
 - `JWT_SECRET`: A secure secret for JWT signing
 - `NODE_ENV`: Set to "production"
