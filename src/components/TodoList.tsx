@@ -603,7 +603,7 @@ const TodoList: React.FC = () => {
                           fontWeight: 600,
                         }}
                       >
-                        {formatDateHeading(date)}
+                        {formatDateHeading(date)} ({todos.length})
                       </Typography>
                       <IconButton
                         size="small"
