@@ -83,7 +83,7 @@ const Header: React.FC = () => {
               aria-haspopup="true"
               aria-expanded={open ? 'true' : undefined}
               sx={{
-                color: 'text.primary',
+                color: 'white',
                 '&:hover': {
                   bgcolor: 'action.hover',
                 },
@@ -158,6 +158,7 @@ const Header: React.FC = () => {
               component={Link}
               to="/login"
               color="primary"
+              variant="contained"
               size="small"
             >
               Login
@@ -166,7 +167,7 @@ const Header: React.FC = () => {
               component={Link}
               to="/register"
               variant="contained"
-              color="primary"
+              color="secondary"
               size="small"
             >
               Register
