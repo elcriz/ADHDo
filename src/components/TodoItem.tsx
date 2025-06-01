@@ -247,7 +247,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
                 position: 'absolute',
                 bottom: 0,
                 right: 0,
-                display: 'flex',
+                display: isEditing ? 'none' : 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 width: 32,
@@ -371,7 +371,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
         {isEditing && (
           <Paper
             elevation={1}
-            sx={{ mt: 2, mb: -2, p: 2, bgcolor: 'uiForm' }}
+            sx={{ mt: 1, mx: 1, mb: 0, p: 2, bgcolor: 'uiForm' }}
           >
             <TodoForm
               todo={todo}
