@@ -42,8 +42,8 @@ const Header: React.FC = () => {
         position="sticky"
         elevation={1}
         sx={{
-          bgcolor: 'background.paper',
-          color: 'text.primary',
+          bgcolor: '#3b82f6',
+          color: 'text.contrastText',
           borderRadius: 0,
           boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
           zIndex: (theme) => theme.zIndex.appBar,
@@ -71,7 +71,7 @@ const Header: React.FC = () => {
           >
             <Typography
               variant="body2"
-              color="text.secondary"
+              color="text.contrastText"
             >
               Hi, {user.name}
             </Typography>
