@@ -5,6 +5,7 @@ import { Box } from '@mui/material';
 import type { Todo } from '../types';
 import { useEditing } from '../contexts/EditingContext';
 import TodoItem from './TodoItem';
+import { BorderColor } from '@mui/icons-material';
 
 interface DraggableTodoItemProps {
   todo: Todo;
@@ -35,6 +36,7 @@ const DraggableTodoItem: React.FC<DraggableTodoItemProps> = ({ todo, level, view
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isSortableDragging ? 0.5 : 1,
+    zIndex: isSortableDragging ? 1000 : 'auto',
   };
 
   // Filter out any children that are strings (IDs) instead of Todo objects
