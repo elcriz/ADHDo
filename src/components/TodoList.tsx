@@ -15,11 +15,6 @@ import {
   InputAdornment,
   IconButton,
   Collapse,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  DialogContentText,
 } from '@mui/material';
 import { Add as AddIcon, Close as CloseIcon, Search as SearchIcon, Delete as DeleteIcon, ViewList as ViewListIcon, ViewModule as ViewModuleIcon } from '@mui/icons-material';
 import {
@@ -45,6 +40,7 @@ import type { Todo } from '../types';
 import TodoItem from './TodoItem';
 import TodoForm from './TodoForm';
 import DraggableTodoItem from './DraggableTodoItem';
+import ConfirmationDialog from './ConfirmationDialog';
 
 const TodoList: React.FC = () => {
   const { todos, loading, deleteCompletedTodos, deleteTodosByDate, reorderTodos } = useTodos();
@@ -653,68 +649,29 @@ const TodoList: React.FC = () => {
         </Fab>
       )}
 
-      {/* Delete all completed todos dialog */}
-      <Dialog
+      {/* Delete all completed todos confirmation */}
+      <ConfirmationDialog
         open={showDeleteDialog}
+        title="Delete All Completed Todos"
+        message="Are you sure you want to delete all completed todos? This action cannot be undone."
+        confirmText="Delete All"
+        loading={deletingCompleted}
+        destructive={true}
         onClose={() => setShowDeleteDialog(false)}
-        aria-labelledby="delete-all-completed-todos"
-      >
-        <DialogTitle id="delete-all-completed-todos">
-          Delete All Completed Todos
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete all completed todos? This action cannot be undone.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => setShowDeleteDialog(false)}
-            color="primary"
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={handleDeleteAllCompleted}
-            color="error"
-            disabled={deletingCompleted}
-          >
-            {deletingCompleted ? <CircularProgress size={24} /> : 'Delete All'}
-          </Button>
-        </DialogActions>
-      </Dialog>
+        onConfirm={handleDeleteAllCompleted}
+      />
 
-      {/* Delete todos by date dialog */}
-      <Dialog
+      {/* Delete todos by date confirmation */}
+      <ConfirmationDialog
         open={showDeleteDateDialog}
+        title={`Delete Todos for ${dateToDelete ? formatDateHeading(dateToDelete) : ''}`}
+        message={`Are you sure you want to delete all todos completed on ${dateToDelete ? formatDateHeading(dateToDelete) : 'this date'}? This action cannot be undone.`}
+        confirmText="Delete"
+        loading={deletingDate}
+        destructive={true}
         onClose={() => setShowDeleteDateDialog(false)}
-        aria-labelledby="delete-todos-by-date"
-      >
-        <DialogTitle id="delete-todos-by-date">
-          Delete Todos for {dateToDelete ? formatDateHeading(dateToDelete) : ''}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete all todos completed on {dateToDelete ? formatDateHeading(dateToDelete) : 'this date'}? This action cannot be undone.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => setShowDeleteDateDialog(false)}
-            color="primary"
-            disabled={deletingDate}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={handleDeleteTodosByDate}
-            color="error"
-            disabled={deletingDate}
-          >
-            {deletingDate ? <CircularProgress size={24} /> : 'Delete'}
-          </Button>
-        </DialogActions>
-      </Dialog>
+        onConfirm={handleDeleteTodosByDate}
+      />
     </Container>
   );
 };

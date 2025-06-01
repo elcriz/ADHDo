@@ -11,10 +11,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Alert,
   CircularProgress,
   Chip,
@@ -37,6 +33,7 @@ import {
 import { tagApi } from '../services/api';
 import type { Tag } from '../types';
 import { useToast } from '../contexts/ToastContext';
+import ConfirmationDialog from './ConfirmationDialog';
 
 const TagManagement: React.FC = () => {
   const navigate = useNavigate();
@@ -516,34 +513,17 @@ const TagManagement: React.FC = () => {
       </Popover>
 
       {/* Delete confirmation dialog */}
-      <Dialog
+      <ConfirmationDialog
         open={deleteTagId !== null}
-        onClose={() => !deletingTag && setDeleteTagId(null)}
-      >
-        <DialogTitle>Delete Tag</DialogTitle>
-        <DialogContent>
-          <Typography>
-            Are you sure you want to delete this tag? This action cannot be undone.
-            Note that existing todos with this tag will keep the tag until manually removed.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => setDeleteTagId(null)}
-            disabled={deletingTag}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={() => deleteTagId && handleDeleteTag(deleteTagId)}
-            color="error"
-            disabled={deletingTag}
-            startIcon={deletingTag ? <CircularProgress size={16} /> : undefined}
-          >
-            {deletingTag ? 'Deleting...' : 'Delete'}
-          </Button>
-        </DialogActions>
-      </Dialog>
+        title="Delete Tag"
+        message="Are you sure you want to delete this tag? This action cannot be undone. Note that existing todos with this tag will keep the tag until manually removed."
+        confirmText="Delete"
+        cancelText="Cancel"
+        loading={deletingTag}
+        destructive={true}
+        onClose={() => setDeleteTagId(null)}
+        onConfirm={() => deleteTagId && handleDeleteTag(deleteTagId)}
+      />
     </Container>
   );
 };
