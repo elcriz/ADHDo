@@ -151,7 +151,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
         sx={{ p: 1, px: 0.25, '&:last-child': { pb: 1.5 } }}
       >
         <Box
-          sx={{ display: 'flex', alignItems: 'flex-start', gap: 0.5 }}
+          sx={{ display: 'flex', alignItems: 'flex-start', gap: 0.5, pt: viewMode === 'compact' ? 1 : 0 }}
         >
           <Checkbox
             checked={todo.completed}
@@ -296,6 +296,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
             onClick={handleMenuOpen}
             disabled={isAnyEditing && editingTodoId !== todo._id || isCompleting}
             sx={{
+              mt: viewMode === 'compact' ? -1.5 : 0,
               p: 0.5,
               '&:disabled': {
                 color: 'action.disabled',
