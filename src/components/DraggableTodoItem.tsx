@@ -5,7 +5,6 @@ import { Box } from '@mui/material';
 import type { Todo } from '../types';
 import { useEditing } from '../contexts/EditingContext';
 import TodoItem from './TodoItem';
-import { BorderColor } from '@mui/icons-material';
 
 interface DraggableTodoItemProps {
   todo: Todo;

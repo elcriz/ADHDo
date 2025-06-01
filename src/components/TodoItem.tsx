@@ -27,6 +27,7 @@ import { useTodos } from '../contexts/TodoContext';
 import { useEditing } from '../contexts/EditingContext';
 import TodoForm from './TodoForm';
 import { TagList } from './TagChip';
+import ConfirmationDialog from './ConfirmationDialog';
 
 interface TodoItemProps {
   todo: Todo;
@@ -43,6 +44,8 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
   const [showChildForm, setShowChildForm] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [isCompleting, setIsCompleting] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Update global editing state when this todo is being edited
   useEffect(() => {
@@ -75,8 +78,18 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
   };
 
   const handleDelete = () => {
-    if (confirm('Are you sure you want to delete this todo and all its children?')) {
-      deleteTodo(todo._id);
+    setShowDeleteDialog(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await deleteTodo(todo._id);
+      setShowDeleteDialog(false);
+    } catch (error) {
+      console.error('Failed to delete todo:', error);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -380,6 +393,23 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
           </Paper>
         )}
       </CardContent>
+
+      {/* Delete confirmation dialog */}
+      <ConfirmationDialog
+        open={showDeleteDialog}
+        title="Delete Todo"
+        message={
+          validChildren.length > 0
+            ? 'Are you sure you want to delete this todo and all its children? This action cannot be undone.'
+            : 'Are you sure you want to delete this todo? This action cannot be undone.'
+        }
+        confirmText="Delete"
+        cancelText="Cancel"
+        loading={isDeleting}
+        destructive={true}
+        onClose={() => setShowDeleteDialog(false)}
+        onConfirm={handleConfirmDelete}
+      />
     </Card>
   );
 };
