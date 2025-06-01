@@ -105,7 +105,7 @@ const TodoForm: React.FC<TodoFormProps> = ({ todo, parent, onSuccess, onCancel }
       />
 
       <Box
-        sx={{ display: 'flex', justifyContent: 'space-between', gap: 1, pr: todo ? 2 : 0 }}
+        sx={{ display: 'flex', justifyContent: 'space-between', gap: 1, pr: todo && !todo.completed ? 2 : 0 }}
       >
         <Button
           type="submit"

@@ -463,7 +463,7 @@ const TodoList: React.FC = () => {
               },
               '& .MuiTab-root': {
                 textTransform: 'none',
-                fontWeight: 500,
+                fontWeight: 700,
                 '&:first-of-type': {
                   borderTopLeftRadius: 8,
                 },
