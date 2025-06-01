@@ -4,9 +4,9 @@ import { Box } from '@mui/material';
 const ColorBar: React.FC = () => {
   // Color palette with primary blue from theme and other vibrant colors
   const colors = [
-    '#3b82f6', // Blue (primary from theme)
     '#f97316', // Orange
     '#22c55e', // Green
+    '#3b82f6', // Blue (primary from theme)
     '#a16207', // Brown
     '#9333ea', // Purple
     '#ec4899', // Pink
