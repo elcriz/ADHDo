@@ -812,6 +812,7 @@ const TodoList: React.FC = () => {
                             alignItems: 'center',
                             justifyContent: 'center',
                             backgroundColor: 'action.hover',
+                            zIndex: 1,
                           }}
                         >
                           <Typography
@@ -829,12 +830,15 @@ const TodoList: React.FC = () => {
                         >
                           <Box
                             sx={{
+                              border: '2px dashed',
+                              borderColor: 'divider',
+                              borderRadius: 2,
                               display: 'flex',
                               flexDirection: 'column',
                               gap: 1,
                               p: 2,
-                              backgroundColor: theme => theme.palette.mode === 'dark' ? 'warning.dark' : 'warning.light',
-                              borderRadius: 2,
+                              backgroundColor: 'action.hover',
+                              zIndex: 1,
                             }}
                           >
                             {priorityTodos.map(todo => (
