@@ -24,6 +24,7 @@ export interface Todo {
   children: Todo[];
   tags: Tag[];
   order?: number;
+  isPriority?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -46,5 +47,6 @@ export interface TodoContextType {
   deleteCompletedTodos: () => Promise<void>;
   deleteTodosByDate: (date: string) => Promise<void>;
   reorderTodos: (todoIds: string[]) => Promise<void>;
+  makeTodoPriority: (id: string) => Promise<void>;
   refreshTodos: () => Promise<void>;
 }

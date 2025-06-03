@@ -6,6 +6,7 @@
 
 ## 🆕 Latest Updates (June 2025)
 
+- **🎯 Priority Section**: Dedicated "Priority" section with drag-and-drop functionality for high-importance todos using "Eat the Frog" productivity principle
 - **🏷️ Tag Filter Feature**: Filter todos by selecting specific tags with visual indicators and seamless search integration
 - **🔍 Enhanced Filtering**: Combined tag filtering and search functionality for refined todo discovery
 
@@ -27,6 +28,7 @@
 - **Authentication System**: Login/Register with JWT tokens
 - **Todo Management**: Create, edit, delete, and toggle todos
 - **Hierarchical Todos**: Parent-child relationships with subtasks
+- **Priority Section**: Dedicated section for high-importance todos with drag-and-drop management and visual styling
 - **Tagging System**: Comprehensive tag management with dedicated interface
 - **Tag Filtering**: Filter todos by selecting tags with visual indicators and search integration
 - **Real-time Search**: Live filtering of todos by title, description, and tags with automatic field focus

@@ -27,6 +27,7 @@ import {
   TouchSensor,
   useSensor,
   useSensors,
+  useDroppable,
   type DragEndEvent,
 } from '@dnd-kit/core';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
@@ -44,6 +45,33 @@ import TodoForm from './TodoForm';
 import DraggableTodoItem from './DraggableTodoItem';
 import ConfirmationDialog from './ConfirmationDialog';
 import TagSelector from './TagSelector';
+
+// Droppable section component for priority and regular todos
+interface DroppableSectionProps {
+  sectionId: string;
+  children: React.ReactNode;
+}
+
+const DroppableSection: React.FC<DroppableSectionProps> = ({ sectionId, children }) => {
+  const { setNodeRef, isOver } = useDroppable({
+    id: sectionId,
+  });
+
+  return (
+    <Box
+      ref={setNodeRef}
+      sx={{
+        transition: 'all 0.2s ease',
+        ...(isOver && {
+          backgroundColor: 'action.hover',
+          transform: 'scale(1.02)',
+        }),
+      }}
+    >
+      {children}
+    </Box>
+  );
+};
 
 const TodoList: React.FC = () => {
   const { todos, loading, deleteCompletedTodos, deleteTodosByDate, reorderTodos } = useTodos();
@@ -303,11 +331,52 @@ const TodoList: React.FC = () => {
       return;
     }
 
-    const activeIndex = openTodos.findIndex(todo => todo._id === active.id);
-    const overIndex = openTodos.findIndex(todo => todo._id === over.id);
+    // Check if we're moving between priority sections
+    const isMovingToPriority = over.id === 'priority-section';
+    const isMovingToRegular = over.id === 'regular-section';
+    const activeTodo = openTodos.find(todo => todo._id === active.id);
+
+    if (!activeTodo) return;
+
+    // If dropping on priority or regular section containers
+    if (isMovingToPriority || isMovingToRegular) {
+      const newIsPriority = isMovingToPriority;
+
+      // Update the todo's priority status
+      try {
+        const response = await fetch(`/api/todos/${activeTodo._id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
+          body: JSON.stringify({
+            title: activeTodo.title,
+            description: activeTodo.description,
+            tags: activeTodo.tags.map(tag => tag._id),
+            isPriority: newIsPriority,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to update todo priority');
+        }
+
+        // Refresh todos to get updated data
+        window.location.reload();
+      } catch (error) {
+        console.error('Failed to update todo priority:', error);
+      }
+      return;
+    }
+
+    // Handle reordering within the same section
+    const sourceList = activeTodo.isPriority ? priorityTodos : regularTodos;
+    const activeIndex = sourceList.findIndex(todo => todo._id === active.id);
+    const overIndex = sourceList.findIndex(todo => todo._id === over.id);
 
     if (activeIndex !== -1 && overIndex !== -1) {
-      const reorderedTodos = arrayMove(openTodos, activeIndex, overIndex);
+      const reorderedTodos = arrayMove(sourceList, activeIndex, overIndex);
       const todoIds = reorderedTodos.map(todo => todo._id);
 
       try {
@@ -330,6 +399,15 @@ const TodoList: React.FC = () => {
     // Then apply search filter
     return searchTodos(filtered, searchQuery);
   }, [allOpenTodos, searchQuery, selectedFilterTags]);
+
+  // Separate priority and regular open todos
+  const priorityTodos = useMemo(() => {
+    return openTodos.filter(todo => todo.isPriority);
+  }, [openTodos]);
+
+  const regularTodos = useMemo(() => {
+    return openTodos.filter(todo => !todo.isPriority);
+  }, [openTodos]);
 
   const completedTodos = useMemo(() => {
     let filtered = allCompletedTodos;
@@ -355,8 +433,6 @@ const TodoList: React.FC = () => {
       todos: grouped[dateKey]
     }));
   }, [completedTodos]);
-
-  const currentTodos = activeTab === 'open' ? openTodos : completedTodos;
 
   const renderTodoWithChildren = (todo: Todo, level: number = 0) => {
     // Filter out any children that are strings (IDs) instead of Todo objects
@@ -690,8 +766,8 @@ const TodoList: React.FC = () => {
           sx={{ mt: -1 }}
         >
           {activeTab === 'open' ? (
-            // Render open todos with drag and drop
-            currentTodos.length === 0 ? (
+            // Render open todos with drag and drop and priority sections
+            openTodos.length === 0 ? (
               <Box
                 sx={{ textAlign: 'center', py: 4 }}
               >
@@ -711,23 +787,150 @@ const TodoList: React.FC = () => {
                 onDragEnd={handleDragEnd}
                 modifiers={[restrictToVerticalAxis]}
               >
-                <SortableContext
-                  items={currentTodos.map(todo => todo._id)}
-                  strategy={verticalListSortingStrategy}
-                >
-                  <Box
-                    sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
-                  >
-                    {currentTodos.map(todo => (
-                      <DraggableTodoItem
-                        key={todo._id}
-                        todo={todo}
-                        level={0}
-                        viewMode={viewMode}
-                      />
-                    ))}
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  {/* Priority Section */}
+                  <Box>
+                    <Box
+                      sx={{
+                        position: 'sticky',
+                        top: { xs: 56, sm: 64 }, // Account for AppBar/Toolbar height
+                        zIndex: 10,
+                        mb: 2,
+                        px: 2,
+                        pt: 1.5,
+                        mx: -2,
+                        borderBottom: 1,
+                        borderColor: 'divider',
+                        pb: 1,
+                        backdropFilter: 'blur(8px)',
+                        WebkitBackdropFilter: 'blur(8px)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                      }}
+                    >
+                      <Typography
+                        variant="h6"
+                        sx={{ fontWeight: 600 }}
+                      >
+                        Priority ({priorityTodos.length})
+                      </Typography>
+                    </Box>
+                    <DroppableSection sectionId="priority-section">
+                      {priorityTodos.length === 0 ? (
+                        <Box
+                          sx={{
+                            border: '2px dashed',
+                            borderColor: 'divider',
+                            borderRadius: 2,
+                            p: 3,
+                            textAlign: 'center',
+                            minHeight: 80,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: 'action.hover',
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{ fontStyle: 'italic' }}
+                          >
+                            Drag your priority todos in here to maintain focus. Eat the frog!
+                          </Typography>
+                        </Box>
+                      ) : (
+                        <SortableContext
+                          items={priorityTodos.map(todo => todo._id)}
+                          strategy={verticalListSortingStrategy}
+                        >
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              gap: 1,
+                              p: 2,
+                              backgroundColor: theme => theme.palette.mode === 'dark' ? 'warning.dark' : 'warning.light',
+                              borderRadius: 2,
+                            }}
+                          >
+                            {priorityTodos.map(todo => (
+                              <DraggableTodoItem
+                                key={todo._id}
+                                todo={todo}
+                                level={0}
+                                viewMode={viewMode}
+                              />
+                            ))}
+                          </Box>
+                        </SortableContext>
+                      )}
+                    </DroppableSection>
                   </Box>
-                </SortableContext>
+
+                  {/* Regular Todos Section */}
+                  <Box>
+                    <Box
+                      sx={{
+                        position: 'sticky',
+                        top: { xs: 56, sm: 64 }, // Account for AppBar/Toolbar height
+                        zIndex: 10,
+                        mb: 2,
+                        px: 2,
+                        pt: 1.5,
+                        mx: -2,
+                        borderBottom: 1,
+                        borderColor: 'divider',
+                        pb: 1,
+                        backdropFilter: 'blur(8px)',
+                        WebkitBackdropFilter: 'blur(8px)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                      }}
+                    >
+                      <Typography
+                        variant="h6"
+                        sx={{ fontWeight: 600 }}
+                      >
+                        Other ({regularTodos.length})
+                      </Typography>
+                    </Box>
+                    <DroppableSection sectionId="regular-section">
+                      {regularTodos.length === 0 ? (
+                        <Box
+                          sx={{ textAlign: 'center', py: 4 }}
+                        >
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                          >
+                            No other todos
+                          </Typography>
+                        </Box>
+                      ) : (
+                        <SortableContext
+                          items={regularTodos.map(todo => todo._id)}
+                          strategy={verticalListSortingStrategy}
+                        >
+                          <Box
+                            sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
+                          >
+                            {regularTodos.map(todo => (
+                              <DraggableTodoItem
+                                key={todo._id}
+                                todo={todo}
+                                level={0}
+                                viewMode={viewMode}
+                              />
+                            ))}
+                          </Box>
+                        </SortableContext>
+                      )}
+                    </DroppableSection>
+                  </Box>
+                </Box>
               </DndContext>
             )
           ) : (

@@ -20,6 +20,7 @@ import {
   Add as AddIcon,
   MoreVert as MoreVertIcon,
   DragIndicator as DragIndicatorIcon,
+  Star as StarIcon,
 } from '@mui/icons-material';
 import { format } from 'date-fns';
 import type { Todo } from '../types';
@@ -38,7 +39,7 @@ interface TodoItemProps {
 }
 
 const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showDragHandle = false, viewMode = 'detailed' }) => {
-  const { toggleTodo, deleteTodo } = useTodos();
+  const { toggleTodo, deleteTodo, makeTodoPriority } = useTodos();
   const { isAnyEditing, setIsAnyEditing, editingTodoId, setEditingTodoId } = useEditing();
   const [isEditing, setIsEditing] = useState(false);
   const [showChildForm, setShowChildForm] = useState(false);
@@ -118,6 +119,13 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
   const handleDeleteClick = () => {
     handleDelete();
     handleMenuClose();
+  };  const handleMakePriority = async () => {
+    try {
+      await makeTodoPriority(todo._id);
+    } catch (error) {
+      console.error('Failed to make todo priority:', error);
+    }
+    handleMenuClose();
   };
 
   const formatDate = (dateString: string) => {
@@ -133,7 +141,11 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
         ml: level,
         borderLeft: level > 0 ? 3 : 0,
         borderLeftColor: level > 0 ? 'primary.light' : 'transparent',
-        bgcolor: todo.completed ? 'todoCompleted' : 'background.paper',
+        bgcolor: todo.completed
+          ? 'todoCompleted'
+          : todo.isPriority
+            ? (theme => theme.palette.mode === 'dark' ? 'warning.dark' : 'warning.light')
+            : 'background.paper',
         borderTopLeftRadius: level > 0 ? 0 : 8,
         borderTopRightRadius: level > 0 ? 0 : 8,
         borderBottomRightRadius: validChildren.length > 0 ? 0 : 8,
@@ -325,6 +337,22 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
               dense
               sx={{ py: 0 }}
             >
+              {/* Only show "Make priority" for open todos that are not already priority */}
+              {!todo.completed && !todo.isPriority && (
+                <MenuItem
+                  onClick={handleMakePriority}
+                >
+                  <ListItemIcon>
+                    <StarIcon
+                      fontSize="small"
+                      color="warning"
+                    />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Make priority"
+                  />
+                </MenuItem>
+              )}
               <MenuItem
                 onClick={handleAddSubtask}
               >

@@ -8,10 +8,11 @@ This application is the result of experimenting with Agent mode in VS Code.
 
 - **User Authentication**: Secure registration and login with JWT tokens
 - **Hierarchical Todos**: Create parent-child relationships between todos
+- **Priority Section**: Dedicated "Priority" section for high-importance todos with "Eat the Frog" productivity approach
 - **Tag System**: Organize todos with colored tags - create new tags on-the-fly or select from existing ones
 - **Tag Filtering**: Filter todos by selecting specific tags with visual indicators and clear all functionality
 - **Smart Todo Ordering**: New todos automatically appear at the top of the list for immediate focus
-- **Drag & Drop Reordering**: Touch-friendly drag and drop for reordering open todos with mobile optimization
+- **Drag & Drop Reordering**: Touch-friendly drag and drop for reordering open todos with mobile optimization, including priority section management
 - **View Mode Toggle**: Switch between detailed and compact display modes with persistent user preference
 - **Status Management**: Toggle between open and completed todos
 - **Toast Notifications**: Non-obstructive feedback for user actions including todo completion/incompletion and tag management operations

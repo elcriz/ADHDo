@@ -112,6 +112,51 @@ export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
     await refreshTodos();
   };
 
+  const makeTodoPriority = async (id: string) => {
+    // Find the todo to get its details
+    const findTodoById = (todoList: Todo[], targetId: string): Todo | null => {
+      for (const todo of todoList) {
+        if (todo._id === targetId) return todo;
+
+        if (todo.children) {
+          for (const child of todo.children) {
+            if (typeof child === 'object') {
+              const found = findTodoById([child], targetId);
+              if (found) return found;
+            }
+          }
+        }
+      }
+      return null;
+    };
+
+    const todoItem = findTodoById(todos, id);
+    if (!todoItem) return;
+
+    try {
+      // Get all priority todos
+      const priorityTodos = todos.filter(t =>
+        t.isPriority && !t.completed && !t.parent
+      );
+
+      // Set this todo to priority status
+      await todoApi.makeTodoPriority(id, {
+        title: todoItem.title,
+        description: todoItem.description,
+        tags: todoItem.tags.map(tag => tag._id),
+      });
+
+      // Now reorder to put this todo at the top of priority section
+      const priorityIds = [id, ...priorityTodos.map(t => t._id)];
+      await todoApi.reorderTodos(priorityIds);
+
+      await refreshTodos();
+      showToast(`"${todoItem.title}" marked as priority`, 'success');
+    } catch (error) {
+      console.error('Failed to make todo priority:', error);
+    }
+  };
+
   const value: TodoContextType = {
     todos,
     loading,
@@ -122,6 +167,7 @@ export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
     deleteCompletedTodos,
     deleteTodosByDate,
     reorderTodos,
+    makeTodoPriority,
     refreshTodos,
   };
 
