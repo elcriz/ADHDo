@@ -151,7 +151,7 @@ export const updateTodo = async (req: AuthRequest, res: Response): Promise<void>
     }
 
     const { id } = req.params;
-    const { title, description, tags } = req.body;
+    const { title, description, tags, isPriority } = req.body;
 
     const todo = await Todo.findOne({ _id: id, user: req.user._id });
 
@@ -167,6 +167,9 @@ export const updateTodo = async (req: AuthRequest, res: Response): Promise<void>
     todo.description = description ?? todo.description;
     if (tags !== undefined) {
       todo.tags = tags;
+    }
+    if (isPriority !== undefined) {
+      todo.isPriority = isPriority;
     }
 
     await todo.save();

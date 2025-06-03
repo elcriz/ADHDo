@@ -10,6 +10,7 @@ export interface ITodo extends Document {
   children: mongoose.Types.ObjectId[];
   tags: mongoose.Types.ObjectId[];
   order?: number;
+  isPriority?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -55,6 +56,10 @@ const TodoSchema = new Schema<ITodo>({
   order: {
     type: Number,
     default: null
+  },
+  isPriority: {
+    type: Boolean,
+    default: false
   }
 }, {
   timestamps: true

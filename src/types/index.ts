@@ -24,6 +24,7 @@ export interface Todo {
   children: Todo[];
   tags: Tag[];
   order?: number;
+  isPriority?: boolean;
   createdAt: string;
   updatedAt: string;
 }

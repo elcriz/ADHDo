@@ -133,7 +133,11 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
         ml: level,
         borderLeft: level > 0 ? 3 : 0,
         borderLeftColor: level > 0 ? 'primary.light' : 'transparent',
-        bgcolor: todo.completed ? 'todoCompleted' : 'background.paper',
+        bgcolor: todo.completed
+          ? 'todoCompleted'
+          : todo.isPriority
+            ? (theme => theme.palette.mode === 'dark' ? 'warning.dark' : 'warning.light')
+            : 'background.paper',
         borderTopLeftRadius: level > 0 ? 0 : 8,
         borderTopRightRadius: level > 0 ? 0 : 8,
         borderBottomRightRadius: validChildren.length > 0 ? 0 : 8,
