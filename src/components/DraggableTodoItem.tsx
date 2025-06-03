@@ -35,7 +35,7 @@ const DraggableTodoItem: React.FC<DraggableTodoItemProps> = ({ todo, level, view
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isSortableDragging ? 0.5 : 1,
-    zIndex: isSortableDragging ? 1000 : 'auto',
+    zIndex: isSortableDragging ? 1000 : 1, // Ensure items always have a z-index value
   };
 
   // Filter out any children that are strings (IDs) instead of Todo objects

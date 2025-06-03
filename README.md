@@ -8,7 +8,7 @@ This application is the result of experimenting with Agent mode in VS Code.
 
 - **User Authentication**: Secure registration and login with JWT tokens
 - **Hierarchical Todos**: Create parent-child relationships between todos
-- **Priority Section**: Dedicated "Priority" section for high-importance todos with "Eat the Frog" productivity approach
+- **Priority Section**: Dedicated "Priority" section for high-importance todos with "Eat the Frog" productivity approach and smooth drag-and-drop functionality
 - **Tag System**: Organize todos with colored tags - create new tags on-the-fly or select from existing ones
 - **Tag Filtering**: Filter todos by selecting specific tags with visual indicators and clear all functionality
 - **Smart Todo Ordering**: New todos automatically appear at the top of the list for immediate focus

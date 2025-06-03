@@ -9,6 +9,7 @@
 - **🎯 Priority Section**: Dedicated "Priority" section with drag-and-drop functionality for high-importance todos using "Eat the Frog" productivity principle
 - **🏷️ Tag Filter Feature**: Filter todos by selecting specific tags with visual indicators and seamless search integration
 - **🔍 Enhanced Filtering**: Combined tag filtering and search functionality for refined todo discovery
+- **🐛 Z-Index Fix**: Resolved visibility issues when dragging todos between priority and regular sections
 
 ## 🆕 Previous Updates (May 2025)
 
