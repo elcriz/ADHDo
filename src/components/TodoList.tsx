@@ -790,12 +790,32 @@ const TodoList: React.FC = () => {
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                   {/* Priority Section */}
                   <Box>
-                    <Typography
-                      variant="h6"
-                      sx={{ mb: 2, fontWeight: 600 }}
+                    <Box
+                      sx={{
+                        position: 'sticky',
+                        top: { xs: 56, sm: 64 }, // Account for AppBar/Toolbar height
+                        zIndex: 10,
+                        mb: 2,
+                        px: 2,
+                        pt: 1.5,
+                        mx: -2,
+                        borderBottom: 1,
+                        borderColor: 'divider',
+                        pb: 1,
+                        backdropFilter: 'blur(8px)',
+                        WebkitBackdropFilter: 'blur(8px)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                      }}
                     >
-                      Priority ({priorityTodos.length})
-                    </Typography>
+                      <Typography
+                        variant="h6"
+                        sx={{ fontWeight: 600 }}
+                      >
+                        Priority ({priorityTodos.length})
+                      </Typography>
+                    </Box>
                     <DroppableSection sectionId="priority-section">
                       {priorityTodos.length === 0 ? (
                         <Box
@@ -851,12 +871,32 @@ const TodoList: React.FC = () => {
 
                   {/* Regular Todos Section */}
                   <Box>
-                    <Typography
-                      variant="h6"
-                      sx={{ mb: 2, fontWeight: 600 }}
+                    <Box
+                      sx={{
+                        position: 'sticky',
+                        top: { xs: 56, sm: 64 }, // Account for AppBar/Toolbar height
+                        zIndex: 10,
+                        mb: 2,
+                        px: 2,
+                        pt: 1.5,
+                        mx: -2,
+                        borderBottom: 1,
+                        borderColor: 'divider',
+                        pb: 1,
+                        backdropFilter: 'blur(8px)',
+                        WebkitBackdropFilter: 'blur(8px)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                      }}
                     >
-                      Other ({regularTodos.length})
-                    </Typography>
+                      <Typography
+                        variant="h6"
+                        sx={{ fontWeight: 600 }}
+                      >
+                        Other ({regularTodos.length})
+                      </Typography>
+                    </Box>
                     <DroppableSection sectionId="regular-section">
                       {regularTodos.length === 0 ? (
                         <Box
