@@ -157,6 +157,42 @@ export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
     }
   };
 
+  const removeTodoPriority = async (id: string) => {
+    // Find the todo to get its details
+    const findTodoById = (todoList: Todo[], targetId: string): Todo | null => {
+      for (const todo of todoList) {
+        if (todo._id === targetId) return todo;
+
+        if (todo.children) {
+          for (const child of todo.children) {
+            if (typeof child === 'object') {
+              const found = findTodoById([child], targetId);
+              if (found) return found;
+            }
+          }
+        }
+      }
+      return null;
+    };
+
+    const todoItem = findTodoById(todos, id);
+    if (!todoItem) return;
+
+    try {
+      // Remove priority status
+      await todoApi.removeTodoPriority(id, {
+        title: todoItem.title,
+        description: todoItem.description,
+        tags: todoItem.tags.map(tag => tag._id),
+      });
+
+      await refreshTodos();
+      showToast(`"${todoItem.title}" removed from priorities`, 'info');
+    } catch (error) {
+      console.error('Failed to remove todo priority:', error);
+    }
+  };
+
   const value: TodoContextType = {
     todos,
     loading,
@@ -168,6 +204,7 @@ export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
     deleteTodosByDate,
     reorderTodos,
     makeTodoPriority,
+    removeTodoPriority,
     refreshTodos,
   };
 

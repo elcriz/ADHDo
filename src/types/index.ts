@@ -48,5 +48,6 @@ export interface TodoContextType {
   deleteTodosByDate: (date: string) => Promise<void>;
   reorderTodos: (todoIds: string[]) => Promise<void>;
   makeTodoPriority: (id: string) => Promise<void>;
+  removeTodoPriority: (id: string) => Promise<void>;
   refreshTodos: () => Promise<void>;
 }
