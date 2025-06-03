@@ -836,7 +836,9 @@ const TodoList: React.FC = () => {
                               display: 'flex',
                               flexDirection: 'column',
                               gap: 1,
-                              p: 2,
+                              pt: 2,
+                              px: 2,
+                              pb: 1,
                               backgroundColor: 'action.hover',
                               zIndex: 1,
                             }}
