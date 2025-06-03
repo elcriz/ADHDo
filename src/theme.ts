@@ -150,7 +150,7 @@ const darkPalette = {
   uiForm: 'rgb(32, 38, 48)',
   uiTabs: 'rgb(32, 38, 48)',
   todoCompleted: 'rgb(32, 38, 48)',
-  todoPriority: '#f0c36d',
+  todoPriority: '#2e405e',
 };
 
 // Create light theme
