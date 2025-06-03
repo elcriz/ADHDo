@@ -62,6 +62,7 @@ const DroppableSection: React.FC<DroppableSectionProps> = ({ sectionId, children
       ref={setNodeRef}
       sx={{
         transition: 'all 0.2s ease',
+        position: 'relative', // Establish position context
         ...(isOver && {
           backgroundColor: 'action.hover',
           transform: 'scale(1.02)',
@@ -812,7 +813,7 @@ const TodoList: React.FC = () => {
                             alignItems: 'center',
                             justifyContent: 'center',
                             backgroundColor: 'action.hover',
-                            zIndex: 1,
+                            position: 'relative', // Add position context
                           }}
                         >
                           <Typography
@@ -840,7 +841,7 @@ const TodoList: React.FC = () => {
                               px: 2,
                               pb: 1,
                               backgroundColor: 'action.hover',
-                              zIndex: 1,
+                              position: 'relative', // Add position context
                             }}
                           >
                             {priorityTodos.map(todo => (

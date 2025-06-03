@@ -37,6 +37,7 @@ The Priority Section is a dedicated area at the top of your open todos that help
 - **Tag Filtering**: Priority todos are included when they have matching tags
 - **Drag Reordering**: You can reorder todos within the priority section
 - **All Todo Operations**: Edit, delete, complete, add children - everything works normally
+- **Visibility**: Todos remain visible at all times during and after drag operations
 
 ### 📱 Mobile Support
 
