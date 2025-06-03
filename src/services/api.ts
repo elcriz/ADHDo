@@ -96,6 +96,14 @@ export const todoApi = {
     });
     return response.data.todo || response.data;
   },
+
+  removeTodoPriority: async (id: string, todoData: { title: string; description?: string; tags: string[] }) => {
+    const response = await api.put(`/todos/${id}`, {
+      ...todoData,
+      isPriority: false,
+    });
+    return response.data.todo || response.data;
+  },
 };
 
 // Tag API

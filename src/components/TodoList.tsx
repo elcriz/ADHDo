@@ -74,7 +74,7 @@ const DroppableSection: React.FC<DroppableSectionProps> = ({ sectionId, children
 };
 
 const TodoList: React.FC = () => {
-  const { todos, loading, deleteCompletedTodos, deleteTodosByDate, reorderTodos } = useTodos();
+  const { todos, loading, deleteCompletedTodos, deleteTodosByDate, reorderTodos, makeTodoPriority, removeTodoPriority } = useTodos();
   const { isAnyEditing, setIsAnyEditing } = useEditing();
   const [activeTab, setActiveTab] = useState<'open' | 'completed'>('open');
   const [showForm, setShowForm] = useState(false);
@@ -340,30 +340,12 @@ const TodoList: React.FC = () => {
 
     // If dropping on priority or regular section containers
     if (isMovingToPriority || isMovingToRegular) {
-      const newIsPriority = isMovingToPriority;
-
-      // Update the todo's priority status
       try {
-        const response = await fetch(`/api/todos/${activeTodo._id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          },
-          body: JSON.stringify({
-            title: activeTodo.title,
-            description: activeTodo.description,
-            tags: activeTodo.tags.map(tag => tag._id),
-            isPriority: newIsPriority,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to update todo priority');
+        if (isMovingToPriority) {
+          await makeTodoPriority(activeTodo._id);
+        } else {
+          await removeTodoPriority(activeTodo._id);
         }
-
-        // Refresh todos to get updated data
-        window.location.reload();
       } catch (error) {
         console.error('Failed to update todo priority:', error);
       }

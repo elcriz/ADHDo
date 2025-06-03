@@ -39,7 +39,7 @@ interface TodoItemProps {
 }
 
 const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showDragHandle = false, viewMode = 'detailed' }) => {
-  const { toggleTodo, deleteTodo, makeTodoPriority } = useTodos();
+  const { toggleTodo, deleteTodo, makeTodoPriority, removeTodoPriority } = useTodos();
   const { isAnyEditing, setIsAnyEditing, editingTodoId, setEditingTodoId } = useEditing();
   const [isEditing, setIsEditing] = useState(false);
   const [showChildForm, setShowChildForm] = useState(false);
@@ -124,6 +124,15 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
       await makeTodoPriority(todo._id);
     } catch (error) {
       console.error('Failed to make todo priority:', error);
+    }
+    handleMenuClose();
+  };
+
+  const handleRemovePriority = async () => {
+    try {
+      await removeTodoPriority(todo._id);
+    } catch (error) {
+      console.error('Failed to remove todo priority:', error);
     }
     handleMenuClose();
   };
@@ -350,6 +359,22 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
                   </ListItemIcon>
                   <ListItemText
                     primary="Make priority"
+                  />
+                </MenuItem>
+              )}
+              {/* Only show "Remove priority" for prioritized todos */}
+              {!todo.completed && todo.isPriority && (
+                <MenuItem
+                  onClick={handleRemovePriority}
+                >
+                  <ListItemIcon>
+                    <StarIcon
+                      fontSize="small"
+                      sx={{ color: 'text.secondary' }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Remove priority"
                   />
                 </MenuItem>
               )}
