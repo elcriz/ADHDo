@@ -88,6 +88,14 @@ export const todoApi = {
     const response = await api.patch('/todos/reorder', { todoIds });
     return response.data;
   },
+
+  makeTodoPriority: async (id: string, todoData: { title: string; description?: string; tags: string[] }) => {
+    const response = await api.put(`/todos/${id}`, {
+      ...todoData,
+      isPriority: true,
+    });
+    return response.data.todo || response.data;
+  },
 };
 
 // Tag API
