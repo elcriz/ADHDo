@@ -21,6 +21,8 @@ import {
   MoreVert as MoreVertIcon,
   DragIndicator as DragIndicatorIcon,
   Star as StarIcon,
+  VerticalAlignTop as VerticalAlignTopIcon,
+  VerticalAlignBottom as VerticalAlignBottomIcon,
 } from '@mui/icons-material';
 import { format } from 'date-fns';
 import type { Todo } from '../types';
@@ -39,7 +41,7 @@ interface TodoItemProps {
 }
 
 const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showDragHandle = false, viewMode = 'detailed' }) => {
-  const { toggleTodo, deleteTodo, makeTodoPriority, removeTodoPriority } = useTodos();
+  const { toggleTodo, deleteTodo, makeTodoPriority, removeTodoPriority, moveTodoToTop, moveTodoToBottom, todos } = useTodos();
   const { isAnyEditing, setIsAnyEditing, editingTodoId, setEditingTodoId } = useEditing();
   const [isEditing, setIsEditing] = useState(false);
   const [showChildForm, setShowChildForm] = useState(false);
@@ -137,9 +139,38 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
     handleMenuClose();
   };
 
+  const handleMoveToTop = async () => {
+    try {
+      await moveTodoToTop(todo._id);
+    } catch (error) {
+      console.error('Failed to move todo to top:', error);
+    }
+    handleMenuClose();
+  };
+
+  const handleMoveToBottom = async () => {
+    try {
+      await moveTodoToBottom(todo._id);
+    } catch (error) {
+      console.error('Failed to move todo to bottom:', error);
+    }
+    handleMenuClose();
+  };
+
   const formatDate = (dateString: string) => {
     return format(new Date(dateString), 'dd-MM-yyyy');
   };
+
+  // Calculate if move actions should be disabled
+  const getSameSectionTodos = () => {
+    return todos.filter(t =>
+      !t.completed && !t.parent && t.isPriority === todo.isPriority
+    );
+  };
+
+  const sameSectionTodos = getSameSectionTodos();
+  const isFirstInSection = sameSectionTodos.length > 0 && sameSectionTodos[0]._id === todo._id;
+  const isLastInSection = sameSectionTodos.length > 0 && sameSectionTodos[sameSectionTodos.length - 1]._id === todo._id;
 
   return (
     <Card
@@ -219,15 +250,6 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
                   variant="outlined"
                   sx={{ fontSize: '0.7rem', height: 20, pt: 0 }}
                 />
-                {todo.completedAt && (
-                  <Chip
-                    label={`Completed: ${formatDate(todo.completedAt)}`}
-                    size="small"
-                    variant="outlined"
-                    color="success"
-                    sx={{ fontSize: '0.7rem', height: 20, pt: 0 }}
-                  />
-                )}
                 {validChildren.length > 0 && (
                   <Chip
                     label={`${validChildren.length} subtask${validChildren.length > 1 ? 's' : ''}`}
@@ -377,6 +399,40 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, level, dragHandleProps, showD
                     primary="Remove priority"
                   />
                 </MenuItem>
+              )}
+
+              {/* Move to top/bottom - only for open, parent-level todos */}
+              {!todo.completed && !todo.parent && sameSectionTodos.length > 1 && (
+                <>
+                  <MenuItem
+                    onClick={handleMoveToTop}
+                    disabled={isFirstInSection}
+                  >
+                    <ListItemIcon>
+                      <VerticalAlignTopIcon
+                        fontSize="small"
+                        color={isFirstInSection ? 'disabled' : 'action'}
+                      />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Move to top"
+                    />
+                  </MenuItem>
+                  <MenuItem
+                    onClick={handleMoveToBottom}
+                    disabled={isLastInSection}
+                  >
+                    <ListItemIcon>
+                      <VerticalAlignBottomIcon
+                        fontSize="small"
+                        color={isLastInSection ? 'disabled' : 'action'}
+                      />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Move to bottom"
+                    />
+                  </MenuItem>
+                </>
               )}
               <MenuItem
                 onClick={handleAddSubtask}

@@ -49,5 +49,7 @@ export interface TodoContextType {
   reorderTodos: (todoIds: string[]) => Promise<void>;
   makeTodoPriority: (id: string) => Promise<void>;
   removeTodoPriority: (id: string) => Promise<void>;
+  moveTodoToTop: (id: string) => Promise<void>;
+  moveTodoToBottom: (id: string) => Promise<void>;
   refreshTodos: () => Promise<void>;
 }

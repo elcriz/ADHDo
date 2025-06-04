@@ -193,6 +193,80 @@ export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
     }
   };
 
+  const moveTodoToTop = async (id: string) => {
+    // Find the todo to get its details
+    const findTodoById = (todoList: Todo[], targetId: string): Todo | null => {
+      for (const todo of todoList) {
+        if (todo._id === targetId) return todo;
+
+        if (todo.children) {
+          for (const child of todo.children) {
+            if (typeof child === 'object') {
+              const found = findTodoById([child], targetId);
+              if (found) return found;
+            }
+          }
+        }
+      }
+      return null;
+    };
+
+    const todoItem = findTodoById(todos, id);
+    if (!todoItem || todoItem.completed || todoItem.parent) return;
+
+    try {
+      // Get all todos in the same section (priority or regular)
+      const sameSectionTodos = todos.filter(t =>
+        !t.completed && !t.parent && t.isPriority === todoItem.isPriority
+      );
+
+      // Create new order with this todo at the top
+      const reorderedIds = [id, ...sameSectionTodos.map(t => t._id).filter(tId => tId !== id)];
+
+      await reorderTodos(reorderedIds);
+      showToast(`"${todoItem.title}" moved to top`, 'success');
+    } catch (error) {
+      console.error('Failed to move todo to top:', error);
+    }
+  };
+
+  const moveTodoToBottom = async (id: string) => {
+    // Find the todo to get its details
+    const findTodoById = (todoList: Todo[], targetId: string): Todo | null => {
+      for (const todo of todoList) {
+        if (todo._id === targetId) return todo;
+
+        if (todo.children) {
+          for (const child of todo.children) {
+            if (typeof child === 'object') {
+              const found = findTodoById([child], targetId);
+              if (found) return found;
+            }
+          }
+        }
+      }
+      return null;
+    };
+
+    const todoItem = findTodoById(todos, id);
+    if (!todoItem || todoItem.completed || todoItem.parent) return;
+
+    try {
+      // Get all todos in the same section (priority or regular)
+      const sameSectionTodos = todos.filter(t =>
+        !t.completed && !t.parent && t.isPriority === todoItem.isPriority
+      );
+
+      // Create new order with this todo at the bottom
+      const reorderedIds = [...sameSectionTodos.map(t => t._id).filter(tId => tId !== id), id];
+
+      await reorderTodos(reorderedIds);
+      showToast(`"${todoItem.title}" moved to bottom`, 'success');
+    } catch (error) {
+      console.error('Failed to move todo to bottom:', error);
+    }
+  };
+
   const value: TodoContextType = {
     todos,
     loading,
@@ -205,6 +279,8 @@ export const TodoProvider: React.FC<TodoProviderProps> = ({ children }) => {
     reorderTodos,
     makeTodoPriority,
     removeTodoPriority,
+    moveTodoToTop,
+    moveTodoToBottom,
     refreshTodos,
   };
 

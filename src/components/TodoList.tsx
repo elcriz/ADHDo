@@ -109,6 +109,7 @@ const TodoList: React.FC = () => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
 
   // Drag and drop sensors - simplified since we now use a dedicated drag handle
   const sensors = useSensors(
@@ -466,7 +467,7 @@ const TodoList: React.FC = () => {
         sx={{ px: 2, pb: 2, pt: 0, backgroundColor: isMobile ? 'transparent': 'auto', borderRadius: isMobile ? 0 : 2 }}
       >
         <Box
-          sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', ml: -2,  mr: -2, mb: 2, px: 2, py: 1, backgroundColor: 'ui', borderTopLeftRadius: isMobile ? 0 : 8, borderTopRightRadius: isMobile ? 0 : 8 }}
+          sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', ml: -2,  mr: -2, mb: isDesktop ? 0 : 2, px: 2, py: 1, backgroundColor: 'ui', borderTopLeftRadius: isMobile ? 0 : 8, borderTopRightRadius: isMobile ? 0 : 8 }}
         >
           <Typography
             variant="h4"
@@ -549,7 +550,7 @@ const TodoList: React.FC = () => {
         </Box>
 
         <Collapse in={showSearch && !isAnyEditing}>
-          <Box sx={{ mb: 2 }}>
+          <Box sx={{ mb: 2, mt: isDesktop ? 2 : 0 }}>
             <TextField
               inputRef={searchInputRef}
               size="small"
@@ -630,7 +631,7 @@ const TodoList: React.FC = () => {
 
         {/* Active Tag Filters Display */}
         {selectedFilterTags.length > 0 && (
-          <Box sx={{ mb: 2, p: 2, bgcolor: 'action.hover', borderRadius: 1 }}>
+          <Box sx={{ mb: 2, mt: isDesktop ? 2 : 0, p: 2, bgcolor: 'action.hover', borderRadius: 1 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
               <Typography variant="body2" color="text.secondary">
                 Filtering by tags:
@@ -666,6 +667,7 @@ const TodoList: React.FC = () => {
             sx={{
               p: 2,
               mb: 3,
+              mt: isDesktop ? 2 : 0,
               bgcolor: 'uiForm',
               ...(isMobile && {
                 position: 'sticky',
@@ -684,47 +686,50 @@ const TodoList: React.FC = () => {
         <Box
           sx={{ mb: 3}}
         >
-          <Tabs
-            value={activeTab}
-            onChange={(_, newValue) => setActiveTab(newValue)}
-            variant="fullWidth"
-            sx={{
-              '& .MuiTabs-flexContainer': {
-                bgcolor: 'ui',
-                borderTopLeftRadius: 8,
-                borderTopRightRadius: 8,
-                p: 0.5,
-              },
-              '& .MuiTab-root': {
-                textTransform: 'none',
-                fontWeight: 700,
-                '&:first-of-type': {
+          {/* Show tabs on mobile/tablet, hide on desktop */}
+          {!isDesktop && (
+            <Tabs
+              value={activeTab}
+              onChange={(_, newValue) => setActiveTab(newValue)}
+              variant="fullWidth"
+              sx={{
+                '& .MuiTabs-flexContainer': {
+                  bgcolor: 'ui',
                   borderTopLeftRadius: 8,
-                },
-                '&:last-of-type': {
                   borderTopRightRadius: 8,
-                }
-              },
-              '& .Mui-selected': {
-                bgcolor: 'background.paper',
-                boxShadow: 1,
-              },
-            }}
-          >
-            <Tab
-              label={`Open (${openTodos.length}${searchQuery.length >= 2 || selectedFilterTags.length > 0 ? ` of ${allOpenTodos.length}` : ''})`}
-              value="open"
-              sx={{ minHeight: 22, py: 1.5 }}
-            />
-            <Tab
-              label={`Completed (${completedTodos.length}${searchQuery.length >= 2 || selectedFilterTags.length > 0 ? ` of ${allCompletedTodos.length}` : ''})`}
-              value="completed"
-              sx={{ minHeight: 22, py: 1.5 }}
-            />
-          </Tabs>
+                  p: 0.5,
+                },
+                '& .MuiTab-root': {
+                  textTransform: 'none',
+                  fontWeight: 700,
+                  '&:first-of-type': {
+                    borderTopLeftRadius: 8,
+                  },
+                  '&:last-of-type': {
+                    borderTopRightRadius: 8,
+                  }
+                },
+                '& .Mui-selected': {
+                  bgcolor: 'background.paper',
+                  boxShadow: 1,
+                },
+              }}
+            >
+              <Tab
+                label={`Open (${openTodos.length}${searchQuery.length >= 2 || selectedFilterTags.length > 0 ? ` of ${allOpenTodos.length}` : ''})`}
+                value="open"
+                sx={{ minHeight: 22, py: 1.5 }}
+              />
+              <Tab
+                label={`Completed (${completedTodos.length}${searchQuery.length >= 2 || selectedFilterTags.length > 0 ? ` of ${allCompletedTodos.length}` : ''})`}
+                value="completed"
+                sx={{ minHeight: 22, py: 1.5 }}
+              />
+            </Tabs>
+          )}
 
-          {/* Delete All Completed Button */}
-          {activeTab === 'completed' && allCompletedTodos.length > 0 && (
+          {/* Delete All Completed Button - show only on mobile when on completed tab */}
+          {(!isDesktop && activeTab === 'completed') && allCompletedTodos.length > 0 && (
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
               <Button
                 variant="contained"
@@ -746,249 +751,521 @@ const TodoList: React.FC = () => {
         </Box>
 
         <Box
-          sx={{ mt: -1 }}
+          sx={{ position: 'relative', mt: -1 }}
         >
-          {activeTab === 'open' ? (
-            // Render open todos with drag and drop and priority sections
-            openTodos.length === 0 ? (
-              <Box
-                sx={{ textAlign: 'center', py: 4 }}
-              >
-                <Typography
-                  variant="body1"
-                  color="text.secondary"
+          {isDesktop ? (
+            // Desktop: Two-column layout
+            <Box sx={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+              {/* Open Todos Column - 2/3 width */}
+              <Box sx={{ flex: 2, minWidth: 0 }}>
+                <Box
+                  sx={{
+                    position: 'sticky',
+                    top: { xs: 56, sm: 64 },
+                    zIndex: 10,
+                    mb: 2,
+                    px: 2,
+                    pt: 1.5,
+                    mx: -2,
+                    borderBottom: 1,
+                    borderColor: 'divider',
+                    pb: 1,
+                    backdropFilter: 'blur(8px)',
+                    WebkitBackdropFilter: 'blur(8px)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
                 >
-                  {searchQuery.length >= 2
-                    ? `No open todos found matching "${searchQuery}"`
-                    : "No open todos. Create one to get started!"}
-                </Typography>
-              </Box>
-            ) : (
-              <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
-                modifiers={[restrictToVerticalAxis]}
-              >
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                  {/* Priority Section */}
-                  <Box>
-                    <Box
-                      sx={{
-                        position: 'sticky',
-                        top: { xs: 56, sm: 64 }, // Account for AppBar/Toolbar height
-                        zIndex: 10,
-                        mb: 2,
-                        px: 2,
-                        pt: 1.5,
-                        mx: -2,
-                        borderBottom: 1,
-                        borderColor: 'divider',
-                        pb: 1,
-                        backdropFilter: 'blur(8px)',
-                        WebkitBackdropFilter: 'blur(8px)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                      }}
-                    >
-                      <Typography
-                        variant="h6"
-                        sx={{ fontWeight: 600 }}
-                      >
-                        Priority ({priorityTodos.length})
-                      </Typography>
-                    </Box>
-                    <DroppableSection sectionId="priority-section">
-                      {priorityTodos.length === 0 ? (
+                  <Typography
+                    variant="h5"
+                    sx={{ fontWeight: 800 }}
+                  >
+                    Open ({openTodos.length}{searchQuery.length >= 2 || selectedFilterTags.length > 0 ? ` of ${allOpenTodos.length}` : ''})
+                  </Typography>
+                </Box>
+
+                {openTodos.length === 0 ? (
+                  <Box sx={{ textAlign: 'center', py: 4 }}>
+                    <Typography variant="body1" color="text.secondary">
+                      {searchQuery.length >= 2
+                        ? `No open todos found matching "${searchQuery}"`
+                        : "No open todos. Create one to get started!"}
+                    </Typography>
+                  </Box>
+                ) : (
+                  <DndContext
+                    sensors={sensors}
+                    collisionDetection={closestCenter}
+                    onDragEnd={handleDragEnd}
+                    modifiers={[restrictToVerticalAxis]}
+                  >
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                      {/* Priority Section */}
+                      <Box>
                         <Box
                           sx={{
-                            border: '2px dashed',
+                            mb: 2,
+                            px: 2,
+                            pt: 1.5,
+                            mx: -2,
+                            borderBottom: 1,
                             borderColor: 'divider',
-                            borderRadius: 2,
-                            p: 3,
-                            textAlign: 'center',
-                            minHeight: 80,
+                            pb: 1,
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center',
-                            backgroundColor: 'action.hover',
-                            position: 'relative', // Add position context
+                            justifyContent: 'space-between',
                           }}
                         >
                           <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            sx={{ fontStyle: 'italic' }}
+                            variant="h6"
+                            sx={{ fontWeight: 600, fontSize: '1rem' }}
                           >
-                            Drag your priority todos in here to maintain focus. Eat the frog!
+                            Priority ({priorityTodos.length})
                           </Typography>
                         </Box>
-                      ) : (
-                        <SortableContext
-                          items={priorityTodos.map(todo => todo._id)}
-                          strategy={verticalListSortingStrategy}
+                        <DroppableSection sectionId="priority-section">
+                          {priorityTodos.length === 0 ? (
+                            <Box
+                              sx={{
+                                border: '2px dashed',
+                                borderColor: 'divider',
+                                borderRadius: 2,
+                                p: 3,
+                                textAlign: 'center',
+                                minHeight: 80,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                backgroundColor: 'action.hover',
+                                position: 'relative',
+                              }}
+                            >
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                sx={{ fontStyle: 'italic' }}
+                              >
+                                Drag your priority todos in here to maintain focus. Eat the frog!
+                              </Typography>
+                            </Box>
+                          ) : (
+                            <SortableContext
+                              items={priorityTodos.map(todo => todo._id)}
+                              strategy={verticalListSortingStrategy}
+                            >
+                              <Box
+                                sx={{
+                                  border: '2px dashed',
+                                  borderColor: 'divider',
+                                  borderRadius: 2,
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  gap: 1,
+                                  pt: 2,
+                                  px: 2,
+                                  pb: 1,
+                                  backgroundColor: 'action.hover',
+                                  position: 'relative',
+                                }}
+                              >
+                                {priorityTodos.map(todo => (
+                                  <DraggableTodoItem
+                                    key={todo._id}
+                                    todo={todo}
+                                    level={0}
+                                    viewMode={viewMode}
+                                  />
+                                ))}
+                              </Box>
+                            </SortableContext>
+                          )}
+                        </DroppableSection>
+                      </Box>
+
+                      {/* Regular Todos Section */}
+                      <Box>
+                        <Box
+                          sx={{
+                            mb: 2,
+                            px: 2,
+                            pt: 1.5,
+                            mx: -2,
+                            borderBottom: 1,
+                            borderColor: 'divider',
+                            pb: 1,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                          }}
                         >
+                          <Typography
+                            variant="h6"
+                            sx={{ fontWeight: 600, fontSize: '1rem' }}
+                          >
+                            Other ({regularTodos.length})
+                          </Typography>
+                        </Box>
+                        <DroppableSection sectionId="regular-section">
+                          {regularTodos.length === 0 ? (
+                            <Box sx={{ textAlign: 'center', py: 4 }}>
+                              <Typography variant="body2" color="text.secondary">
+                                No other todos
+                              </Typography>
+                            </Box>
+                          ) : (
+                            <SortableContext
+                              items={regularTodos.map(todo => todo._id)}
+                              strategy={verticalListSortingStrategy}
+                            >
+                              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                                {regularTodos.map(todo => (
+                                  <DraggableTodoItem
+                                    key={todo._id}
+                                    todo={todo}
+                                    level={0}
+                                    viewMode={viewMode}
+                                  />
+                                ))}
+                              </Box>
+                            </SortableContext>
+                          )}
+                        </DroppableSection>
+                      </Box>
+                    </Box>
+                  </DndContext>
+                )}
+              </Box>
+
+              {/* Completed Todos Column - 1/3 width */}
+              <Box sx={{ flex: 1, minWidth: 0, px: isDesktop ? 4 : 0, pb: isDesktop ? 1 : 0, backgroundColor: isDesktop ? 'action.hover': 'none', borderRadius: 2 }}>
+                <Box
+                  sx={{
+                    position: 'sticky',
+                    top: { xs: 56, sm: 64 },
+                    zIndex: 10,
+                    mb: 2,
+                    px: 0,
+                    pt: 1.5,
+                    mx: -2,
+                    borderBottom: 1,
+                    borderColor: 'divider',
+                    pb: 1,
+                    backdropFilter: 'blur(8px)',
+                    WebkitBackdropFilter: 'blur(8px)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <Typography
+                    variant="h5"
+                    sx={{ fontWeight: 800 }}
+                  >
+                    Completed ({completedTodos.length} {searchQuery.length >= 2 || selectedFilterTags.length > 0 ? ` of ${allCompletedTodos.length}` : ''})
+                  </Typography>
+                </Box>
+
+                {groupedCompletedTodos.length === 0 ? (
+                  <Box sx={{ textAlign: 'center', py: 4 }}>
+                    <Typography variant="body1" color="text.secondary">
+                      {searchQuery.length >= 2
+                        ? `No completed todos found matching "${searchQuery}"`
+                        : "No completed todos yet. Time to get busy!"}
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: isDesktop ? -0.65 : -2 }}>
+                    {groupedCompletedTodos.map(({ date, todos }) => (
+                      <Box key={date}>
+                        <Box
+                          sx={{
+                            mb: 2,
+                            px: isDesktop ? 0 : 2,
+                            pt: 1.5,
+                            mx: -2,
+                            borderBottom: 1,
+                            borderColor: 'divider',
+                            pb: 1,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                          }}
+                        >
+                          <Typography
+                            variant="h6"
+                            sx={{ fontWeight: 600, fontSize: '1rem' }}
+                          >
+                            {formatDateHeading(date)} ({todos.length})
+                          </Typography>
+                          <IconButton
+                            size="small"
+                            onClick={() => handleDateDeleteClick(date)}
+                            sx={{
+                              color: 'text.secondary',
+                              '&:hover': {
+                                color: 'error.main',
+                                backgroundColor: 'error.light',
+                              },
+                            }}
+                            title={`Delete all todos completed on ${formatDateHeading(date)}`}
+                          >
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                        </Box>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                          {todos.map(todo => renderTodoWithChildren(todo))}
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+              </Box>
+            </Box>
+          ) : (
+            // Mobile/Tablet: Single column with tabs
+            activeTab === 'open' ? (
+              // Render open todos with drag and drop and priority sections
+              openTodos.length === 0 ? (
+                <Box
+                  sx={{ textAlign: 'center', py: 4 }}
+                >
+                  <Typography
+                    variant="body1"
+                    color="text.secondary"
+                  >
+                    {searchQuery.length >= 2
+                      ? `No open todos found matching "${searchQuery}"`
+                      : "No open todos. Create one to get started!"}
+                  </Typography>
+                </Box>
+              ) : (
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleDragEnd}
+                  modifiers={[restrictToVerticalAxis]}
+                >
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                    {/* Priority Section */}
+                    <Box>
+                      <Box
+                        sx={{
+                          position: 'sticky',
+                          top: { xs: 56, sm: 64 }, // Account for AppBar/Toolbar height
+                          zIndex: 10,
+                          mb: 2,
+                          px: 2,
+                          pt: 1.5,
+                          mx: -2,
+                          borderBottom: 1,
+                          borderColor: 'divider',
+                          pb: 1,
+                          backdropFilter: 'blur(8px)',
+                          WebkitBackdropFilter: 'blur(8px)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                        }}
+                      >
+                        <Typography
+                          variant="h6"
+                          sx={{ fontWeight: 600 }}
+                        >
+                          Priority ({priorityTodos.length})
+                        </Typography>
+                      </Box>
+                      <DroppableSection sectionId="priority-section">
+                        {priorityTodos.length === 0 ? (
                           <Box
                             sx={{
                               border: '2px dashed',
                               borderColor: 'divider',
                               borderRadius: 2,
+                              p: 3,
+                              textAlign: 'center',
+                              minHeight: 80,
                               display: 'flex',
-                              flexDirection: 'column',
-                              gap: 1,
-                              pt: 2,
-                              px: 2,
-                              pb: 1,
+                              alignItems: 'center',
+                              justifyContent: 'center',
                               backgroundColor: 'action.hover',
                               position: 'relative', // Add position context
                             }}
                           >
-                            {priorityTodos.map(todo => (
-                              <DraggableTodoItem
-                                key={todo._id}
-                                todo={todo}
-                                level={0}
-                                viewMode={viewMode}
-                              />
-                            ))}
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                              sx={{ fontStyle: 'italic' }}
+                            >
+                              Drag your priority todos in here to maintain focus. Eat the frog!
+                            </Typography>
                           </Box>
-                        </SortableContext>
-                      )}
-                    </DroppableSection>
-                  </Box>
+                        ) : (
+                          <SortableContext
+                            items={priorityTodos.map(todo => todo._id)}
+                            strategy={verticalListSortingStrategy}
+                          >
+                            <Box
+                              sx={{
+                                border: '2px dashed',
+                                borderColor: 'divider',
+                                borderRadius: 2,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 1,
+                                pt: 2,
+                                px: 2,
+                                pb: 1,
+                                backgroundColor: 'action.hover',
+                                position: 'relative', // Add position context
+                              }}
+                            >
+                              {priorityTodos.map(todo => (
+                                <DraggableTodoItem
+                                  key={todo._id}
+                                  todo={todo}
+                                  level={0}
+                                  viewMode={viewMode}
+                                />
+                              ))}
+                            </Box>
+                          </SortableContext>
+                        )}
+                      </DroppableSection>
+                    </Box>
 
-                  {/* Regular Todos Section */}
-                  <Box>
-                    <Box
-                      sx={{
-                        position: 'sticky',
-                        top: { xs: 56, sm: 64 }, // Account for AppBar/Toolbar height
-                        zIndex: 10,
-                        mb: 2,
-                        px: 2,
-                        pt: 1.5,
-                        mx: -2,
-                        borderBottom: 1,
-                        borderColor: 'divider',
-                        pb: 1,
-                        backdropFilter: 'blur(8px)',
-                        WebkitBackdropFilter: 'blur(8px)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                      }}
-                    >
-                      <Typography
-                        variant="h6"
-                        sx={{ fontWeight: 600 }}
+                    {/* Regular Todos Section */}
+                    <Box>
+                      <Box
+                        sx={{
+                          position: 'sticky',
+                          top: { xs: 56, sm: 64 }, // Account for AppBar/Toolbar height
+                          zIndex: 10,
+                          mb: 2,
+                          px: 2,
+                          pt: 1.5,
+                          mx: -2,
+                          borderBottom: 1,
+                          borderColor: 'divider',
+                          pb: 1,
+                          backdropFilter: 'blur(8px)',
+                          WebkitBackdropFilter: 'blur(8px)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                        }}
                       >
-                        Other ({regularTodos.length})
-                      </Typography>
-                    </Box>
-                    <DroppableSection sectionId="regular-section">
-                      {regularTodos.length === 0 ? (
-                        <Box
-                          sx={{ textAlign: 'center', py: 4 }}
+                        <Typography
+                          variant="h6"
+                          sx={{ fontWeight: 600 }}
                         >
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                          >
-                            No other todos
-                          </Typography>
-                        </Box>
-                      ) : (
-                        <SortableContext
-                          items={regularTodos.map(todo => todo._id)}
-                          strategy={verticalListSortingStrategy}
-                        >
+                          Other ({regularTodos.length})
+                        </Typography>
+                      </Box>
+                      <DroppableSection sectionId="regular-section">
+                        {regularTodos.length === 0 ? (
                           <Box
-                            sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
+                            sx={{ textAlign: 'center', py: 4 }}
                           >
-                            {regularTodos.map(todo => (
-                              <DraggableTodoItem
-                                key={todo._id}
-                                todo={todo}
-                                level={0}
-                                viewMode={viewMode}
-                              />
-                            ))}
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                            >
+                              No other todos
+                            </Typography>
                           </Box>
-                        </SortableContext>
-                      )}
-                    </DroppableSection>
+                        ) : (
+                          <SortableContext
+                            items={regularTodos.map(todo => todo._id)}
+                            strategy={verticalListSortingStrategy}
+                          >
+                            <Box
+                              sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}
+                            >
+                              {regularTodos.map(todo => (
+                                <DraggableTodoItem
+                                  key={todo._id}
+                                  todo={todo}
+                                  level={0}
+                                  viewMode={viewMode}
+                                />
+                              ))}
+                            </Box>
+                          </SortableContext>
+                        )}
+                      </DroppableSection>
+                    </Box>
                   </Box>
-                </Box>
-              </DndContext>
-            )
-          ) : (
-            // Render completed todos grouped by date
-            groupedCompletedTodos.length === 0 ? (
-              <Box
-                sx={{ textAlign: 'center', py: 4 }}
-              >
-                <Typography
-                  variant="body1"
-                  color="text.secondary"
-                >
-                  {searchQuery.length >= 2
-                    ? `No completed todos found matching "${searchQuery}"`
-                    : "No completed todos yet. Time to get busy!"}
-                </Typography>
-              </Box>
+                </DndContext>
+              )
             ) : (
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: -2 }}>
-                {groupedCompletedTodos.map(({ date, todos }) => (
-                  <Box key={date}>
-                    <Box
-                      sx={{
-                        position: 'sticky',
-                        top: { xs: 56, sm: 64 }, // Account for AppBar/Toolbar height
-                        zIndex: 10,
-                        mb: 2,
-                        px: 2,
-                        pt: 1.5,
-                        mx: -2,
-                        borderBottom: 1,
-                        borderColor: 'divider',
-                        pb: 1,
-                        backdropFilter: 'blur(8px)',
-                        WebkitBackdropFilter: 'blur(8px)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                      }}
-                    >
-                      <Typography
-                        variant="h6"
+              // Render completed todos grouped by date
+              groupedCompletedTodos.length === 0 ? (
+                <Box
+                  sx={{ textAlign: 'center', py: 4 }}
+                >
+                  <Typography
+                    variant="body1"
+                    color="text.secondary"
+                  >
+                    {searchQuery.length >= 2
+                      ? `No completed todos found matching "${searchQuery}"`
+                      : "No completed todos yet. Time to get busy!"}
+                  </Typography>
+                </Box>
+              ) : (
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: -2 }}>
+                  {groupedCompletedTodos.map(({ date, todos }) => (
+                    <Box key={date}>
+                      <Box
                         sx={{
-                          fontWeight: 600,
+                          position: 'sticky',
+                          top: { xs: 56, sm: 64 }, // Account for AppBar/Toolbar height
+                          zIndex: 10,
+                          mb: 2,
+                          px: 2,
+                          pt: 1.5,
+                          mx: -2,
+                          borderBottom: 1,
+                          borderColor: 'divider',
+                          pb: 1,
+                          backdropFilter: 'blur(8px)',
+                          WebkitBackdropFilter: 'blur(8px)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
                         }}
                       >
-                        {formatDateHeading(date)} ({todos.length})
-                      </Typography>
-                      <IconButton
-                        size="small"
-                        onClick={() => handleDateDeleteClick(date)}
-                        sx={{
-                          color: 'text.secondary',
-                          '&:hover': {
-                            color: 'error.main',
-                            backgroundColor: 'error.light',
-                          },
-                        }}
-                        title={`Delete all todos completed on ${formatDateHeading(date)}`}
-                      >
-                        <DeleteIcon fontSize="small" />
-                      </IconButton>
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            fontWeight: 600,
+                          }}
+                        >
+                          {formatDateHeading(date)} ({todos.length})
+                        </Typography>
+                        <IconButton
+                          size="small"
+                          onClick={() => handleDateDeleteClick(date)}
+                          sx={{
+                            color: 'text.secondary',
+                            '&:hover': {
+                              color: 'error.main',
+                              backgroundColor: 'error.light',
+                            },
+                          }}
+                          title={`Delete all todos completed on ${formatDateHeading(date)}`}
+                        >
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                      </Box>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                        {todos.map(todo => renderTodoWithChildren(todo))}
+                      </Box>
                     </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                      {todos.map(todo => renderTodoWithChildren(todo))}
-                    </Box>
-                  </Box>
-                ))}
-              </Box>
+                  ))}
+                </Box>
+              )
             )
           )}
         </Box>
