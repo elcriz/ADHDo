@@ -962,7 +962,7 @@ const TodoList: React.FC = () => {
                     variant="h5"
                     sx={{ fontWeight: 800 }}
                   >
-                    Completed ({completedTodos.length} {searchQuery.length >= 2 || selectedFilterTags.length > 0 ? ` of ${allCompletedTodos.length}` : ''})
+                    Completed ({completedTodos.length}{searchQuery.length >= 2 || selectedFilterTags.length > 0 ? ` of ${allCompletedTodos.length}` : ''})
                   </Typography>
                 </Box>
 
